@@ -6,19 +6,19 @@
 
 # [v1.2](https://gitlab.com/derSchabi/OCBookmarks/tags/v1.2)
 
-## Fix
+### Fix
 - Fixed icons in menu
 - fixed following / problem in log in
 
 
 # [v1.1](https://gitlab.com/derSchabi/OCBookmarks/tags/v1.1)
 
-## New
+### New
 - Add support for owncloud (just the cooperate identity).
 - add proguard (minify)
 - Russian translation
 
-## fixes
+### fixes
 - spelling fixes
 - allow to update tags
 
