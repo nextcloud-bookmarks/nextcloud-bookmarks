@@ -1,6 +1,7 @@
 <resources>
     <!-- owncloud/nextcloud -->
     <string name="app_name">Nextcloud Bookmarks</string>
+    <string name="app_name_short">Signets</string>
     <string name="oc_bookmark_login">Identifiant Nextcloud Bookmark</string>
 
     <!-- persistend stuff -->
