@@ -1,6 +1,7 @@
 <resources>
     <!-- owncloud/nextcloud -->
     <string name="app_name">Закладки Nextcloud</string>
+    <string name="app_name_short">Закладки</string>
     <string name="oc_bookmark_login">Вход в Nextcloud Bookmark</string>
 
     <!-- persistend stuff -->
