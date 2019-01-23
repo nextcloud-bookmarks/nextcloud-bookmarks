@@ -21,3 +21,4 @@ and ownCloudBookmarks version [0.10.2](https://marketplace.owncloud.com/apps/boo
 [<img src="assets/nx/screenshots/shot4.png" width="160px>">](assets/nx/screenshots/shot4.png)
 [<img src="assets/nx/screenshots/shot5.png" width="160px>">](assets/nx/screenshots/shot5.png)
 
+Test Edit
