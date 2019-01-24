@@ -18,7 +18,7 @@
                 android:id="@+id/starImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="100dp"
-                app:srcCompat="@drawable/star"
+                app:srcCompat="@drawable/star_new"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:focusable="true"
