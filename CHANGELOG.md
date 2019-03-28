@@ -1,3 +1,9 @@
+# [v1.6](https://gitlab.com/derSchabi/OCBookmarks/tags/v1.6)
+
+- Latest target version update
+- Fix icons
+- Gradle update.
+
 # [v1.5](https://gitlab.com/derSchabi/OCBookmarks/tags/v1.5)
 
 - Fix several translation
