@@ -3,11 +3,7 @@ Owncloud/Nextcloud Bookmarks Android App
 
 [<img src="assets/nx/icon.png" width=160px>](/)
 [![F-Droid](./assets/fdroid_badge.png)](https://f-droid.org/packages/org.schabi.nxbookmarks/)
-[![PlayStore](./assets/ps_badge.png)](https://play.google.com/store/apps/details?id=org.schabi.nxbookmarks)
-
-[<img src="assets/oc/icon.png" width=160px>](/)
-[![F-Droid](./assets/fdroid_badge.png)](https://f-droid.org/packages/org.schabi.nxbookmarks.owncloud/)
-[![PlayStore](./assets/ps_badge.png)](https://play.google.com/store/apps/details?id=org.schabi.nxbookmarks.owncloud)
+[![PlayStore](./assets/ps_badge.png)](https://play.google.com/store/apps/details?id=org.bisw.nxbookmarks)
 
 
 An Android front end for the Nextcloud/Owncloud [Bookmark App](https://github.com/nextcloud/bookmarks/) 
