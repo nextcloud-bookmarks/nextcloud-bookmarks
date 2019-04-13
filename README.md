@@ -3,6 +3,7 @@
 [<img src="assets/nx/icon.png" width=160px>](/)
 [![F-Droid](./assets/fdroid_badge.png)](https://f-droid.org/packages/org.schabi.nxbookmarks/)
 [![PlayStore](./assets/ps_badge.png)](https://play.google.com/store/apps/details?id=org.bisw.nxbookmarks)
+[![Gitter](https://badges.gitter.im/nextcloud-bookmarks/community.svg)](https://gitter.im/nextcloud-bookmarks/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 
 An Android front end for the Nextcloud [Bookmark App](https://github.com/nextcloud/bookmarks/) 
@@ -27,6 +28,3 @@ and ownCloudBookmarks version [0.10.2](https://marketplace.owncloud.com/apps/boo
 
 ## :link: Requirements
 * [Nextcloud](https://nextcloud.com/) instance running.
-
-## :link: gitter
-https://gitter.im/nextcloud-bookmarks/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link
