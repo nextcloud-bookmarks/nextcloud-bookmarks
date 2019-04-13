@@ -27,3 +27,6 @@ and ownCloudBookmarks version [0.10.2](https://marketplace.owncloud.com/apps/boo
 
 ## :link: Requirements
 * [Nextcloud](https://nextcloud.com/) instance running.
+
+## :link: gitter
+https://gitter.im/nextcloud-bookmarks/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link
