@@ -1,5 +1,8 @@
 package org.schabi.ocbookmarks.REST;
 
+import android.util.Log;
+
+import org.apache.commons.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,10 +14,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Date;
 
-import org.apache.commons.codec.binary.Base64;
-
 /**
  * Created by the-scrabi on 14.05.17.
+ * Modified by @dasbiswajit on 14.04.2019
  */
 
 
@@ -24,6 +26,9 @@ public class OCBookmarksRestConnector {
     private String pwd;
 
     private static final int TIME_OUT = 10000; // in milliseconds
+
+    private static final String TAG = "ocbookmarks";
+
 
     public OCBookmarksRestConnector(String owncloudRootUrl, String user, String password) {
         apiRootUrl = owncloudRootUrl + "/index.php/apps/bookmarks/public/rest/v2";
@@ -38,7 +43,11 @@ public class OCBookmarksRestConnector {
         URL url = null;
         try {
             url = new URL(apiRootUrl + relativeUrl);
+            if(apiRootUrl.startsWith("https"))
+            {
+                Log.e(TAG, "apiRootUrl value is https:"+apiRootUrl); //#TODO: add functionality for http and https.
 
+            }
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(methode);
             connection.setConnectTimeout(TIME_OUT);
