@@ -28,3 +28,6 @@ and ownCloudBookmarks version [0.10.2](https://marketplace.owncloud.com/apps/boo
 
 ## :link: Requirements
 * [Nextcloud](https://nextcloud.com/) instance running.
+
+## :link: Contributions
+* All pull requests are welcome.
