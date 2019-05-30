@@ -20,6 +20,8 @@ import java.util.ArrayList;
 
 import static android.os.Build.VERSION.SDK_INT;
 
+//This Class is to handle Edit bookmark activity. Need to fix here for get all listed tags while editing. #TODO
+
 public class EditBookmarkDialog {
     ArrayList<String> tagList = new ArrayList<>();
     Bookmark bookmark;

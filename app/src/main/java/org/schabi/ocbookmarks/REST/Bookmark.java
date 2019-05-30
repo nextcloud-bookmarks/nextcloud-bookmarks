@@ -17,6 +17,7 @@ public class Bookmark {
     private int clickcount = -1;
     private boolean isPublic = false;
     private String[] tags = new String[0];
+    private String[] folders= new String[0];
 
     public static Bookmark emptyInstance() {
         return new Bookmark();
@@ -77,6 +78,10 @@ public class Bookmark {
 
     public Bookmark setPublic(boolean aPublic) {
         isPublic = aPublic;
+        return this;
+    }
+    public Bookmark setFolder(String[] folders) {
+        this.folders = folders;
         return this;
     }
 
