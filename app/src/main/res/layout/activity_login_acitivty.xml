@@ -25,7 +25,7 @@
                 android:focusableInTouchMode="true"/>
 
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/urlInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -42,9 +42,9 @@
                 android:inputType="textUri"
                 android:hint="@string/loginUrlHint"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/userInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,10 +62,10 @@
                 android:inputType="text"/>
 
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/passwordInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
             <TextView
