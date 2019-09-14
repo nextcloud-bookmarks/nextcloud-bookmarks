@@ -17,11 +17,16 @@ and ownCloudBookmarks version [0.10.2](https://marketplace.owncloud.com/apps/boo
 [<img src="assets/nx/screenshots/shot4.png" width=160px>](assets/nx/screenshots/shot4.png)
 [<img src="assets/nx/screenshots/shot5.png" width=160px>](assets/nx/screenshots/shot5.png)
 
+## :link: Planned Feature
+
+* [Folder Structure](https://gitlab.com/bisada/OCBookmarks/issues/17)
+
 ## :link: Issues
 * Please note we have identified Some issues. Please look at [Issue board](https://gitlab.com/bisada/OCBookmarks/issues) before review.
 * Feel free to send us a pull request.
 ## :link: Maintainer
 * [Biswajit Das](https://gitlab.com/bisasda):@bisasda
+
 
 ## :link: Contributors
 * [Biswajit Das](https://gitlab.com/bisasda):@bisasda
