@@ -202,6 +202,14 @@ public class MainActivity extends AppCompatActivity {
                         loginData.url,
                         loginData.user,
                         loginData.password);
+                try{
+                    Log.e(TAG, "folders:"+connector.getFolders());
+                }
+                catch (Exception e){
+                    Log.e(TAG, "folders exception");
+                }
+
+
                 if(bookmark.getId() < 0) {
                     // add new bookmark
                     try {

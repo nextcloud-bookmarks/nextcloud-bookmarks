@@ -57,7 +57,7 @@ public class TagsFragment extends Fragment {
 
         adapter = new TagsRecyclerViewAdapter(getActivity(), false, tagList);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 
         adapter.setOnTagTapedListener(new TagsRecyclerViewAdapter.OnTagTapedListener() {
             @Override

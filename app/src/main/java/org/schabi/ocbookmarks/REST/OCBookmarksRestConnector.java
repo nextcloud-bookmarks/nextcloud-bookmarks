@@ -37,6 +37,22 @@ public class OCBookmarksRestConnector {
         pwd = password;
     }
 
+    public String[] getFolders() throws RequestException{
+        try {
+            JSONArray data = send("GET", "/folder").getJSONArray("data");
+
+            String[] folders = new String[data.length()];
+            for (int i = 0; i < folders.length; i++) {
+                folders[i] = data.getString(i);
+                Log.e(TAG,"Folder: "+folders[i].toString());
+            }
+
+            return folders;
+        } catch (JSONException je) {
+            throw new RequestException("Could not get all folders", je);
+        }
+
+    }
     public JSONObject send(String methode, String relativeUrl) throws RequestException {
         BufferedReader in = null;
         StringBuilder response = new StringBuilder();
@@ -160,20 +176,22 @@ public class OCBookmarksRestConnector {
 
     private Bookmark getBookmarkFromJsonO(JSONObject jBookmark) throws RequestException {
 
-        String[] folders; //here all the folders
-        String folderstring="";
-        try {
-            JSONArray jfolders = jBookmark.getJSONArray("folders");
-            folders = new String[jfolders.length()];
-            for (int j = 0; j < folders.length; j++) {
-                folders[j] = jfolders.getString(j);
-                folderstring =folderstring + "," + folders[j];
-            }
-            Log.e(TAG, "logging of folder:"+folderstring);
+//        String[] folders; //here all the folders
+//        String folderstring="";
+//        try {
+//            JSONArray jfolders = jBookmark.getJSONArray("folders");
+//            folders = new String[jfolders.length()];
+//            for (int j = 0; j < folders.length; j++) {
+//                folders[j] = jfolders.getString(j);
+//                folderstring =folderstring + "," + folders[j];
+//            }
+//            Log.e(TAG, "logging of folder:"+folderstring);
+//
+//        } catch (JSONException je) {
+//            throw new RequestException("Could not parse array", je);
+//        }
 
-        } catch (JSONException je) {
-            throw new RequestException("Could not parse array", je);
-        }
+        Log.d(TAG, jBookmark.toString());
 
 
         String[] tags; //here all the tags loded
@@ -202,12 +220,12 @@ public class OCBookmarksRestConnector {
                     .setUrl(jBookmark.getString("url"))
                     .setTitle(jBookmark.getString("title"))
                     .setUserId(jBookmark.getString("user_id"))
-                    .setDescription(jBookmark.getString("description")+folderstring)
+                    .setDescription(jBookmark.getString("description"))
                     .setPublic(jBookmark.getInt("public") != 0)
                     .setAdded(new Date(jBookmark.getLong("added") * 1000))
                     .setLastModified(new Date(jBookmark.getLong("lastmodified") * 1000))
                     .setClickcount(jBookmark.getInt("clickcount"))
-                    .setFolder(folders)
+                    //.setFolder(folders)
                     .setTags(tags);
         } catch (JSONException je) {
             throw new RequestException("Could not gather all data", je);
