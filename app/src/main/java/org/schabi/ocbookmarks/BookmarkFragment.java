@@ -67,6 +67,9 @@ public class BookmarkFragment extends Fragment {
                 (RecyclerView) rootView.findViewById(R.id.bookmark_recycler_view);
         mAdapter = new BookmarksRecyclerViewAdapter(getActivity());
         recyclerView.setAdapter(mAdapter);
+        /*
+        #TODO: need to add Grid layout for eg: recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        */
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
