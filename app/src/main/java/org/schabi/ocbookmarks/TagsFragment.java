@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 
 /**
@@ -96,6 +97,7 @@ public class TagsFragment extends Fragment {
     }
 
     public void updateData(String[] tags) {
+	Arrays.sort(tags);
         if(refreshLayout != null) {
             refreshLayout.setRefreshing(false);
         }
