@@ -33,8 +33,10 @@
                 android:textStyle="bold" />
 
             <android.support.constraint.ConstraintLayout
+                android:id="@+id/bookmrk_name_constr"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/site_icon"
@@ -42,7 +44,6 @@
                     card_view:layout_constraintLeft_toLeftOf="parent"
                     android:layout_width="72dp"
                     android:layout_height="72dp"
-                    android:layout_centerVertical="true"
                     android:scaleType="fitXY"
                     android:gravity="center"
                     android:padding="15dp"/>
@@ -51,10 +52,9 @@
                     android:id="@+id/item_name_and_size"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:orientation="vertical"
                     card_view:layout_constraintEnd_toEndOf="parent"
-                    card_view:layout_constraintLeft_toRightOf="@+id/site_icon"
+                    card_view:layout_constraintStart_toEndOf="@+id/site_icon"
                     card_view:layout_constraintTop_toTopOf="parent">
 
                     <TextView

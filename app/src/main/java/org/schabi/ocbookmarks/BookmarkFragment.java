@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -70,7 +70,7 @@ public class BookmarkFragment extends Fragment {
         /*
         #TODO: need to add Grid layout for eg: recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         */
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -134,7 +134,7 @@ public class BookmarkFragment extends Fragment {
                 case 0:
                     return new BookmarkHolder(inflater.inflate(R.layout.bookmark_list_item, parent, false));
                 case 1:
-                    return new FooderViewHolder(inflater.inflate(R.layout.bookmark_list_item_fooder, parent, false));
+                    return new FooderViewHolder(inflater.inflate(R.layout.bookmark_list_item_folder, parent, false));
                 default:
                     return null;
             }
@@ -277,8 +277,10 @@ public class BookmarkFragment extends Fragment {
         }
 
         class FooderViewHolder extends RecyclerView.ViewHolder {
+            TextView bookmark_folder_text;
             FooderViewHolder(View view) {
                 super(view);
+                bookmark_folder_text = (TextView)view.findViewById(R.id.bookmark_folder_text);
             }
         }
     }
