@@ -37,22 +37,70 @@ public class OCBookmarksRestConnector {
         pwd = password;
     }
 
-    public String[] getFolders() throws RequestException{
-        try {
-            JSONArray data = send("GET", "/folder").getJSONArray("data");
+    private BookmarkFolder getBookmarkfolderFromJsonO(JSONObject jBookmark) throws RequestException {
 
-            String[] folders = new String[data.length()];
-            for (int i = 0; i < folders.length; i++) {
-                folders[i] = data.getString(i);
-                Log.e(TAG,"Folder: "+folders[i].toString());
+        Log.d(TAG, "Debugging bookmark Folder json" + jBookmark.toString());
+        String[] folders; //here all the folders
+        try {
+            JSONArray jfolders = jBookmark.getJSONArray("folders");
+            folders = new String[jfolders.length()];
+            for (int j = 0; j < folders.length; j++) {
+                folders[j] = jfolders.getString(j);
             }
 
-            return folders;
         } catch (JSONException je) {
-            throw new RequestException("Could not get all folders", je);
+            throw new RequestException("Could not parse array", je);
         }
 
+        //another api error we need to fix
+        if(folders.length == 1 && folders[0].isEmpty()) {
+            folders = new String[0];
+        }
+
+        try {
+            Log.e(TAG, "logging of bookmark Folder:"+jBookmark.toString());
+            return BookmarkFolder.emptyInstance()
+                    .setId(jBookmark.getInt("id"))
+                    .setTitle(jBookmark.getString("title"))
+                    .setParent_folder(jBookmark.getString("parent_folder"))
+                    .setChildren(folders);
+        } catch (JSONException je) {
+            throw new RequestException("Could not gather all data", je);
+        }
     }
+
+    public JSONArray getRawBookmarkFolder() throws RequestException {
+        try {
+            return send("GET", "/folder").getJSONArray("data");
+        } catch (JSONException e) {
+            throw new RequestException("Could not parse data", e);
+        }
+    }
+
+    public BookmarkFolder[] getFromRawfolderJson(JSONArray data) throws RequestException {
+        try {
+            BookmarkFolder[] bookmarks = new BookmarkFolder[data.length()];
+            for (int i = 0; i < data.length(); i++) {
+
+                JSONObject bookmarkfolder = data.getJSONObject(i);
+                bookmarks[i] = getBookmarkfolderFromJsonO(bookmarkfolder);
+            }
+            return bookmarks;
+        } catch (JSONException e) {
+            throw new RequestException("Could not parse data", e);
+        }
+    }
+    public BookmarkFolder[] getFolders() throws RequestException{
+
+  //          JSONArray data = send("GET", "/folder").getJSONArray("data");
+
+            JSONArray data = getRawBookmarkFolder();
+            return getFromRawfolderJson(data);
+
+    }
+
+    //End of bookmark folder
+
     public JSONObject send(String methode, String relativeUrl) throws RequestException {
         BufferedReader in = null;
         StringBuilder response = new StringBuilder();

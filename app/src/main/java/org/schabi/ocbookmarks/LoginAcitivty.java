@@ -115,6 +115,7 @@ public class LoginAcitivty extends AppCompatActivity {
                     new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password);
             try {
                 connector.getBookmarks();
+                connector.getFolders();
                 return OK;
             } catch (RequestException re) {
                 if(BuildConfig.DEBUG) {
