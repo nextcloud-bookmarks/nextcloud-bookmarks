@@ -53,6 +53,7 @@ public class OCBookmarksRestConnector {
             connection.setConnectTimeout(TIME_OUT);
             connection.addRequestProperty("Content-Type", "application/json");
             connection.addRequestProperty("Authorization", "Basic " + new String(Base64.encodeBase64((usr + ":" + pwd).getBytes())));
+            Log.e(TAG,"Connection success!!");
         } catch (Exception e) {
             throw new RequestException("Could not setup request", e);
         }
@@ -179,9 +180,9 @@ public class OCBookmarksRestConnector {
                     .setId(jBookmark.getInt("id"))
                     .setUrl(jBookmark.getString("url"))
                     .setTitle(jBookmark.getString("title"))
-                    .setUserId(jBookmark.getString("user_id"))
+                    .setUserId(jBookmark.getString("userId"))
                     .setDescription(jBookmark.getString("description"))
-                    .setPublic(jBookmark.getInt("public") != 0)
+                    //.setPublic(false) //dummy to false for version 2 to 3 upgrade.
                     .setAdded(new Date(jBookmark.getLong("added") * 1000))
                     .setLastModified(new Date(jBookmark.getLong("lastmodified") * 1000))
                     .setClickcount(jBookmark.getInt("clickcount"))
@@ -206,9 +207,9 @@ public class OCBookmarksRestConnector {
         if(!bookmark.getDescription().isEmpty()) {
             url += "&description=" + URLEncoder.encode(bookmark.getDescription());
         }
-        if(bookmark.isPublic()) {
-            url += "&is_public=1";
-        }
+//        if(bookmark.isPublic()) {
+//            url += "&is_public=1";
+//        }
 
         for(String tag : bookmark.getTags()) {
             url += "&" + URLEncoder.encode("item[tags][]") + "=" + URLEncoder.encode(tag);
@@ -221,6 +222,8 @@ public class OCBookmarksRestConnector {
         try {
             if (bookmark.getId() == -1) {
                 String url = "/bookmark" + createBookmarkParameter(bookmark);
+
+                Log.e(TAG,"url String"+url);
 
                 JSONObject replay = send("POST", url);
                 return getBookmarkFromJsonO(replay.getJSONObject("item"));

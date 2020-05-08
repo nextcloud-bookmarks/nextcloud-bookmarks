@@ -15,7 +15,7 @@ public class Bookmark {
     private Date added = null;
     private Date lastModified = null;
     private int clickcount = -1;
-    private boolean isPublic = false;
+//    private boolean isPublic = false;
     private String[] tags = new String[0];
 
     public static Bookmark emptyInstance() {
@@ -75,10 +75,10 @@ public class Bookmark {
         return this;
     }
 
-    public Bookmark setPublic(boolean aPublic) {
-        isPublic = aPublic;
-        return this;
-    }
+//    public Bookmark setPublic(boolean aPublic) {
+//        isPublic = aPublic;
+//        return this;
+//    }
 
     // +++++++++++++++++++++++++
     // +   getter functions    +
@@ -112,9 +112,9 @@ public class Bookmark {
     public String[] getTags() {
         return tags;
     }
-    public boolean isPublic() {
-        return isPublic;
-    }
+//    public boolean isPublic() {
+//        return isPublic;
+//    }
 
     @Override
     public String toString() {
@@ -131,8 +131,8 @@ public class Bookmark {
                 "added:" + added.toString() + "\n" +
                 "lastModified:" + lastModified.toString() + "\n" +
                 "clickount:" + clickcount + "\n" +
-                "tags:" + tagsString + "\n" +
-                "isPublic:" + Boolean.toString(isPublic);
+                "tags:" + tagsString;
+//                "isPublic:" + Boolean.toString(isPublic);
     }
 
 
