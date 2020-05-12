@@ -12,7 +12,7 @@ public class Bookmark {
     private String title = "";
     private String userId = "";
     private String description = "";
-    private Date added = null;
+//    private Date added = null;
     private Date lastModified = null;
     private int clickcount = -1;
 //    private boolean isPublic = false;
@@ -55,10 +55,10 @@ public class Bookmark {
         return this;
     }
 
-    public Bookmark setAdded(Date added) {
-        this.added = added;
-        return this;
-    }
+//    public Bookmark setAdded(Date added) {
+//        this.added = added;
+//        return this;
+//    }
 
     public Bookmark setLastModified(Date lastModified) {
         this.lastModified = lastModified;
@@ -100,9 +100,9 @@ public class Bookmark {
     public String getDescription() {
         return description;
     }
-    public Date getAdded() {
-        return added;
-    }
+//    public Date getAdded() {
+//        return added;
+//    }
     public Date getLastModified() {
         return lastModified;
     }
@@ -128,7 +128,7 @@ public class Bookmark {
                 "title:" + title + "\n" +
                 "userId:" + userId + "\n" +
                 "description:" + description + "\n" +
-                "added:" + added.toString() + "\n" +
+//                "added:" + added.toString() + "\n" +
                 "lastModified:" + lastModified.toString() + "\n" +
                 "clickount:" + clickcount + "\n" +
                 "tags:" + tagsString;
