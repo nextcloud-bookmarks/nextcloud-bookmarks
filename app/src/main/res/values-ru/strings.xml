@@ -28,6 +28,7 @@
     <string name="could_not_update_tag">Не могу обновить метку</string>
     <string name="could_not_delete_tag">Не могу удалить метку</string>
     <string name="no_url_entered">Не был введён URL</string>
+    <string name="no_title_entered">Не введено название</string>
     <string name="could_not_add_bookmark">Не могу добавить закладку</string>
     <string name="could_not_change_bookmark">Ошибка изменения закладки</string>
     <string name="could_not_delete_bookmark">Ошибка удаления закладки</string>

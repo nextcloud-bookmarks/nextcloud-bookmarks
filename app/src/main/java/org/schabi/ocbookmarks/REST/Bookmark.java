@@ -5,6 +5,7 @@ import java.util.Vector;
 
 /**
  * Created by the-scrabi on 14.05.17.
+ * modified by bisasda
  */
 public class Bookmark {
     private int id = -1;
