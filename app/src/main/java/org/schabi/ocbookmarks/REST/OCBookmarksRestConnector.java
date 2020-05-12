@@ -53,6 +53,7 @@ public class OCBookmarksRestConnector {
             connection.setConnectTimeout(TIME_OUT);
             connection.addRequestProperty("Content-Type", "application/json");
             connection.addRequestProperty("Authorization", "Basic " + new String(Base64.encodeBase64((usr + ":" + pwd).getBytes())));
+            Log.e(TAG, "Connection String for Debug!"+url.toString()); //For Debug purpose
             Log.e(TAG,"Connection success!!");
         } catch (Exception e) {
             throw new RequestException("Could not setup request", e);
