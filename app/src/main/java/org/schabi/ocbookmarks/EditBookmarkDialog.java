@@ -1,18 +1,19 @@
 package org.schabi.ocbookmarks;
 
-import android.graphics.Color;
-import androidx.appcompat.app.AlertDialog;
+import android.app.Activity;
 import android.content.Context;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import androidx.appcompat.widget.Toolbar;
-import android.app.Activity;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.schabi.ocbookmarks.REST.Bookmark;
 
@@ -45,6 +46,7 @@ public class EditBookmarkDialog {
         final EditText urlInput = (EditText) view.findViewById(R.id.urlInput);
         final EditText titleInput = (EditText) view.findViewById(R.id.titleInput);
         final EditText descriptionInput = (EditText) view.findViewById(R.id.descriptionInput);
+
         String dialogTitle = null;
 
         if(b == null) {
@@ -84,14 +86,25 @@ public class EditBookmarkDialog {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                //Here Actually we are saving Data to NextCloud
                 if(item.getItemId() == R.id.save_menu) {
                     bookmark.setUrl(urlInput.getText().toString());
                     bookmark.setTitle(titleInput.getText().toString());
-                    bookmark.setDescription(descriptionInput.getText().toString());
+                    if(descriptionInput.getText().length()!=0)
+                    {
+                        bookmark.setDescription(descriptionInput.getText().toString());
+                    }
+                    else {
+                        bookmark.setDescription(" "); //v3 api does not accept null value.
+                    }
 
-                    if(bookmark.getUrl().isEmpty()) {
+
+                    if(bookmark.getUrl().isEmpty()){
                         Toast.makeText(context, R.string.no_url_entered, Toast.LENGTH_SHORT).show();
-                    } else {
+                    } else if(bookmark.getTitle().isEmpty()) {
+                        Toast.makeText(context, R.string.no_title_entered, Toast.LENGTH_SHORT).show();
+                    }
+                    else {
                         String[] tags = new String[tagList.size()];
                         for (int i = 0; i < tags.length; i++) {
                             tags[i] = tagList.get(i);

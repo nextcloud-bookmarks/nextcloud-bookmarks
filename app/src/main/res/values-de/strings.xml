@@ -29,6 +29,7 @@
     <string name="could_not_update_tag">Tag konnte nicht aktualisiert werden.</string>
     <string name="could_not_delete_tag">Tag konnte nicht gelöscht werden.</string>
     <string name="no_url_entered">Keine URL eingegeben</string>
+    <string name="no_title_entered">Kein Titel eingegeben</string>
     <string name="could_not_add_bookmark">Lesezeichen konnte nicht hinzugefügt werden</string>
     <string name="could_not_change_bookmark">Lesezeichen konnte nicht geändert werden</string>
     <string name="could_not_delete_bookmark">Lesezeichen konnte nicht gelöscht werden</string>
