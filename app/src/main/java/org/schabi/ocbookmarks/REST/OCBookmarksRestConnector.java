@@ -183,7 +183,7 @@ public class OCBookmarksRestConnector {
                     .setUserId(jBookmark.getString("userId"))
                     .setDescription(jBookmark.getString("description"))
                     //.setPublic(false) //dummy to false for version 2 to 3 upgrade.
-                    .setAdded(new Date(jBookmark.getLong("added") * 1000))
+//                    .setAdded(new Date(jBookmark.getLong("added") * 1000))
                     .setLastModified(new Date(jBookmark.getLong("lastmodified") * 1000))
                     .setClickcount(jBookmark.getInt("clickcount"))
                     .setTags(tags);
