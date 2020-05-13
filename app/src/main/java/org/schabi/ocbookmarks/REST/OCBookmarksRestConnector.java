@@ -213,7 +213,7 @@ public class OCBookmarksRestConnector {
 //        }
 
         for(String tag : bookmark.getTags()) {
-            url += "&" + URLEncoder.encode("item[tags][]") + "=" + URLEncoder.encode(tag);
+            url += "&" + URLEncoder.encode("tags[]") + "=" + URLEncoder.encode(tag);
         }
 
         return url;
