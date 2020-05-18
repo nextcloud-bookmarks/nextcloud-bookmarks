@@ -11,6 +11,7 @@ android {
         applicationId "org.bisw.nxbookmarks"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    flavorDimensions "default"
     buildTypes {
         release {
             minifyEnabled true
@@ -23,6 +24,15 @@ android {
             applicationIdSuffix ".owncloud"
         }
     }
+    productFlavors {
+        fdroid {
+            applicationId "org.schabi.bookmarks"
+        }
+        playstore {
+            applicationId "org.bisw.nxbookmarks"
+        }
+    }
+
     lintOptions {
         checkReleaseBuilds false
         // Or, if you prefer, you can continue to check for errors in release builds,
