@@ -26,10 +26,7 @@ android {
     }
     productFlavors {
         fdroid {
-            applicationId "org.schabi.bookmarks"
-        }
-        playstore {
-            applicationId "org.bisw.nxbookmarks"
+            applicationId "org.schabi.nxbookmarks"
         }
     }
 
