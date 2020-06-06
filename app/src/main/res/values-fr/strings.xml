@@ -37,6 +37,7 @@
     <string name="bookmark_saved">Marque-page sauvegardé</string>
     <string name="reload_icons">Recharger les Icônes</string>
     <string name="connectino_failed">La connexion a échoué</string>
+    <string name="content_desc_tap_to_refresh">Tapoter pour rafraîchir</string>
 
     <!-- login errors -->
     <string name="connection_failed_login">La connexion a échoué. Vérifiez\n
@@ -53,4 +54,9 @@
        &#x2022; Vous avez un accès Internet.\n
        &#x2022; L\'URL est correcte.\n
        &#x2022; Vous avez entré le bon numéro de port.</string>
+    <string name="email_subject">Aide de NextCloud BookMarks!</string>
+    <string name="email_body">Veuillez expliquer le problème ci-dessous</string>
+    <string name="support_email">biswajitbangalore@gmail.com</string>
+    <string name="send_email">envoyer un e-mail</string>
+    <string name="E_mail">E-mail</string>
 </resources>

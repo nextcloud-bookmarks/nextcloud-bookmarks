@@ -15,4 +15,6 @@
     <!-- edit text dialog -->
     <color name="editTitlebarTextColor">#ffffff</color>
 
+    <color name="app_drawer_feed_list_background_color">#ededed</color>
+
 </resources>
