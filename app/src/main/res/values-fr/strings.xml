@@ -2,7 +2,7 @@
     <!-- owncloud/nextcloud -->
     <string name="app_name">Nextcloud Bookmarks</string>
     <string name="app_name_short">Signets</string>
-    <string name="oc_bookmark_login">Identifiant Nextcloud Bookmark</string>
+    <string name="oc_bookmark_login"></string>
 
     <!-- persistend stuff -->
     <string name="action_change_login">Changer l\'Identifiant</string>
@@ -59,4 +59,5 @@
     <string name="support_email">biswajitbangalore@gmail.com</string>
     <string name="send_email">envoyer un e-mail</string>
     <string name="E_mail">E-mail</string>
+    <string name="content_desc_show_password">afficher le mot de passe</string>
 </resources>

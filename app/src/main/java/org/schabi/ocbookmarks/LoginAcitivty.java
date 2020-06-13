@@ -3,14 +3,16 @@ package org.schabi.ocbookmarks;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import androidx.core.content.SharedPreferencesCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.schabi.ocbookmarks.REST.OCBookmarksRestConnector;
 import org.schabi.ocbookmarks.REST.RequestException;
@@ -25,6 +27,7 @@ public class LoginAcitivty extends AppCompatActivity {
     private static final int HOST_NOT_FOUND= 2;
     private static final int FILE_NOT_FOUND = 3;
     private static final int TIME_OUT = 4;
+    private boolean mPasswordVisible = false;
 
     LoginData loginData = new LoginData();
 
@@ -34,6 +37,7 @@ public class LoginAcitivty extends AppCompatActivity {
     Button connectButton;
     ProgressBar progressBar;
     TextView errorView;
+    ImageView mImageViewShowPwd;
 
     SharedPreferences sharedPrefs;
 
@@ -52,15 +56,20 @@ public class LoginAcitivty extends AppCompatActivity {
         connectButton = (Button) findViewById(R.id.connectButton);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         errorView = (TextView) findViewById(R.id.loginErrorView);
+        mImageViewShowPwd= (ImageView) findViewById(R.id.imgView_ShowPassword);
 
         errorView.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
 
+        mImageViewShowPwd.setOnClickListener(ImgViewShowPasswordListener);
         sharedPrefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         urlInput.setText(sharedPrefs.getString(getString(R.string.login_url), ""));
         userInput.setText(sharedPrefs.getString(getString(R.string.login_user), ""));
         passwordInput.setText(sharedPrefs.getString(getString(R.string.login_pwd), ""));
 
+        if(!passwordInput.getText().toString().isEmpty()) {
+            mImageViewShowPwd.setVisibility(View.GONE);
+        }
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,6 +86,18 @@ public class LoginAcitivty extends AppCompatActivity {
         });
     }
 
+    private View.OnClickListener ImgViewShowPasswordListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mPasswordVisible = !mPasswordVisible;
+
+            if(mPasswordVisible) {
+                passwordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            } else {
+                passwordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            }
+        }
+    };
     private String fixUrl(String rawUrl) {
         if(!rawUrl.startsWith("http")) {
             rawUrl = "https://" + rawUrl;

@@ -50,10 +50,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
+                app:counterOverflowTextColor="@android:color/white"
+                android:theme="@style/TextInputLayoutAppearance"
                 android:layout_marginTop="55dp"
                 android:layout_below="@+id/urlInputLayout">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/userInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,12 +98,28 @@
                 android:textColor="@color/login_error_color"
                 android:textSize="18sp" />
 
+            <ImageView
+                android:id="@+id/imgView_ShowPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/passwordInputLayout"
+                android:layout_alignEnd="@+id/passwordInputLayout"
+                android:layout_alignBottom="@+id/passwordInputLayout"
+                android:layout_gravity="end"
+                android:contentDescription="@string/content_desc_show_password"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:src="@drawable/ic_action_visibility"
+                android:layout_alignRight="@+id/passwordInputLayout" />
+
             <Button
                 android:id="@+id/connectButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/shape"
                 android:layout_below="@id/loginErrorView"
                 android:layout_centerHorizontal="true"
+                android:padding="16dp"
                 android:layout_marginTop="18dp"
                 android:text="@string/connect" />
 
