@@ -26,6 +26,18 @@ and ownCloudBookmarks version [0.10.2](https://marketplace.owncloud.com/apps/boo
 ## :link: Maintainer
 * [Biswajit Das](https://gitlab.com/bisasda):@bisasda
 
+## :link: How to compile the App
+
+## :label: Requirements:
+-------------
+  1. Android Studio
+
+:arrow_down_small: Download and install:
+
+  1. Open cmd/terminal
+  2. Navigate to your workspace
+  3. Then type in: `git clone https://gitlab.com/bisada/OCBookmarks.git`
+  4. Import the Project in Android Studio and start coding!
 
 ## :link: Contributors
 * [Biswajit Das](https://gitlab.com/bisasda):@bisasda
