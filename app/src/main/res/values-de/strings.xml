@@ -2,7 +2,7 @@
     <!-- owncloud/nextcloud -->
     <string name="app_name">Nextcloud Lesezeichen</string>
     <string name="app_name_short">Lesezeichen</string>
-    <string name="oc_bookmark_login">Nextcloud Lesezeichen Anmeldung</string>
+    <string name="oc_bookmark_login"></string>
 
     <!-- persistend stuff -->
     <string name="action_change_login">Anmeldedaten ändern</string>
@@ -49,4 +49,5 @@
     <string name="support_email">biswajitbangalore@gmail.com</string>
     <string name="send_email">E-Mail senden</string>
     <string name="E_mail">E-mail</string>
+    <string name="content_desc_show_password">Passwort anzeigen</string>
 </resources>
