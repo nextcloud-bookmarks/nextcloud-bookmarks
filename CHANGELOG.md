@@ -1,3 +1,6 @@
+# [v1.12](https://gitlab.com/bisada/OCBookmarks/tags/v1.12)
+
+- New Login screen design. Show/Hide password in login screen. 
 
 # [v1.11](https://gitlab.com/bisada/OCBookmarks/tags/v1.11)
 
@@ -15,7 +18,7 @@
 
 - V3 API Fix!
 - This is an intermediate release!!
-- Known issues are documented here : https://github.com/nextcloud/bookmarks/issues/1012 
+- Known issues are documented here : <https://github.com/nextcloud/bookmarks/issues/1012> 
 
 # [v1.6](https://gitlab.com/bisada/OCBookmarks/tags/v1.6)
 
