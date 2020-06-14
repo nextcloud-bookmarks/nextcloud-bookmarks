@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     private static LoginData loginData;
 
     private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle mToggle;
     private NavigationView navigationview;
     SharedPreferences sharedPrefs;
 
@@ -83,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
         //Get Navigationview and do the action
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         navigationview = (NavigationView)findViewById(R.id.nvView);
+        mToggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
+        drawerLayout.addDrawerListener(mToggle);
+        mToggle.syncState();
         navigationview.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -114,6 +119,9 @@ public class MainActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
 
 
         // Create the adapter that will return a fragment for each of the three
@@ -392,6 +400,10 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        if(mToggle.onOptionsItemSelected(item))
+        {
+            return true;
+        }
         //noinspection SimplifiableIfStatement
         switch(id) {
             case R.id.action_change_login:
