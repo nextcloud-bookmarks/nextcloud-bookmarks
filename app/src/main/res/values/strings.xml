@@ -50,4 +50,7 @@
     <string name="send_email">Send Email</string>
     <string name="E_mail">E-mail</string>
     <string name="content_desc_show_password">show password</string>
+    
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 </resources>
