@@ -123,6 +123,17 @@
                 android:layout_marginTop="18dp"
                 android:text="@string/connect" />
 
+            <Button
+                android:id="@+id/ssoButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape"
+                android:layout_below="@id/connectButton"
+                android:layout_centerHorizontal="true"
+                android:padding="16dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/connect_sso" />
+
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyle"
