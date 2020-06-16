@@ -1,10 +1,12 @@
 package org.schabi.ocbookmarks;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,7 +14,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.nextcloud.android.sso.AccountImporter;
+import com.nextcloud.android.sso.exceptions.AccountImportCancelledException;
+import com.nextcloud.android.sso.exceptions.AndroidGetAccountsPermissionNotGranted;
+import com.nextcloud.android.sso.exceptions.NextcloudFilesAppNotInstalledException;
+import com.nextcloud.android.sso.ui.UiExceptionManager;
 
 import org.schabi.ocbookmarks.REST.OCBookmarksRestConnector;
 import org.schabi.ocbookmarks.REST.RequestException;
@@ -35,6 +44,7 @@ public class LoginAcitivty extends AppCompatActivity {
     EditText userInput;
     EditText passwordInput;
     Button connectButton;
+    Button ssoButton;
     ProgressBar progressBar;
     TextView errorView;
     ImageView mImageViewShowPwd;
@@ -54,6 +64,7 @@ public class LoginAcitivty extends AppCompatActivity {
         userInput = (EditText) findViewById(R.id.userInput);
         passwordInput = (EditText) findViewById(R.id.passwordInput);
         connectButton = (Button) findViewById(R.id.connectButton);
+        ssoButton= (Button) findViewById(R.id.ssoButton);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         errorView = (TextView) findViewById(R.id.loginErrorView);
         mImageViewShowPwd= (ImageView) findViewById(R.id.imgView_ShowPassword);
@@ -84,7 +95,42 @@ public class LoginAcitivty extends AppCompatActivity {
                 connectButton.setVisibility(View.INVISIBLE);
             }
         });
+        ssoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    AccountImporter.pickNewAccount(LoginAcitivty.this);
+                }
+                catch (NextcloudFilesAppNotInstalledException e)
+                {
+                    UiExceptionManager.showDialogForException(LoginAcitivty.this, e);
+                } catch (AndroidGetAccountsPermissionNotGranted e)
+                { UiExceptionManager.showDialogForException(LoginAcitivty.this, e); }
+            }
+        });
+
+
     }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        try {
+            AccountImporter.onActivityResult(requestCode, resultCode, data, this, (account) -> {
+                // When you reached this one time you will have access to the API
+            });
+        } catch (AccountImportCancelledException e) {
+            Log.i("log", "Account import has been canceled.");
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        AccountImporter.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
 
     private View.OnClickListener ImgViewShowPasswordListener = new View.OnClickListener() {
         @Override
