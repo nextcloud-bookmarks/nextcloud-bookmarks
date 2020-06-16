@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-
+        //mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
