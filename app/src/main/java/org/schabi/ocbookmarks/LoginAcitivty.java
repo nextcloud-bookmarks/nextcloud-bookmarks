@@ -1,5 +1,6 @@
 package org.schabi.ocbookmarks;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +22,7 @@ import com.nextcloud.android.sso.AccountImporter;
 import com.nextcloud.android.sso.exceptions.AccountImportCancelledException;
 import com.nextcloud.android.sso.exceptions.AndroidGetAccountsPermissionNotGranted;
 import com.nextcloud.android.sso.exceptions.NextcloudFilesAppNotInstalledException;
+import com.nextcloud.android.sso.helper.SingleAccountHelper;
 import com.nextcloud.android.sso.ui.UiExceptionManager;
 
 import org.schabi.ocbookmarks.REST.OCBookmarksRestConnector;
@@ -87,6 +89,8 @@ public class LoginAcitivty extends AppCompatActivity {
                 loginData.url = fixUrl(urlInput.getText().toString());
                 loginData.user = userInput.getText().toString();
                 loginData.password = passwordInput.getText().toString();
+                loginData.ssologin = false;
+                loginData.token = "";
                 urlInput.setText(loginData.url);
 
                 testLoginTask = new TestLoginTask();
@@ -117,7 +121,19 @@ public class LoginAcitivty extends AppCompatActivity {
 
         try {
             AccountImporter.onActivityResult(requestCode, resultCode, data, this, (account) -> {
-                // When you reached this one time you will have access to the API
+                SingleAccountHelper.setCurrentAccount(this,account.name);
+                loginData.url=account.url;
+                loginData.user=account.userId;
+                loginData.ssologin = true;
+                loginData.token = account.token;;
+                loginData.password="";
+//                storeLogin(loginData);
+                finish();
+                testLoginTask = new TestLoginTask();
+                testLoginTask.execute(loginData);
+                progressBar.setVisibility(View.VISIBLE);
+                connectButton.setVisibility(View.INVISIBLE);
+                ssoButton.setVisibility(View.INVISIBLE);
             });
         } catch (AccountImportCancelledException e) {
             Log.i("log", "Account import has been canceled.");
@@ -154,11 +170,20 @@ public class LoginAcitivty extends AppCompatActivity {
         return rawUrl;
     }
 
+    @SuppressLint("ResourceType")
     private void storeLogin(LoginData loginData) {
         SharedPreferences.Editor editor = sharedPrefs.edit();
         editor.putString(getString(R.string.login_url), loginData.url);
         editor.putString(getString(R.string.login_user), loginData.user);
-        editor.putString(getString(R.string.login_pwd), loginData.password);
+        editor.putBoolean(getString(R.string.ssologin), loginData.ssologin);
+        if (loginData.ssologin){
+            editor.putString(getString(R.string.login_token), loginData.token);
+        }
+        else
+        {
+            editor.putString(getString(R.string.login_pwd), loginData.password);
+        }
+
         editor.apply();
     }
 
@@ -178,7 +203,7 @@ public class LoginAcitivty extends AppCompatActivity {
         protected Integer doInBackground(LoginData... loginDatas) {
             LoginData loginData = loginDatas[0];
             OCBookmarksRestConnector connector =
-                    new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password);
+                    new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token, loginData.ssologin);
             try {
                 connector.getBookmarks();
                 return OK;
