@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -50,6 +51,8 @@ public class LoginAcitivty extends AppCompatActivity {
     ProgressBar progressBar;
     TextView errorView;
     ImageView mImageViewShowPwd;
+    TextView mtv_manual_login;
+    RelativeLayout mOldLoginWrapper;
 
     SharedPreferences sharedPrefs;
 
@@ -70,9 +73,11 @@ public class LoginAcitivty extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         errorView = (TextView) findViewById(R.id.loginErrorView);
         mImageViewShowPwd= (ImageView) findViewById(R.id.imgView_ShowPassword);
-
+        mOldLoginWrapper=(RelativeLayout) findViewById(R.id.old_login_wrapper);
+        mtv_manual_login= (TextView) findViewById(R.id.tv_manual_login);
         errorView.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
+
 
         mImageViewShowPwd.setOnClickListener(ImgViewShowPasswordListener);
         sharedPrefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
@@ -147,6 +152,14 @@ public class LoginAcitivty extends AppCompatActivity {
         AccountImporter.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
+
+    public void onClick(View v) {
+        if (mOldLoginWrapper.getVisibility() == View.VISIBLE) {
+            mOldLoginWrapper.setVisibility(View.INVISIBLE);
+        } else {
+            mOldLoginWrapper.setVisibility(View.VISIBLE);
+        }
+    }
 
     private View.OnClickListener ImgViewShowPasswordListener = new View.OnClickListener() {
         @Override

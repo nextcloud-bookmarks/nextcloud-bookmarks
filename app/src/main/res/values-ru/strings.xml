@@ -58,5 +58,6 @@
     <string name="send_email">отправить письмо</string>
     <string name="E_mail">E-mail</string>
     <string name="content_desc_show_password">показать пароль</string>
-    <string name="connect_sso">Sign SSO</string>
+    <string name="connect_sso">Nextcloud Single Sign On (SSO)</string>
+    <string name="login_manual">Стандартный вход</string>
 </resources>
