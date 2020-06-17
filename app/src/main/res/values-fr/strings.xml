@@ -60,4 +60,6 @@
     <string name="send_email">envoyer un e-mail</string>
     <string name="E_mail">E-mail</string>
     <string name="content_desc_show_password">afficher le mot de passe</string>
+    <string name="connect_sso">Authentification unique Nextcloud (SSO)</string>
+    <string name="login_manual">Connexion manuelle</string>
 </resources>
