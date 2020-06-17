@@ -1,3 +1,7 @@
+# [v1.13](https://gitlab.com/bisada/OCBookmarks/tags/v1.13)
+
+- SSO initial release. 
+
 # [v1.12](https://gitlab.com/bisada/OCBookmarks/tags/v1.12)
 
 - New Login screen design. Show/Hide password in login screen. 
