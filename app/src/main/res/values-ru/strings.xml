@@ -2,7 +2,7 @@
     <!-- owncloud/nextcloud -->
     <string name="app_name">Закладки Nextcloud</string>
     <string name="app_name_short">Закладки</string>
-    <string name="oc_bookmark_login">Вход в Nextcloud Bookmark</string>
+    <string name="oc_bookmark_login"></string>
 
     <!-- persistend stuff -->
     <string name="action_change_login">Сменить аккаунт</string>
@@ -37,6 +37,7 @@
     <string name="reload_icons">Загрузить значки заново</string>
     <string name="connectino_failed">Ошибка подключения</string>
     <string name="sure_to_delete_bookmark">Удалить эту закладку?</string>
+    <string name="content_desc_tap_to_refresh">коснитесь для обновления</string>
 
     <!-- login errors -->
     <string name="connection_failed_login">Ошибка подключения. Проверьте\n
@@ -51,4 +52,12 @@
  • Наличие доступа в сеть\n
  • Правильность URL\n
  • Номер порта</string>
+    <string name="email_subject">Справка NextCloud BookMarks!</string>
+    <string name="email_body">Пожалуйста, объясните проблему ниже</string>
+    <string name="support_email">biswajitbangalore@gmail.com</string>
+    <string name="send_email">отправить письмо</string>
+    <string name="E_mail">E-mail</string>
+    <string name="content_desc_show_password">показать пароль</string>
+    <string name="connect_sso">Nextcloud Single Sign On (SSO)</string>
+    <string name="login_manual">Стандартный вход</string>
 </resources>

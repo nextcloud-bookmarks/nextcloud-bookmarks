@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!--             - NextCloud colors -     -->
     <color name="colorPrimary">#0082c9</color>
@@ -14,5 +14,8 @@
 
     <!-- edit text dialog -->
     <color name="editTitlebarTextColor">#ffffff</color>
+
+    <color name="app_drawer_feed_list_background_color">#ededed</color>
+    <color name="material_red_600" tools:override="true">#e53935</color>
 
 </resources>
