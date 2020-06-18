@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.nextcloud.android.sso.AccountImporter;
+import com.nextcloud.android.sso.BuildConfig;
 import com.nextcloud.android.sso.exceptions.AccountImportCancelledException;
 import com.nextcloud.android.sso.exceptions.AndroidGetAccountsPermissionNotGranted;
 import com.nextcloud.android.sso.exceptions.NextcloudFilesAppNotInstalledException;
@@ -216,7 +217,7 @@ public class LoginAcitivty extends AppCompatActivity {
         protected Integer doInBackground(LoginData... loginDatas) {
             LoginData loginData = loginDatas[0];
             OCBookmarksRestConnector connector =
-                    new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token, loginData.ssologin);
+                    new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token, loginData.ssologin,LoginAcitivty.this);
             try {
                 connector.getBookmarks();
                 return OK;

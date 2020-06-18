@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
                                 loginData.user,
                                 loginData.password,
                                 loginData.token,
-                                loginData.ssologin);
+                                loginData.ssologin, MainActivity.this);
                         try {
                             connector.deleteBookmark(bookmark);
                         } catch (Exception e) {
@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
                         loginData.user,
                         loginData.password,
                         loginData.token,
-                        loginData.ssologin);
+                        loginData.ssologin,MainActivity.this);
                 if(bookmark.getId() < 0) {
                     // add new bookmark
                     try {
@@ -310,7 +310,8 @@ public class MainActivity extends AppCompatActivity {
                                         loginData.user,
                                         loginData.password,
                                         loginData.token,
-                                        loginData.ssologin);
+                                        loginData.ssologin,
+                                        MainActivity.this);
                         try {
                             connector.renameTag(oldTag, newTag);
                         } catch (Exception e) {
@@ -343,7 +344,8 @@ public class MainActivity extends AppCompatActivity {
                                 loginData.user,
                                 loginData.password,
                                 loginData.token,
-                                loginData.ssologin);
+                                loginData.ssologin,
+                                MainActivity.this);
                         try {
                             connector.deleteTag(tag);
                         } catch (Exception e) {
@@ -480,7 +482,7 @@ public class MainActivity extends AppCompatActivity {
         protected Bookmark[] doInBackground(Void... bla) {
             try {
                 OCBookmarksRestConnector connector =
-                        new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token,loginData.ssologin);
+                        new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token,loginData.ssologin,MainActivity.this);
                 JSONArray data = connector.getRawBookmarks();
                 storeToFile(data);
                 return connector.getFromRawJson(data);
@@ -521,7 +523,8 @@ public class MainActivity extends AppCompatActivity {
                                 loginData.user,
                                 loginData.password,
                                 loginData.token,
-                                loginData.ssologin);
+                                loginData.ssologin,
+                                MainActivity.this);
                 Bookmark[] bookmarks = connector.getFromRawJson(new JSONArray(text.toString()));
                 mTagsFragment.updateData(Bookmark.getTagsFromBookmarks(bookmarks));
                 mBookmarkFragment.updateData(bookmarks);

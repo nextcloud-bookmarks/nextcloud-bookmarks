@@ -1,6 +1,17 @@
 package org.schabi.ocbookmarks.REST;
 
+import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
+
+import com.google.gson.GsonBuilder;
+import com.nextcloud.android.sso.aidl.NextcloudRequest;
+import com.nextcloud.android.sso.api.NextcloudAPI;
+import com.nextcloud.android.sso.api.Response;
+import com.nextcloud.android.sso.exceptions.NextcloudFilesAppAccountNotFoundException;
+import com.nextcloud.android.sso.exceptions.NoCurrentAccountSelectedException;
+import com.nextcloud.android.sso.helper.SingleAccountHelper;
+import com.nextcloud.android.sso.model.SingleSignOnAccount;
 
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONArray;
@@ -8,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -26,71 +38,156 @@ public class OCBookmarksRestConnector {
     private String pwd;
     private String token;
     private boolean mSsologin;
+    private NextcloudAPI mNextcloudAPI;
+    private Context context;
+
 
     private static final int TIME_OUT = 10000; // in milliseconds
 
     private static final String TAG = "ocbookmarks";
 
 
-    public OCBookmarksRestConnector(String owncloudRootUrl, String user, String password, String mtoken, boolean Ssologin) {
+    public OCBookmarksRestConnector(String owncloudRootUrl, String user, String password, String mtoken, boolean Ssologin, Context con) {
         apiRootUrl = owncloudRootUrl + "/index.php/apps/bookmarks/public/rest/v2";
         usr = user;
         pwd = password;
         token = mtoken;
         mSsologin =Ssologin;
+        context = con;
+    }
+
+    private NextcloudAPI.ApiConnectedListener apiCallback = new NextcloudAPI.ApiConnectedListener() {
+        @Override
+        public void onConnected() {
+            // ignore this one..
+        }
+
+        @Override
+        public void onError(Exception ex) {
+            // TODO handle error in your app
+        }
+    };
+
+    private void downloadFile() {
+        NextcloudRequest nextcloudRequest = new NextcloudRequest.Builder()
+                .setMethod("GET")
+                .setUrl(Uri.encode("/remote.php/webdav/sample movie.mp4","/"))
+                .build();
+
+        try {
+            InputStream inputStream = mNextcloudAPI.performNetworkRequest(nextcloudRequest);
+            while(inputStream.available() > 0) {
+                inputStream.read();
+                // TODO do something useful with the data here..
+                // like writing it to a file..?
+            }
+            inputStream.close();
+        } catch (Exception e) {
+            // TODO handle errors
+        }
+    }
+
+
+    protected void onStop() {
+        // Close Service Connection to Nextcloud Files App and
+        // disconnect API from Context (prevent Memory Leak)
+        mNextcloudAPI.stop();
     }
 
     public JSONObject send(String methode, String relativeUrl) throws RequestException {
         BufferedReader in = null;
         StringBuilder response = new StringBuilder();
-        HttpURLConnection connection = null;
+        HttpURLConnection connection=null;
         URL url = null;
-        try {
-            url = new URL(apiRootUrl + relativeUrl);
-            if(apiRootUrl.startsWith("https"))
-            {
-                Log.e(TAG, "apiRootUrl value is https:"+apiRootUrl); //#TODO: add functionality for http and https.
 
-            }
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod(methode);
-            connection.setConnectTimeout(TIME_OUT);
-            connection.addRequestProperty("Content-Type", "application/json");
-            if (mSsologin)
-            {
-                connection.addRequestProperty("Authorization", "bearer " + new String(Base64.encodeBase64((usr + ":" + token).getBytes())));
-            }
-            else {
-                connection.addRequestProperty("Authorization", "Basic " + new String(Base64.encodeBase64((usr + ":" + pwd).getBytes())));
-            }
-            Log.e(TAG, "Connection String for Debug!"+url.toString()); //For Debug purpose
-            Log.e(TAG,"Connection success!!");
-        } catch (Exception e) {
-            throw new RequestException("Could not setup request", e);
-        }
-        try {
-            in = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream()));
-
-            String inputLine;
-            while((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-        } catch (Exception e) {
-            if(e.getMessage().contains("500")) {
-                throw new PermissionException(e);
-            }
-            throw new RequestException(e);
-        } finally {
+        if (mSsologin){
             try {
-                if (in != null) {
-                    in.close();
+                SingleSignOnAccount ssoAccount = SingleAccountHelper.getCurrentSingleSignOnAccount(context);
+                mNextcloudAPI = new NextcloudAPI(context, ssoAccount, new GsonBuilder().create(), apiCallback);
+
+                NextcloudRequest nextcloudRequest = new NextcloudRequest.Builder()
+                        .setMethod(methode)
+                        .setUrl(apiRootUrl + relativeUrl)
+                        .setToken(ssoAccount.token)
+                        .build();
+                StringBuilder result = new StringBuilder();
+
+                try {
+                    Log.v(TAG, "NextcloudRequest: " + nextcloudRequest.toString());
+                    Response ssoresponse = mNextcloudAPI.performNetworkRequestV2(nextcloudRequest);
+                    Log.v(TAG, "NextcloudRequest: " + nextcloudRequest.toString());
+                    in = new BufferedReader(new InputStreamReader(ssoresponse.getBody()));
+
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        result.append(line);
+                    }
+                    ssoresponse.getBody().close();
+                } catch (Exception e) {
+
+                        e.printStackTrace();
                 }
-                connection.disconnect();
-            } catch (Exception e) {
-                throw new RequestException("Could not close connection", e);
+
+            } catch (NextcloudFilesAppAccountNotFoundException e) {
+                // TODO handle errors
+                Log.v(TAG, "Account not found exception");
+
+            } catch (NoCurrentAccountSelectedException e) {
+                // TODO handle errors
+                Log.v(TAG, "Account not found exception");
             }
+
         }
+        else {
+            try {
+                url = new URL(apiRootUrl + relativeUrl);
+                if (apiRootUrl.startsWith("https")) {
+                    Log.e(TAG, "apiRootUrl value is https:" + apiRootUrl); //#TODO: add functionality for http and https.
+
+                }
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod(methode);
+                connection.setConnectTimeout(TIME_OUT);
+                connection.addRequestProperty("Content-Type", "application/json");
+                if (mSsologin) {
+                    connection.addRequestProperty("Authorization", "bearer " + new String(Base64.encodeBase64((usr + ":" + token).getBytes())));
+                } else {
+                    connection.addRequestProperty("Authorization", "Basic " + new String(Base64.encodeBase64((usr + ":" + pwd).getBytes())));
+                }
+                Log.e(TAG, "Connection String for Debug!" + url.toString()); //For Debug purpose
+                Log.e(TAG, "Connection success!!");
+            } catch (Exception e) {
+                throw new RequestException("Could not setup request", e);
+            }
+
+            //We have data here
+
+            try {
+                in = new BufferedReader(
+                        new InputStreamReader(connection.getInputStream()));
+
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+            } catch (Exception e) {
+                if (e.getMessage().contains("500")) {
+                    throw new PermissionException(e);
+                }
+                throw new RequestException(e);
+            } finally {
+                try {
+                    if (in != null) {
+                        in.close();
+                    }
+                    connection.disconnect();
+                } catch (Exception e) {
+                    throw new RequestException("Could not close connection", e);
+                }
+            }
+
+        }
+
 
         return parseJson(methode, url.toString(), response.toString());
     }
