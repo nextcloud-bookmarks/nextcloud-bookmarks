@@ -16,7 +16,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
+    
+    flavorDimensions "default"
     buildTypes {
         release {
             minifyEnabled true
@@ -29,12 +30,22 @@ android {
             applicationIdSuffix ".owncloud"
         }
     }
+    productFlavors {
+        fdroid {
+            applicationId "org.schabi.nxbookmarks"
+        }
+    }
+
     lintOptions {
         checkReleaseBuilds false
         // Or, if you prefer, you can continue to check for errors in release builds,
         // but continue the build even when errors are found:
         abortOnError false
     }
+}
+repositories {
+    maven { url "https://jitpack.io" }
+
 }
 
 repositories {
