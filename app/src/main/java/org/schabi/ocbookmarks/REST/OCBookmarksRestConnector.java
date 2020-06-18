@@ -1,7 +1,6 @@
 package org.schabi.ocbookmarks.REST;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 
 import com.google.gson.GsonBuilder;
@@ -19,7 +18,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -67,26 +65,6 @@ public class OCBookmarksRestConnector {
             // TODO handle error in your app
         }
     };
-
-    private void downloadFile() {
-        NextcloudRequest nextcloudRequest = new NextcloudRequest.Builder()
-                .setMethod("GET")
-                .setUrl(Uri.encode("/remote.php/webdav/sample movie.mp4","/"))
-                .build();
-
-        try {
-            InputStream inputStream = mNextcloudAPI.performNetworkRequest(nextcloudRequest);
-            while(inputStream.available() > 0) {
-                inputStream.read();
-                // TODO do something useful with the data here..
-                // like writing it to a file..?
-            }
-            inputStream.close();
-        } catch (Exception e) {
-            // TODO handle errors
-        }
-    }
-
 
     protected void onStop() {
         // Close Service Connection to Nextcloud Files App and
