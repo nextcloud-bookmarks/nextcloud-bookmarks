@@ -1,28 +1,33 @@
 package org.schabi.ocbookmarks;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import androidx.appcompat.app.AlertDialog;
-import android.content.Intent;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private static LoginData loginData;
 
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationview;
+    SharedPreferences sharedPrefs;
+
     private static final String TAG = MainActivity.class.toString();
 
     @Override
@@ -71,8 +80,42 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        //Get Navigationview and do the action
+        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        navigationview = (NavigationView)findViewById(R.id.nvView);
+        navigationview.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                switch(id)
+                {
+                    case R.id.email:
+                    Intent intent = new Intent(Intent.ACTION_SENDTO);
+                    intent.setType("text/plain");
+                    intent.putExtra(Intent.EXTRA_EMAIL, getString(R.string.support_email));
+                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject));
+                    intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.email_body));
+                    startActivity(Intent.createChooser(intent, getString(R.string.send_email)));
+                    //Toast.makeText(MainActivity.this, "Report issues to Developer",Toast.LENGTH_SHORT).show();break;
+                    default:
+                        return true;
+                }
+
+
+            }
+        });
+        View headerView = navigationview.getHeaderView(0);
+        TextView userTextView= (TextView)headerView.findViewById(R.id.userTextView);
+        TextView urlTextView= (TextView)headerView.findViewById(R.id.urlTextView);
+        sharedPrefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+        urlTextView.setText(sharedPrefs.getString(getString(R.string.login_url), ""));
+        userTextView.setText(sharedPrefs.getString(getString(R.string.login_user), ""));
+
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -174,7 +217,9 @@ public class MainActivity extends AppCompatActivity {
                         OCBookmarksRestConnector connector = new OCBookmarksRestConnector(
                                 loginData.url,
                                 loginData.user,
-                                loginData.password);
+                                loginData.password,
+                                loginData.token,
+                                loginData.ssologin);
                         try {
                             connector.deleteBookmark(bookmark);
                         } catch (Exception e) {
@@ -203,7 +248,9 @@ public class MainActivity extends AppCompatActivity {
                 OCBookmarksRestConnector connector = new OCBookmarksRestConnector(
                         loginData.url,
                         loginData.user,
-                        loginData.password);
+                        loginData.password,
+                        loginData.token,
+                        loginData.ssologin);
                 if(bookmark.getId() < 0) {
                     // add new bookmark
                     try {
@@ -261,7 +308,9 @@ public class MainActivity extends AppCompatActivity {
                                 new OCBookmarksRestConnector(
                                         loginData.url,
                                         loginData.user,
-                                        loginData.password);
+                                        loginData.password,
+                                        loginData.token,
+                                        loginData.ssologin);
                         try {
                             connector.renameTag(oldTag, newTag);
                         } catch (Exception e) {
@@ -292,7 +341,9 @@ public class MainActivity extends AppCompatActivity {
                         OCBookmarksRestConnector connector = new OCBookmarksRestConnector(
                                 loginData.url,
                                 loginData.user,
-                                loginData.password);
+                                loginData.password,
+                                loginData.token,
+                                loginData.ssologin);
                         try {
                             connector.deleteTag(tag);
                         } catch (Exception e) {
@@ -325,6 +376,8 @@ public class MainActivity extends AppCompatActivity {
         loginData.url = sharedPreferences.getString(getString(R.string.login_url), "");
         loginData.user = sharedPreferences.getString(getString(R.string.login_user), "");
         loginData.password = sharedPreferences.getString(getString(R.string.login_pwd), "");
+        loginData.token=sharedPreferences.getString(getString(R.string.login_token), "");
+        loginData.ssologin=sharedPreferences.getBoolean(String.valueOf(R.string.ssologin), false);
         if(loginData.url.isEmpty()) {
             Intent intent = new Intent(this, LoginAcitivty.class);
             startActivity(intent);
@@ -427,7 +480,7 @@ public class MainActivity extends AppCompatActivity {
         protected Bookmark[] doInBackground(Void... bla) {
             try {
                 OCBookmarksRestConnector connector =
-                        new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password);
+                        new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token,loginData.ssologin);
                 JSONArray data = connector.getRawBookmarks();
                 storeToFile(data);
                 return connector.getFromRawJson(data);
@@ -466,7 +519,9 @@ public class MainActivity extends AppCompatActivity {
                 OCBookmarksRestConnector connector =
                         new OCBookmarksRestConnector(loginData.url,
                                 loginData.user,
-                                loginData.password);
+                                loginData.password,
+                                loginData.token,
+                                loginData.ssologin);
                 Bookmark[] bookmarks = connector.getFromRawJson(new JSONArray(text.toString()));
                 mTagsFragment.updateData(Bookmark.getTagsFromBookmarks(bookmarks));
                 mBookmarkFragment.updateData(bookmarks);

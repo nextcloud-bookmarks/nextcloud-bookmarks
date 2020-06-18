@@ -2,7 +2,7 @@
     <!-- owncloud/nextcloud -->
     <string name="app_name">Nextcloud Bookmarks</string>
     <string name="app_name_short">Bookmarks</string>
-    <string name="oc_bookmark_login">Nextcloud Bookmark Login</string>
+    <string name="oc_bookmark_login"></string>
 
     <!-- persistend stuff -->
     <string name="action_change_login">Change Login</string>
@@ -11,7 +11,9 @@
     <string name="loginUserHint">Username</string>
     <string name="loginPasswordHint">Password</string>
     <string name="loginUrlHint">Server address https://&#8230;</string>
-    <string name="connect">Connect</string>
+    <string name="connect">Sign in</string>
+    <string name="connect_sso">Nextcloud Single Sign On (SSO)</string>
+    <string name="login_manual">Manual login</string>
     <string name="save">Save</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
@@ -37,10 +39,17 @@
     <string name="bookmark_saved">Bookmark saved</string>
     <string name="reload_icons">Reload Icons</string>
     <string name="connectino_failed">Connection Failed</string>
+    <string name="content_desc_tap_to_refresh">tap to refresh</string>
 
     <!-- login errors -->
     <string name="connection_failed_login">Connection Failed. Check if\n &#x2022; You have internet access\n &#x2022; the URL is correct.\n &#x2022; you imported self signed certificates.</string>
     <string name="login_host_not_found">Connection Failed. Check if\n &#x2022; You entered the right URL.</string>
     <string name="login_failed">Login Failed. Check if\n &#x2022; The URL is correct.\n &#x2022; username/password is correct.\n &#x2022; Bookmark App v0.10.1 or\n higher is installed on your Nextcloud</string>
     <string name="login_timeout">Connection Failed. Check if\n &#x2022; you have internet access.\n &#x2022; the URL is correct.\n &#x2022; you entered the right port number.</string>
+    <string name="email_subject">NextCloud BookMarks Help!</string>
+    <string name="email_body">Please Explain the issue Below</string>
+    <string name="support_email">biswajitbangalore@gmail.com</string>
+    <string name="send_email">Send Email</string>
+    <string name="E_mail">E-mail</string>
+    <string name="content_desc_show_password">show password</string>
 </resources>
