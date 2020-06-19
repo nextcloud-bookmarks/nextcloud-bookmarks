@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Date;
@@ -46,6 +47,7 @@ public class OCBookmarksRestConnector {
 
 
     public OCBookmarksRestConnector(String owncloudRootUrl, String user, String password, String mtoken, boolean Ssologin, Context con) {
+
         apiRootUrl = owncloudRootUrl + "/index.php/apps/bookmarks/public/rest/v2";
         usr = user;
         pwd = password;
@@ -81,12 +83,12 @@ public class OCBookmarksRestConnector {
         if (mSsologin){
             try {
                 SingleSignOnAccount ssoAccount = SingleAccountHelper.getCurrentSingleSignOnAccount(context);
+                url = new URL(apiRootUrl + relativeUrl);
                 mNextcloudAPI = new NextcloudAPI(context, ssoAccount, new GsonBuilder().create(), apiCallback);
 
                 NextcloudRequest nextcloudRequest = new NextcloudRequest.Builder()
                         .setMethod(methode)
-                        .setUrl(apiRootUrl + relativeUrl)
-                        .setToken(ssoAccount.token)
+                        .setUrl("/index.php/apps/bookmarks/public/rest/v2" + relativeUrl)
                         .build();
                 StringBuilder result = new StringBuilder();
 
@@ -98,7 +100,7 @@ public class OCBookmarksRestConnector {
 
                     String line;
                     while ((line = in.readLine()) != null) {
-                        result.append(line);
+                        response.append(line);
                     }
                     ssoresponse.getBody().close();
                 } catch (Exception e) {
@@ -113,6 +115,8 @@ public class OCBookmarksRestConnector {
             } catch (NoCurrentAccountSelectedException e) {
                 // TODO handle errors
                 Log.v(TAG, "Account not found exception");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
             }
 
         }
