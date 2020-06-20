@@ -1,10 +1,25 @@
 ## :link: Nextcloud Bookmarks Android App
 
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
+[![Android CI](https://gitlab.com/bisada/OCBookmarks/badges/master/pipeline.svg)](https://gitlab.com/bisada/OCBookmarks/-/pipelines)
+[![Gitter](https://badges.gitter.im/nextcloud-bookmarks/community.svg)](https://gitter.im/nextcloud-bookmarks/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://gitlab.com/bisada/OCBookmarks/-/issues)
+
+## :arrow_forward: Access
+[![F-Droid Release](https://img.shields.io/f-droid/v/org.schabi.nxbookmarks)](https://f-droid.org/en/packages/org.schabi.nxbookmarks/) 
+
+[<img src="https://raw.githubusercontent.com/stefan-niedermann/paypal-donate-button/master/paypal-donate-button.png"
+      alt="Donate with PayPal"
+      height="80">](https://www.paypal.me/biswajitbangalore)
+[<img src="https://raw.githubusercontent.com/stefan-niedermann/DonateButtons/master/LiberaPay.png"
+      alt="Donate using Liberapay"
+      height="80">](https://liberapay.com/bisasda/donate)
+
 [<img src="assets/nx/icon.png" width=160px>](/)
 [![PlayStore](./assets/ps_badge.png)](https://play.google.com/store/apps/details?id=org.bisw.nxbookmarks)
+[![F-Droid](./assets/fdroid_badge.png)](https://f-droid.org/packages/org.schabi.nxbookmarks/)
 [<img src="assets/oc/icon.png" width=160px>](/)
 [![PlayStore](./assets/ps_badge.png)](https://play.google.com/store/apps/details?id=org.bisw.nxbookmarks.owncloud)
-[![Gitter](https://badges.gitter.im/nextcloud-bookmarks/community.svg)](https://gitter.im/nextcloud-bookmarks/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 
 ## :rocket: Features
@@ -15,7 +30,7 @@
 * Manage tags 🏷
 * Translated in many languages 🌎
 * Multiple accounts
-* SSO : Nextcloud Single Sign On
+* SSO : Nextcloud Single Sign On (WIP)
 
 
 An Android front end for the Nextcloud [Bookmark App](https://github.com/nextcloud/bookmarks/) 
@@ -74,3 +89,5 @@ and ownCloudBookmarks version [0.10.2](https://marketplace.owncloud.com/apps/boo
 
 ## :link: Contributions
 * All pull requests are welcome.
+
+[![ForTheBadge built-with-love](http://ForTheBadge.com/images/badges/built-with-love.svg)](https://gitlab.com/bisada/)
