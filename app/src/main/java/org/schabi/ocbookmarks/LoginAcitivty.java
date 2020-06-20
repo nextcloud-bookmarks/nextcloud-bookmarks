@@ -100,6 +100,7 @@ public class LoginAcitivty extends AppCompatActivity {
                 urlInput.setText(loginData.url);
 
                 testLoginTask = new TestLoginTask();
+                SingleAccountHelper.setCurrentAccount(LoginAcitivty.this,null);
                 testLoginTask.execute(loginData);
                 progressBar.setVisibility(View.VISIBLE);
                 connectButton.setVisibility(View.INVISIBLE);
