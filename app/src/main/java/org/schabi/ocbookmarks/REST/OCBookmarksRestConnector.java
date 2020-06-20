@@ -20,7 +20,6 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Date;
@@ -79,18 +78,19 @@ public class OCBookmarksRestConnector {
         StringBuilder response = new StringBuilder();
         HttpURLConnection connection=null;
         URL url = null;
+        String returl="";
 
         if (mSsologin){
             try {
                 SingleSignOnAccount ssoAccount = SingleAccountHelper.getCurrentSingleSignOnAccount(context);
-                url = new URL(apiRootUrl + relativeUrl);
+                returl = "/index.php/apps/bookmarks/public/rest/v2" + relativeUrl;
                 mNextcloudAPI = new NextcloudAPI(context, ssoAccount, new GsonBuilder().create(), apiCallback);
 
                 NextcloudRequest nextcloudRequest = new NextcloudRequest.Builder()
                         .setMethod(methode)
                         .setUrl("/index.php/apps/bookmarks/public/rest/v2" + relativeUrl)
                         .build();
-                StringBuilder result = new StringBuilder();
+                //StringBuilder result = new StringBuilder();
 
                 try {
                     Log.v(TAG, "NextcloudRequest: " + nextcloudRequest.toString());
@@ -115,14 +115,13 @@ public class OCBookmarksRestConnector {
             } catch (NoCurrentAccountSelectedException e) {
                 // TODO handle errors
                 Log.v(TAG, "Account not found exception");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
             }
 
         }
         else {
             try {
                 url = new URL(apiRootUrl + relativeUrl);
+                returl=url.toString();
                 if (apiRootUrl.startsWith("https")) {
                     Log.e(TAG, "apiRootUrl value is https:" + apiRootUrl); //#TODO: add functionality for http and https.
 
@@ -171,7 +170,7 @@ public class OCBookmarksRestConnector {
         }
 
 
-        return parseJson(methode, url.toString(), response.toString());
+        return parseJson(methode, returl, response.toString());
     }
 
     private JSONObject parseJson(String methode, String url, String response) throws RequestException {
