@@ -18,10 +18,10 @@
 [<img src="assets/nx/icon.png" width=160px>](/)
 [![PlayStore](./assets/ps_badge.png)](https://play.google.com/store/apps/details?id=org.bisw.nxbookmarks)
 [![F-Droid](./assets/fdroid_badge.png)](https://f-droid.org/packages/org.schabi.nxbookmarks/)
+
 [<img src="assets/oc/icon.png" width=160px>](/)
 [![PlayStore](./assets/ps_badge.png)](https://play.google.com/store/apps/details?id=org.bisw.nxbookmarks.owncloud)
 
-assets/nx/screenshots/shotsso.jpg
 ## :eyes: Screenshots
 
 | Multiple Accounts | SSO | Tags |  Bookmarks |
