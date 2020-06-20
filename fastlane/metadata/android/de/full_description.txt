@@ -1,0 +1,12 @@
+Eine Android-Oberfläche für die Nextcloud/Owncloud Bookmark App basierend auf der neuen REST API, die mit Version 0.10.1 der Nextcloud App eingeführt wurde. Mit dieser App lassen sich Lesezeichen hinzufügen, bearbeiten, löschen und anzeigen, sowie mit der Nextcloud-Instaz synchronisieren.
+Dies setzt natürlich voraus, dass in der Nextcloud-Instanz mindestens Version 0.10.1 der Bookmarks-App installiert und auch aktiviert ist.
+Details zur Nextcloud Bookmark App finden sich unter <a href="https://apps.nextcloud.com/apps/bookmarks">diesem Link</a>.
+
+<b>Features:</b><ul>
+<li>Arbeitet offline 🔌</li>
+<li>Bookmarks können als Favorites markiert werden</li>
+<li>Bookmarks können mit Labels organisiert werden 🔖</li>
+<li>Tags verwalten 🏷</li>
+<li>In viele Sprachen übersetzt 🌎</li>
+<li>Mehrere Accounts verwenden</li>
+<li>SSO : Nextcloud Single Sign On (WIP)</li></ul>
