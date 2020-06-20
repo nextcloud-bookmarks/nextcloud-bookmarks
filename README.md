@@ -26,7 +26,7 @@
 
 | Multiple Accounts | SSO | Tags |  Bookmarks |
 | :--: | :--: | :--: | :--: |
-| ![Screenshot of list view](assets/nx/screenshots/shotsso.jpg) | ![Screenshot of edit mode](assets/nx/screenshots/shotsso1.jpg)  | ![Screenshot of tag](assets/nx/screenshots/shot2.png) | ![Screenshot of bookmark](assets/nx/screenshots/shot3.png) |
+| ![Screenshot of list view](fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg) | ![Screenshot of edit mode](fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg)  | ![Screenshot of tag](fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg) | ![Screenshot of bookmark](fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg) |
 
 
 
