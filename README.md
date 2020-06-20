@@ -21,6 +21,14 @@
 [<img src="assets/oc/icon.png" width=160px>](/)
 [![PlayStore](./assets/ps_badge.png)](https://play.google.com/store/apps/details?id=org.bisw.nxbookmarks.owncloud)
 
+assets/nx/screenshots/shotsso.jpg
+## :eyes: Screenshots
+
+| Multiple Accounts | SSO | Tags |  Bookmarks |
+| :--: | :--: | :--: | :--: |
+| ![Screenshot of list view](assets/nx/screenshots/shotsso.jpg) | ![Screenshot of edit mode](assets/nx/screenshots/shotsso1.jpg)  | ![Screenshot of tag](assets/nx/screenshots/shot2.png) | ![Screenshot of bookmark](assets/nx/screenshots/shot3.png) |
+
+
 
 ## :rocket: Features
 
