@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private static LoginData loginData;
 
-    private DrawerLayout drawerLayout;
+    // private DrawerLayout drawerLayout;
     private NavigationView navigationview;
     SharedPreferences sharedPrefs;
 
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Get Navigationview and do the action
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        // drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         navigationview = (NavigationView)findViewById(R.id.nvView);
         navigationview.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -371,15 +371,15 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         //todo: only reload if no data is stored so fare
-        // start login activity when nececary:
+        // start login activity when necessary:
         sharedPreferences =
                 getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         loginData = new LoginData();
         loginData.url = sharedPreferences.getString(getString(R.string.login_url), "");
         loginData.user = sharedPreferences.getString(getString(R.string.login_user), "");
         loginData.password = sharedPreferences.getString(getString(R.string.login_pwd), "");
-        loginData.token=sharedPreferences.getString(getString(R.string.login_token), "");
-        loginData.ssologin=sharedPreferences.getBoolean(String.valueOf(R.string.ssologin), false);
+        loginData.token = sharedPreferences.getString(getString(R.string.login_token), "");
+        loginData.ssologin = sharedPreferences.getBoolean(getString(R.string.ssologin), false);
         if(loginData.url.isEmpty()) {
             Intent intent = new Intent(this, LoginAcitivty.class);
             startActivity(intent);

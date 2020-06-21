@@ -137,8 +137,6 @@ public class LoginAcitivty extends AppCompatActivity {
                 loginData.ssologin = true;
                 loginData.token = account.token;;
                 loginData.password="";
-//                storeLogin(loginData);
-                finish();
                 testLoginTask = new TestLoginTask();
                 testLoginTask.execute(loginData);
                 progressBar.setVisibility(View.VISIBLE);
@@ -196,12 +194,9 @@ public class LoginAcitivty extends AppCompatActivity {
         editor.putBoolean(getString(R.string.ssologin), loginData.ssologin);
         if (loginData.ssologin){
             editor.putString(getString(R.string.login_token), loginData.token);
-        }
-        else
-        {
+        } else {
             editor.putString(getString(R.string.login_pwd), loginData.password);
         }
-
         editor.apply();
     }
 
@@ -221,7 +216,7 @@ public class LoginAcitivty extends AppCompatActivity {
         protected Integer doInBackground(LoginData... loginDatas) {
             LoginData loginData = loginDatas[0];
             OCBookmarksRestConnector connector =
-                    new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token, loginData.ssologin,LoginAcitivty.this);
+                    new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password, loginData.token, loginData.ssologin,LoginAcitivty.this);
             try {
                 connector.getBookmarks();
                 return OK;
