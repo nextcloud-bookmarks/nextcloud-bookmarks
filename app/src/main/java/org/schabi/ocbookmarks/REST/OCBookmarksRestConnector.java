@@ -130,8 +130,7 @@ public class OCBookmarksRestConnector {
                 connection.setRequestMethod(methode);
                 connection.setConnectTimeout(TIME_OUT);
                 connection.addRequestProperty("Content-Type", "application/json");
-                if (!mSsologin)
-                    connection.addRequestProperty("Authorization", "Basic " + new String(Base64.encodeBase64((usr + ":" + pwd).getBytes())));
+                connection.addRequestProperty("Authorization", "Basic " + new String(Base64.encodeBase64((usr + ":" + pwd).getBytes())));
                 Log.e(TAG, "Connection String for Debug!" + url.toString()); //For Debug purpose
                 Log.e(TAG, "Connection success!!");
             } catch (Exception e) {
