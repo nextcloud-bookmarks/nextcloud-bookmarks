@@ -41,6 +41,7 @@ public class LoginAcitivty extends AppCompatActivity {
     private static final int FILE_NOT_FOUND = 3;
     private static final int TIME_OUT = 4;
     private boolean mPasswordVisible = false;
+    private static final String TAG = "ocbookmarks";
 
     LoginData loginData = new LoginData();
 
@@ -115,6 +116,8 @@ public class LoginAcitivty extends AppCompatActivity {
                 catch (NextcloudFilesAppNotInstalledException e)
                 {
                     UiExceptionManager.showDialogForException(LoginAcitivty.this, e);
+                    Log.w(TAG, "=============================================================");
+                    Log.w(TAG, "Nextcloud app is not installed. Cannot choose account");
                 } catch (AndroidGetAccountsPermissionNotGranted e)
                 { UiExceptionManager.showDialogForException(LoginAcitivty.this, e); }
             }
