@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -36,7 +37,6 @@ public class OCBookmarksRestConnector {
     private String pwd;
     private String token;
     private boolean mSsologin;
-    private NextcloudAPI mNextcloudAPI;
     private Context context;
 
 
@@ -45,69 +45,62 @@ public class OCBookmarksRestConnector {
     private static final String TAG = "ocbookmarks";
 
 
-    public OCBookmarksRestConnector(String owncloudRootUrl, String user, String password, String mtoken, boolean Ssologin, Context con) {
-
+    public OCBookmarksRestConnector(String owncloudRootUrl, String user, String password, String mToken, boolean ssoLogin, Context con) {
         apiRootUrl = owncloudRootUrl + "/index.php/apps/bookmarks/public/rest/v2";
         usr = user;
         pwd = password;
-        token = mtoken;
-        mSsologin =Ssologin;
+        token = mToken;
+        mSsologin = ssoLogin;
         context = con;
     }
 
     private NextcloudAPI.ApiConnectedListener apiCallback = new NextcloudAPI.ApiConnectedListener() {
         @Override
         public void onConnected() {
-            // ignore this one..
+            Log.d(TAG, "Connected");
         }
 
         @Override
         public void onError(Exception ex) {
-            // TODO handle error in your app
+            Log.e(TAG, ex.getMessage());
         }
     };
 
-    protected void onStop() {
-        // Close Service Connection to Nextcloud Files App and
-        // disconnect API from Context (prevent Memory Leak)
-        mNextcloudAPI.stop();
-    }
-
-    public JSONObject send(String methode, String relativeUrl) throws RequestException {
+    public JSONObject send(String method, String relativeUrl) throws RequestException {
         BufferedReader in = null;
         StringBuilder response = new StringBuilder();
-        HttpURLConnection connection=null;
-        URL url = null;
+        HttpURLConnection connection;
+        URL url ;
         String returl="";
 
         if (mSsologin){
             try {
                 SingleSignOnAccount ssoAccount = SingleAccountHelper.getCurrentSingleSignOnAccount(context);
                 returl = "/index.php/apps/bookmarks/public/rest/v2" + relativeUrl;
-                mNextcloudAPI = new NextcloudAPI(context, ssoAccount, new GsonBuilder().create(), apiCallback);
 
                 NextcloudRequest nextcloudRequest = new NextcloudRequest.Builder()
-                        .setMethod(methode)
+                        .setMethod(method)
                         .setUrl("/index.php/apps/bookmarks/public/rest/v2" + relativeUrl)
                         .build();
-                //StringBuilder result = new StringBuilder();
 
+                NextcloudAPI nextcloudAPI = new NextcloudAPI(context, ssoAccount, new GsonBuilder().create(), apiCallback);
                 try {
                     Log.v(TAG, "NextcloudRequest: " + nextcloudRequest.toString());
-                    Response ssoresponse = mNextcloudAPI.performNetworkRequestV2(nextcloudRequest);
-                    Log.v(TAG, "NextcloudRequest: " + nextcloudRequest.toString());
-                    in = new BufferedReader(new InputStreamReader(ssoresponse.getBody()));
+                    Response ssoResponse = nextcloudAPI.performNetworkRequestV2(nextcloudRequest);
+                    InputStream body = ssoResponse.getBody();
+                    in = new BufferedReader(new InputStreamReader(body));
 
                     String line;
                     while ((line = in.readLine()) != null) {
                         response.append(line);
                     }
-                    ssoresponse.getBody().close();
+                    body.close();
                 } catch (Exception e) {
-
-                        e.printStackTrace();
+                    Log.e(TAG, e.getMessage());
+                    e.printStackTrace();
+                } finally {
+                    nextcloudAPI.stop();
                 }
-
             } catch (NextcloudFilesAppAccountNotFoundException e) {
                 // TODO handle errors
                 Log.v(TAG, "Account not found exception");
@@ -116,7 +109,6 @@ public class OCBookmarksRestConnector {
                 // TODO handle errors
                 Log.v(TAG, "Account not found exception");
             }
-
         }
         else {
             try {
@@ -127,7 +119,7 @@ public class OCBookmarksRestConnector {
 
                 }
                 connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod(methode);
+                connection.setRequestMethod(method);
                 connection.setConnectTimeout(TIME_OUT);
                 connection.addRequestProperty("Content-Type", "application/json");
                 connection.addRequestProperty("Authorization", "Basic " + new String(Base64.encodeBase64((usr + ":" + pwd).getBytes())));
@@ -138,7 +130,6 @@ public class OCBookmarksRestConnector {
             }
 
             //We have data here
-
             try {
                 in = new BufferedReader(
                         new InputStreamReader(connection.getInputStream()));
@@ -162,17 +153,14 @@ public class OCBookmarksRestConnector {
                     throw new RequestException("Could not close connection", e);
                 }
             }
-
         }
-
-
-        return parseJson(methode, returl, response.toString());
+        return parseJson(method, returl, response.toString());
     }
 
-    private JSONObject parseJson(String methode, String url, String response) throws RequestException {
+    private JSONObject parseJson(String method, String url, String response) throws RequestException {
 
         JSONObject data = null;
-        if(methode.equals("GET") && url.endsWith("/tag")) {
+        if("GET".equals(method) && url.endsWith("/tag")) {
             // we have to handle GET /tag different:
             // https://github.com/nextcloud/bookmarks#list-all-tags
             JSONArray array = null;
@@ -184,7 +172,7 @@ public class OCBookmarksRestConnector {
                 throw new RequestException("Parsing error, maybe owncloud does not support bookmark api", je);
             }
             return data;
-        } else if(methode == "PUT") {
+        } else if("PUT".equals(method)) {
             try {
                 data = new JSONObject(response);
                 return data.getJSONObject("item");
@@ -192,7 +180,6 @@ public class OCBookmarksRestConnector {
                 throw new RequestException("Parsing error, maybe owncloud does not support bookmark api", je);
             }
         } else {
-
             try {
                 data = new JSONObject(response);
             } catch (JSONException je) {
@@ -200,7 +187,7 @@ public class OCBookmarksRestConnector {
             }
 
             try {
-                if (!data.getString("status").equals("success")) {
+                if (!"success".equals(data.getString("status"))) {
                     throw new RequestException("Error bad request: " + url);
                 }
             } catch (JSONException e) {
@@ -216,8 +203,7 @@ public class OCBookmarksRestConnector {
 
     public JSONArray getRawBookmarks() throws RequestException {
         try {
-            return send("GET", "/bookmark?page=-1")
-                    .getJSONArray("data");
+            return send("GET", "/bookmark?page=-1").getJSONArray("data");
         } catch (JSONException e) {
             throw new RequestException("Could not parse data", e);
         }
