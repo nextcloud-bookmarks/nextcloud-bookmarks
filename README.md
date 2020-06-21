@@ -43,8 +43,7 @@
 
 An Android front end for the Nextcloud [Bookmark App](https://github.com/nextcloud/bookmarks/) 
 based on the new [REST API](https://github.com/nextcloud/bookmarks/#rest-api) that was introduced
-by NextCloudBookmarks version [0.10.1](https://github.com/nextcloud/bookmarks/releases/tag/v0.10.1)
-and ownCloudBookmarks version [0.10.2](https://marketplace.owncloud.com/apps/bookmarks)
+by NextCloudBookmarks version [3.2.1](https://github.com/nextcloud/bookmarks/releases/tag/v3.2.1)
 
 [<img src="assets/nx/screenshots/1.jpg" width=160px>](assets/nx/screenshots/1.jpg)
 [<img src="assets/nx/screenshots/2.jpg" width=160px>](assets/nx/screenshots/2.jpg)
