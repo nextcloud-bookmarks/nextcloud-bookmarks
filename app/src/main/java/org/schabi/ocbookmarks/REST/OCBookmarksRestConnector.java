@@ -22,8 +22,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by the-scrabi on 14.05.17.
@@ -72,16 +75,18 @@ public class OCBookmarksRestConnector {
         HttpURLConnection connection;
         URL url ;
         String returl="";
-
+        Log.v(TAG, "Method called: " + method);
         if (mSsologin){
             try {
                 SingleSignOnAccount ssoAccount = SingleAccountHelper.getCurrentSingleSignOnAccount(context);
                 returl = "/index.php/apps/bookmarks/public/rest/v2" + relativeUrl;
 
+                Log.e("Connector","relativeUrl:"+relativeUrl);
                 NextcloudRequest nextcloudRequest = new NextcloudRequest.Builder()
                         .setMethod(method)
-                        .setUrl("/index.php/apps/bookmarks/public/rest/v2" + relativeUrl)
+                        .setUrl(returl)
                         .build();
+
 
                 NextcloudAPI nextcloudAPI = new NextcloudAPI(context, ssoAccount, new GsonBuilder().create(), apiCallback);
                 try {
@@ -100,6 +105,34 @@ public class OCBookmarksRestConnector {
                     e.printStackTrace();
                 } finally {
                     nextcloudAPI.stop();
+                }
+
+                if(method =="POST") {
+
+                    try {
+                        returl = "/index.php/apps/bookmarks/public/rest/v2/bookmark";
+                        relativeUrl=relativeUrl.replace("/bookmark?","");
+                        String[] pairs = relativeUrl.split("&");
+                        Map<String, String> params = new HashMap<>();
+                        for (String pair : pairs) {
+                            int idx = pair.indexOf("=");
+                            params.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+                        }
+
+                        Log.e(TAG,"Params"+params);
+
+                        nextcloudRequest = new NextcloudRequest.Builder()
+                                .setMethod(method)
+                                .setParameter(params)
+                                .setUrl(returl)
+                                .build();
+                    } catch (Exception e) {
+                        Log.e(TAG, e.getMessage());
+
+                    } finally {
+
+                    }
+
                 }
             } catch (NextcloudFilesAppAccountNotFoundException e) {
                 // TODO handle errors
@@ -295,7 +328,7 @@ public class OCBookmarksRestConnector {
                 String url = "/bookmark" + createBookmarkParameter(bookmark);
 
                 Log.e(TAG,"url String"+url);
-
+                //Here we have to Fix the Method threw 'java.lang.NullPointerException' exception. Cannot evaluate org.schabi.ocbookmarks.REST.Bookmark.toString()
                 JSONObject replay = send("POST", url);
                 return getBookmarkFromJsonO(replay.getJSONObject("item"));
             } else {
