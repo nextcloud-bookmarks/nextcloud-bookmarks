@@ -3,7 +3,8 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 [![Android CI](https://gitlab.com/bisada/OCBookmarks/badges/master/pipeline.svg)](https://gitlab.com/bisada/OCBookmarks/-/pipelines)
 [![Gitter](https://badges.gitter.im/nextcloud-bookmarks/community.svg)](https://gitter.im/nextcloud-bookmarks/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://gitlab.com/bisada/OCBookmarks/-/issues)
+[![Open Issues !](https://img.shields.io/badge/Open%20Feature-Request-1abc9c.svg)](https://gitlab.com/bisada/OCBookmarks/-/issues)
+[![Connect it on telegram](https://img.shields.io/badge/Connect%20via-%20telegram-0088cc.svg)](https://t.me/nextcloudbookmarks)
 
 ## :arrow_forward: Access
 [![F-Droid Release](https://img.shields.io/f-droid/v/org.schabi.nxbookmarks)](https://f-droid.org/en/packages/org.schabi.nxbookmarks/) 
@@ -64,6 +65,7 @@ by NextCloudBookmarks version [3.2.1](https://github.com/nextcloud/bookmarks/rel
   * Create a [Pull Request](https://opensource.guide/how-to-contribute/#opening-a-pull-request)
   * Buy this app on [Google Play Store](https://play.google.com/store/apps/details?id=org.bisw.nxbookmarks)
   * Send me a bottle of your favorite beer :beers: :wink:
+  * [![Connect it on telegram](https://img.shields.io/badge/Connect%20via-%20telegram-0088cc.svg)](https://t.me/nextcloudbookmarks)
 
 ## :link: Issues
 * Please note we have identified Some issues. Please look at [Issue board](https://gitlab.com/bisada/OCBookmarks/issues) before review.
