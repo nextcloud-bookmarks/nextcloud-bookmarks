@@ -12,10 +12,13 @@
     <string name="loginPasswordHint">Пароль</string>
     <string name="loginUrlHint">Адрес сервера https:// ...</string>
     <string name="connect">Подключиться</string>
+    <string name="connect_sso">Nextcloud Single Sign On (SSO)</string>
+    <string name="login_manual">Стандартный вход</string>
     <string name="save">Сохранить</string>
     <string name="edit">Правка</string>
     <string name="delete">Удалить</string>
     <string name="share">Поделиться</string>
+    <string name="sure_to_delete_bookmark">Удалить эту закладку?</string>
     <string name="bookmark_url_hint">URL</string>
     <string name="bookmark_title_hint">Название</string>
     <string name="bookmark_description_hint">Описание</string>
@@ -35,8 +38,9 @@
     <string name="not_yet_logged_in">Вы ещё не вошли.</string>
     <string name="bookmark_saved">Закладка сохранена</string>
     <string name="reload_icons">Загрузить значки заново</string>
+    <!--TODO: translate-->
+    <string name="backup_data">Backup Bookmarks to File</string>
     <string name="connectino_failed">Ошибка подключения</string>
-    <string name="sure_to_delete_bookmark">Удалить эту закладку?</string>
     <string name="content_desc_tap_to_refresh">коснитесь для обновления</string>
 
     <!-- login errors -->
@@ -58,6 +62,9 @@
     <string name="send_email">отправить письмо</string>
     <string name="E_mail">E-mail</string>
     <string name="content_desc_show_password">показать пароль</string>
-    <string name="connect_sso">Nextcloud Single Sign On (SSO)</string>
-    <string name="login_manual">Стандартный вход</string>
+
+    <!-- backup result messages -->
+    <!--TODO: translate-->
+    <string name="backup_successful">Bookmarks backed up to %1s</string>
+    <string name="backup_failed">Failed to create backup of bookmarks</string>
 </resources>
