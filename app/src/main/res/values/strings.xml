@@ -38,6 +38,7 @@
     <string name="not_yet_logged_in">You are not yet logged in.</string>
     <string name="bookmark_saved">Bookmark saved</string>
     <string name="reload_icons">Reload Icons</string>
+    <string name="backup_data">Backup Bookmarks to File</string>
     <string name="connectino_failed">Connection Failed</string>
     <string name="content_desc_tap_to_refresh">tap to refresh</string>
 
@@ -52,4 +53,8 @@
     <string name="send_email">Send Email</string>
     <string name="E_mail">E-mail</string>
     <string name="content_desc_show_password">show password</string>
+
+    <!-- backup result messages -->
+    <string name="backup_successful">Bookmarks backed up to %1s</string>
+    <string name="backup_failed">Failed to create backup of bookmarks</string>
 </resources>

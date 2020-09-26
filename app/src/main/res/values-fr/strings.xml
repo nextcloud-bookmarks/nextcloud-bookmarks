@@ -12,6 +12,8 @@
     <string name="loginPasswordHint">Mot de passe</string>
     <string name="loginUrlHint">Adresse du serveur https://&#8230;</string>
     <string name="connect">Connexion</string>
+    <string name="connect_sso">Authentification unique Nextcloud (SSO)</string>
+    <string name="login_manual">Connexion manuelle</string>
     <string name="save">Sauvegarder</string>
     <string name="edit">Modifier</string>
     <string name="delete">Supprimer</string>
@@ -36,6 +38,8 @@
     <string name="not_yet_logged_in">Vous n\'êtes pas encore connecté.</string>
     <string name="bookmark_saved">Marque-page sauvegardé</string>
     <string name="reload_icons">Recharger les Icônes</string>
+    <!--TODO: translate-->
+    <string name="backup_data">Backup Bookmarks to File</string>
     <string name="connectino_failed">La connexion a échoué</string>
     <string name="content_desc_tap_to_refresh">Tapoter pour rafraîchir</string>
 
@@ -60,6 +64,9 @@
     <string name="send_email">envoyer un e-mail</string>
     <string name="E_mail">E-mail</string>
     <string name="content_desc_show_password">afficher le mot de passe</string>
-    <string name="connect_sso">Authentification unique Nextcloud (SSO)</string>
-    <string name="login_manual">Connexion manuelle</string>
+
+    <!-- backup result messages -->
+    <!--TODO: translate-->
+    <string name="backup_successful">Bookmarks backed up to %1s</string>
+    <string name="backup_failed">Failed to create backup of bookmarks</string>
 </resources>
