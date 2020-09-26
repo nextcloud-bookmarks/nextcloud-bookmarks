@@ -36,11 +36,18 @@ import org.schabi.ocbookmarks.REST.OCBookmarksRestConnector;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String DATA_FILE_NAME = "data.json";
+    private static final String DATA_BACKUP_FILE_NAME = "data.json.backup";
 
     /**
      * The {@link PagerAdapter} that will provide
@@ -396,6 +403,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem backupDataItem = menu.findItem(R.id.action_backup_data);
+        if (backupDataItem != null) {
+            backupDataItem.setVisible(getDataFileIfExists() != null);
+        }
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -403,7 +419,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        switch(id) {
+        switch (id) {
             case R.id.action_change_login:
                 Intent intent = new Intent(this, LoginAcitivty.class);
                 startActivity(intent);
@@ -412,6 +428,10 @@ public class MainActivity extends AppCompatActivity {
                 IconHandler iconHandler = new IconHandler(MainActivity.this);
                 iconHandler.deleteAll();
                 reloadData();
+                return true;
+            case R.id.action_backup_data:
+                new BackupDataTask(this).execute();
+                return true;
             case android.R.id.home:
                 mBookmarkFragment.releaseTag();
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -503,10 +523,95 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private static class BackupDataTask extends AsyncTask<Void, Void, String> {
+        private WeakReference<MainActivity> activityReference;
+
+        BackupDataTask(MainActivity mainActivity) {
+            this.activityReference = new WeakReference<>(mainActivity);
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            final MainActivity mainActivity = activityReference.get();
+            if (mainActivity == null || mainActivity.isFinishing()) {
+                return null;
+            }
+
+            final File dataFile = mainActivity.getDataFileIfExists();
+            if (dataFile == null) {
+                Log.e(this.getClass().getName(), DATA_FILE_NAME + " does not exist");
+                return null;
+            }
+
+            final File backupDir = mainActivity.getExternalFilesDir(null);
+            if (backupDir == null) {
+                Log.e(this.getClass().getName(), "External storage not available");
+                return null;
+            }
+
+            final File backupFile = new File(backupDir, DATA_BACKUP_FILE_NAME);
+            if (backupFile.exists() && !backupFile.delete()) {
+                Log.e(this.getClass().getName(), "Existing backup file could not be deleted");
+                return null;
+            }
+
+            try {
+                doCopy(dataFile, backupFile);
+                return backupFile.getAbsolutePath();
+            } catch (Exception e) {
+                Log.e(this.getClass().getName(), "Error creating backup of " + dataFile, e);
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String backupFilePath) {
+            final MainActivity mainActivity = activityReference.get();
+            if (mainActivity == null || mainActivity.isFinishing()) {
+                return;
+            }
+            if (backupFilePath != null) {
+                mainActivity.mainProgressBar.setVisibility(View.GONE);
+                mainActivity.setRefreshing(false);
+                Toast.makeText(
+                        mainActivity,
+                        mainActivity.getApplicationContext().getString(
+                                R.string.backup_successful,
+                                backupFilePath),
+                        Toast.LENGTH_LONG)
+                        .show();
+            } else {
+                Toast.makeText(
+                        mainActivity,
+                        R.string.backup_failed,
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+
+        private void doCopy(final File dataFile, final File backupFile) throws Exception {
+            try (final InputStream fis = new FileInputStream(dataFile);
+                 final OutputStream fos = new FileOutputStream(backupFile)) {
+                final byte[] buffer = new byte[1024];
+
+                int length;
+                while ((length = fis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, length);
+                }
+                fos.flush();
+            }
+        }
+    }
+
+    private File getDataFileIfExists() {
+        final File dataFile = new File(getFilesDir() + File.pathSeparator + DATA_FILE_NAME);
+        return dataFile.exists() ? dataFile : null;
+    }
+
     private void loadFromFile() {
-        File jsonFile = new File(getFilesDir() + "/data.json");
-        StringBuilder text = new StringBuilder();
-        if(jsonFile.exists()) {
+        File jsonFile = getDataFileIfExists();
+        if (jsonFile != null) {
+            StringBuilder text = new StringBuilder();
             mainProgressBar.setVisibility(View.GONE);
             try {
                 BufferedReader br = new BufferedReader(new FileReader(jsonFile));
@@ -526,21 +631,22 @@ public class MainActivity extends AppCompatActivity {
                 mTagsFragment.updateData(Bookmark.getTagsFromBookmarks(bookmarks));
                 mBookmarkFragment.updateData(bookmarks);
             } catch (JSONException je) {
-                if(BuildConfig.DEBUG) je.printStackTrace();
+                if (BuildConfig.DEBUG) je.printStackTrace();
             } catch (Exception e) {
-                if(BuildConfig.DEBUG) e.printStackTrace();
+                if (BuildConfig.DEBUG) e.printStackTrace();
             }
         }
     }
 
     private void storeToFile(JSONArray data) {
         try {
-            FileOutputStream jsonFile = new FileOutputStream(getFilesDir() + "/data.json", false);
+            FileOutputStream jsonFile =
+                    new FileOutputStream(getFilesDir() + File.pathSeparator + DATA_FILE_NAME);
             jsonFile.write(data.toString().getBytes());
             jsonFile.flush();
             jsonFile.close();
         } catch (Exception e) {
-            if(BuildConfig.DEBUG) e.printStackTrace();
+            if (BuildConfig.DEBUG) e.printStackTrace();
         }
     }
 }

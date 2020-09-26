@@ -12,6 +12,8 @@
     <string name="loginPasswordHint">Passwort</string>
     <string name="loginUrlHint">Server Adresse https://&#8230;</string>
     <string name="connect">Verbinden</string>
+    <string name="connect_sso">Nextcloud Single Sign On (SSO)</string>
+    <string name="login_manual">Manuelle Anmeldung</string>
     <string name="save">Speichern</string>
     <string name="edit">Ändern</string>
     <string name="delete">Löschen</string>
@@ -36,6 +38,7 @@
     <string name="not_yet_logged_in">Sie sind noch nicht angemeldet.</string>
     <string name="bookmark_saved">Lesezeichen gespeichert</string>
     <string name="reload_icons">Icons aktualisieren</string>
+    <string name="backup_data">Lesezeichen in Datei sichern</string>
     <string name="connectino_failed">Verbindung fehlgeschlagen</string>
     <string name="content_desc_tap_to_refresh">zum aktualisieren antippen</string>
 
@@ -50,6 +53,8 @@
     <string name="send_email">E-Mail senden</string>
     <string name="E_mail">E-mail</string>
     <string name="content_desc_show_password">Passwort anzeigen</string>
-    <string name="connect_sso">Nextcloud Single Sign On (SSO)</string>
-    <string name="login_manual">Manuelle Anmeldung</string>
+
+    <!-- backup result messages -->
+    <string name="backup_successful">Lesezeichen wurden gesichert nach %1s</string>
+    <string name="backup_failed">Sichern der Lesezeichen fehlgeschlagen</string>
 </resources>
