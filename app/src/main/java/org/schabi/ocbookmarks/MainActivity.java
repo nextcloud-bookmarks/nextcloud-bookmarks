@@ -47,7 +47,7 @@ import java.lang.ref.WeakReference;
 public class MainActivity extends AppCompatActivity {
 
     private static final String DATA_FILE_NAME = "data.json";
-    private static final String DATA_BACKUP_FILE_NAME = "data.json.backup";
+    private static final String DATA_BACKUP_FILE_NAME = "data-backup.json";
 
     /**
      * The {@link PagerAdapter} that will provide
