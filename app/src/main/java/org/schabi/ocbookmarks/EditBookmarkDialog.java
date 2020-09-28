@@ -2,27 +2,34 @@ package org.schabi.ocbookmarks;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.schabi.ocbookmarks.REST.Bookmark;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static android.os.Build.VERSION.SDK_INT;
 
 public class EditBookmarkDialog {
     ArrayList<String> tagList = new ArrayList<>();
+    private static final String logTAG = "ocbookmarks";
     Bookmark bookmark;
     String title = "";
     String url = "";
@@ -90,23 +97,12 @@ public class EditBookmarkDialog {
                 if(item.getItemId() == R.id.save_menu) {
                     bookmark.setUrl(urlInput.getText().toString());
                     bookmark.setTitle(titleInput.getText().toString());
-                    if(descriptionInput.getText().length()!=0)
-                    {
-                        bookmark.setDescription(descriptionInput.getText().toString());
-                    }
-                    else {
-                        bookmark.setDescription(" "); //v3 api does not accept null value.
-                    }
-
+                    bookmark.setDescription(descriptionInput.getText().toString());
 
                     if(bookmark.getUrl().isEmpty()){
                         Toast.makeText(context, R.string.no_url_entered, Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        if(bookmark.getTitle().isEmpty()) {
-                            Toast.makeText(context, R.string.no_title_entered, Toast.LENGTH_SHORT).show();
-                            bookmark.setTitle(urlInput.getText().toString());
-                        }
                         String[] tags = new String[tagList.size()];
                         for (int i = 0; i < tags.length; i++) {
                             tags[i] = tagList.get(i);
@@ -122,6 +118,8 @@ public class EditBookmarkDialog {
                 return false;
             }
         });
+
+
 
         // setup recycler view
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.tag_recycler_view);
