@@ -101,10 +101,12 @@ public class EditBookmarkDialog {
 
                     if(bookmark.getUrl().isEmpty()){
                         Toast.makeText(context, R.string.no_url_entered, Toast.LENGTH_SHORT).show();
-                    } else if(bookmark.getTitle().isEmpty()) {
-                        Toast.makeText(context, R.string.no_title_entered, Toast.LENGTH_SHORT).show();
                     }
                     else {
+                        if(bookmark.getTitle().isEmpty()) {
+                            Toast.makeText(context, R.string.no_title_entered, Toast.LENGTH_SHORT).show();
+                            bookmark.setTitle(urlInput.getText().toString());
+                        }
                         String[] tags = new String[tagList.size()];
                         for (int i = 0; i < tags.length; i++) {
                             tags[i] = tagList.get(i);
