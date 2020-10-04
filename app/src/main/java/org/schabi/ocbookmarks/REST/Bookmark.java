@@ -5,7 +5,6 @@ import java.util.Vector;
 
 /**
  * Created by the-scrabi on 14.05.17.
- * modified by bisasda
  */
 public class Bookmark {
     private int id = -1;
@@ -13,11 +12,12 @@ public class Bookmark {
     private String title = "";
     private String userId = "";
     private String description = "";
-//    private Date added = null;
+    private Date added = null;
     private Date lastModified = null;
     private int clickcount = -1;
-//    private boolean isPublic = false;
+    private boolean isPublic = false;
     private String[] tags = new String[0];
+    private String[] folders= new String[0];
 
     public static Bookmark emptyInstance() {
         return new Bookmark();
@@ -56,10 +56,10 @@ public class Bookmark {
         return this;
     }
 
-//    public Bookmark setAdded(Date added) {
-//        this.added = added;
-//        return this;
-//    }
+    public Bookmark setAdded(Date added) {
+        this.added = added;
+        return this;
+    }
 
     public Bookmark setLastModified(Date lastModified) {
         this.lastModified = lastModified;
@@ -76,10 +76,14 @@ public class Bookmark {
         return this;
     }
 
-//    public Bookmark setPublic(boolean aPublic) {
-//        isPublic = aPublic;
-//        return this;
-//    }
+    public Bookmark setPublic(boolean aPublic) {
+        isPublic = aPublic;
+        return this;
+    }
+    public Bookmark setFolder(String[] folders) {
+        this.folders = folders;
+        return this;
+    }
 
     // +++++++++++++++++++++++++
     // +   getter functions    +
@@ -101,9 +105,9 @@ public class Bookmark {
     public String getDescription() {
         return description;
     }
-//    public Date getAdded() {
-//        return added;
-//    }
+    public Date getAdded() {
+        return added;
+    }
     public Date getLastModified() {
         return lastModified;
     }
@@ -113,9 +117,9 @@ public class Bookmark {
     public String[] getTags() {
         return tags;
     }
-//    public boolean isPublic() {
-//        return isPublic;
-//    }
+    public boolean isPublic() {
+        return isPublic;
+    }
 
     @Override
     public String toString() {
@@ -129,11 +133,11 @@ public class Bookmark {
                 "title:" + title + "\n" +
                 "userId:" + userId + "\n" +
                 "description:" + description + "\n" +
-//                "added:" + added.toString() + "\n" +
+                "added:" + added.toString() + "\n" +
                 "lastModified:" + lastModified.toString() + "\n" +
                 "clickount:" + clickcount + "\n" +
-                "tags:" + tagsString;
-//                "isPublic:" + Boolean.toString(isPublic);
+                "tags:" + tagsString + "\n" +
+                "isPublic:" + Boolean.toString(isPublic);
     }
 
 

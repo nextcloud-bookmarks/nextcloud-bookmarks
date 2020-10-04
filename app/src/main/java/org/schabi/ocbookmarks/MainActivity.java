@@ -502,6 +502,9 @@ public class MainActivity extends AppCompatActivity {
                 OCBookmarksRestConnector connector =
                         new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token,loginData.ssologin);
                 JSONArray data = connector.getRawBookmarks();
+                JSONArray folders = connector.getRawBookmarkFolder();
+                Log.d("Main", "folders: " + folders);
+
                 storeToFile(data);
                 return connector.getFromRawJson(data);
             } catch (Exception e) {
