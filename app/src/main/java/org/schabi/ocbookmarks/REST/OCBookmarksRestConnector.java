@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -40,6 +41,71 @@ public class OCBookmarksRestConnector {
         mSsologin =Ssologin;
     }
 
+    private BookmarkFolder getBookmarkfolderFromJsonO(JSONObject jBookmark) throws RequestException {
+
+        Log.d(TAG, "Debugging bookmark Folder json" + jBookmark.toString());
+        String[] folders; //here all the folders
+        try {
+            JSONArray jfolders = jBookmark.getJSONArray("folders");
+            folders = new String[jfolders.length()];
+            for (int j = 0; j < folders.length; j++) {
+                folders[j] = jfolders.getString(j);
+            }
+
+        } catch (JSONException je) {
+            throw new RequestException("Could not parse array", je);
+        }
+
+        //another api error we need to fix
+        if(folders.length == 1 && folders[0].isEmpty()) {
+            folders = new String[0];
+        }
+
+        try {
+            Log.e(TAG, "logging of bookmark Folder:"+jBookmark.toString());
+            return BookmarkFolder.emptyInstance()
+                    .setId(jBookmark.getInt("id"))
+                    .setTitle(jBookmark.getString("title"))
+                    .setParent_folder(jBookmark.getString("parent_folder"))
+                    .setChildren(folders);
+        } catch (JSONException je) {
+            throw new RequestException("Could not gather all data", je);
+        }
+    }
+
+    public JSONArray getRawBookmarkFolder() throws RequestException {
+        Log.d("OCBookmarks", "getRawBookmarkFolder called");
+        try {
+            return send("GET", "/folder").getJSONArray("data");
+        } catch (JSONException e) {
+            throw new RequestException("Could not parse data", e);
+        }
+    }
+
+    public BookmarkFolder[] getFromRawfolderJson(JSONArray data) throws RequestException {
+        Log.d("OCBookmarks", "getFromRawfolderJson called");
+        try {
+            BookmarkFolder[] bookmarks = new BookmarkFolder[data.length()];
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject bookmarkfolder = data.getJSONObject(i);
+                bookmarks[i] = getBookmarkfolderFromJsonO(bookmarkfolder);
+            }
+            return bookmarks;
+        } catch (JSONException e) {
+            throw new RequestException("Could not parse data", e);
+        }
+    }
+
+    public BookmarkFolder[] getFolders() throws RequestException{
+        Log.d("OCBookmarks", "getFolders called");
+        //          JSONArray data = send("GET", "/folder").getJSONArray("data");
+        JSONArray data = getRawBookmarkFolder();
+        return getFromRawfolderJson(data);
+
+    }
+
+    //End of bookmark folder
+
     public JSONObject send(String methode, String relativeUrl) throws RequestException {
         BufferedReader in = null;
         StringBuilder response = new StringBuilder();
@@ -56,15 +122,7 @@ public class OCBookmarksRestConnector {
             connection.setRequestMethod(methode);
             connection.setConnectTimeout(TIME_OUT);
             connection.addRequestProperty("Content-Type", "application/json");
-            if (mSsologin)
-            {
-                connection.addRequestProperty("Authorization", "bearer " + new String(Base64.encodeBase64((usr + ":" + token).getBytes())));
-            }
-            else {
-                connection.addRequestProperty("Authorization", "Basic " + new String(Base64.encodeBase64((usr + ":" + pwd).getBytes())));
-            }
-            Log.e(TAG, "Connection String for Debug!"+url.toString()); //For Debug purpose
-            Log.e(TAG,"Connection success!!");
+            connection.addRequestProperty("Authorization", "Basic " + new String(Base64.encodeBase64((usr + ":" + pwd).getBytes())));
         } catch (Exception e) {
             throw new RequestException("Could not setup request", e);
         }
@@ -153,7 +211,9 @@ public class OCBookmarksRestConnector {
         try {
             Bookmark[] bookmarks = new Bookmark[data.length()];
             for (int i = 0; i < data.length(); i++) {
+
                 JSONObject bookmark = data.getJSONObject(i);
+                Log.d("OCBookmarks", "bookmark: " + bookmark);
                 bookmarks[i] = getBookmarkFromJsonO(bookmark);
             }
             return bookmarks;
@@ -218,12 +278,12 @@ public class OCBookmarksRestConnector {
         if(!bookmark.getDescription().isEmpty()) {
             url += "&description=" + URLEncoder.encode(bookmark.getDescription());
         }
-//        if(bookmark.isPublic()) {
-//            url += "&is_public=1";
-//        }
+        if(bookmark.isPublic()) {
+            url += "&is_public=1";
+        }
 
         for(String tag : bookmark.getTags()) {
-            url += "&" + URLEncoder.encode("tags[]") + "=" + URLEncoder.encode(tag);
+            url += "&" + URLEncoder.encode("item[tags][]") + "=" + URLEncoder.encode(tag);
         }
 
         return url;
@@ -233,8 +293,6 @@ public class OCBookmarksRestConnector {
         try {
             if (bookmark.getId() == -1) {
                 String url = "/bookmark" + createBookmarkParameter(bookmark);
-
-                Log.e(TAG,"url String"+url);
 
                 JSONObject replay = send("POST", url);
                 return getBookmarkFromJsonO(replay.getJSONObject("item"));
