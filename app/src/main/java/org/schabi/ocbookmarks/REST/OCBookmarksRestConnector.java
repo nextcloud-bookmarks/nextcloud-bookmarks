@@ -53,7 +53,7 @@ public class OCBookmarksRestConnector {
             }
 
         } catch (JSONException je) {
-            throw new RequestException("Could not parse array", je);
+            throw new RequestException("Could not parse folder array", je);
         }
 
         //another api error we need to fix
