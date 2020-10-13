@@ -37,6 +37,9 @@ android {
         playstore{
             applicationId "org.bisw.nxbookmarks"
         }
+        amazon{
+            applicationId "org.bisw.nxbookmarks"
+        }
     }
 
     lintOptions {
