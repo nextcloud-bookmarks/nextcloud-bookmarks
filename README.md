@@ -23,6 +23,9 @@
 [<img src="assets/oc/icon.png" width=160px>](/)
 [![PlayStore](./assets/ps_badge.png)](https://play.google.com/store/apps/details?id=org.bisw.nxbookmarks.owncloud)
 
+[![Amazon](https://images-na.ssl-images-amazon.com/images/G/01/mobile-apps/devportal2/res/images/amazon-appstore-badge-english-white.png)](https://www.amazon.com/dp/B08L5RKHMM/ref=apps_sf_sta)
+
+
 ## :eyes: Screenshots
 
 | Multiple Accounts | SSO | Tags |  Bookmarks |
