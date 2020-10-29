@@ -17,12 +17,8 @@
       height="80">](https://liberapay.com/bisasda/donate)
 
 [<img src="assets/nx/icon.png" width=160px>](/)
-[![PlayStore](./assets/ps_badge.png)](https://play.google.com/store/apps/details?id=org.bisw.nxbookmarks)
+[![PlayStore](./assets/ps_badge.png)](https://t.me/nextcloudbookmarks)
 [![F-Droid](./assets/fdroid_badge.png)](https://f-droid.org/packages/org.schabi.nxbookmarks/)
-
-[<img src="assets/oc/icon.png" width=160px>](/)
-[![PlayStore](./assets/ps_badge.png)](https://play.google.com/store/apps/details?id=org.bisw.nxbookmarks.owncloud)
-
 [![Amazon](https://images-na.ssl-images-amazon.com/images/G/01/mobile-apps/devportal2/res/images/amazon-appstore-badge-english-white.png)](https://www.amazon.com/dp/B08L5RKHMM/ref=apps_sf_sta)
 
 
@@ -66,7 +62,7 @@ by NextCloudBookmarks version [3.2.1](https://github.com/nextcloud/bookmarks/rel
   * Report issues in the [issue tracker](https://gitlab.com/bisada/OCBookmarks/issues)
   * [Pick a good first issue](https://github.com/nextcloud/server/labels/good%20first%20issue) :notebook:
   * Create a [Pull Request](https://opensource.guide/how-to-contribute/#opening-a-pull-request)
-  * Buy this app on [Google Play Store](https://play.google.com/store/apps/details?id=org.bisw.nxbookmarks)
+  * Buy this app on [Amazon App Store](https://www.amazon.com/dp/B08L5RKHMM/ref=apps_sf_sta)
   * Send me a bottle of your favorite beer :beers: :wink:
   * [![Connect it on telegram](https://img.shields.io/badge/Connect%20via-%20telegram-0088cc.svg)](https://t.me/nextcloudbookmarks)
 
