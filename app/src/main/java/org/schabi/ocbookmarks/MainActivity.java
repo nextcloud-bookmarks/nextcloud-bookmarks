@@ -387,7 +387,6 @@ public class MainActivity extends AppCompatActivity {
         loginData.url = sharedPreferences.getString(getString(R.string.login_url), "");
         loginData.user = sharedPreferences.getString(getString(R.string.login_user), "");
         loginData.password = sharedPreferences.getString(getString(R.string.login_pwd), "");
-        loginData.token=sharedPreferences.getString(getString(R.string.login_token), "");
         loginData.ssologin=sharedPreferences.getBoolean(getString(R.string.ssologin), false);
 
         if (loginData.ssologin) {

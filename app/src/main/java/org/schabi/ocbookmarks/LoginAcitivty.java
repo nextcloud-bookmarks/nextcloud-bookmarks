@@ -99,7 +99,6 @@ public class LoginAcitivty extends AppCompatActivity {
                 loginData.user = userInput.getText().toString();
                 loginData.password = passwordInput.getText().toString();
                 loginData.ssologin = false;
-                loginData.token = "";
                 urlInput.setText(loginData.url);
 
                 testLoginTask = new TestLoginTask();
@@ -128,8 +127,6 @@ public class LoginAcitivty extends AppCompatActivity {
                 loginData.url = account.url;
                 loginData.user = account.userId;
                 loginData.ssologin = true;
-                loginData.token = account.token;
-                ;
                 loginData.password = "";
                 progressBar.setVisibility(View.VISIBLE);
                 connectButton.setVisibility(View.INVISIBLE);
@@ -187,13 +184,8 @@ public class LoginAcitivty extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPrefs.edit();
         editor.putString(getString(R.string.login_url), loginData.url);
         editor.putString(getString(R.string.login_user), loginData.user);
+        editor.putString(getString(R.string.login_pwd), loginData.password);
         editor.putBoolean(getString(R.string.ssologin), loginData.ssologin);
-        if (loginData.ssologin) {
-            editor.putString(getString(R.string.login_token), loginData.token);
-        } else {
-            editor.putString(getString(R.string.login_pwd), loginData.password);
-        }
-
         editor.apply();
     }
 

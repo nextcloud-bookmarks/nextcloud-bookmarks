@@ -8,6 +8,5 @@ public class LoginData {
     public String url;
     public String user;
     public String password;
-    public String token;
     public boolean ssologin;
 }

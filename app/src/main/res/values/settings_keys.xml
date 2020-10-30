@@ -3,6 +3,5 @@
     <string translatable="false" name="login_url">login_url</string>
     <string translatable="false" name="login_user">login_user</string>
     <string translatable="false" name="login_pwd">login_password</string>
-    <string translatable="false" name="login_token">login_token</string>
     <string translatable="false" name="ssologin">ssologin</string>
 </resources>
