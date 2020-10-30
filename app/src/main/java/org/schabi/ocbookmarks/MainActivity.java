@@ -38,6 +38,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.schabi.ocbookmarks.REST.Bookmark;
 import org.schabi.ocbookmarks.REST.OCBookmarksRestConnector;
+import org.schabi.ocbookmarks.REST.RequestException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -387,7 +388,7 @@ public class MainActivity extends AppCompatActivity {
         loginData.user = sharedPreferences.getString(getString(R.string.login_user), "");
         loginData.password = sharedPreferences.getString(getString(R.string.login_pwd), "");
         loginData.token=sharedPreferences.getString(getString(R.string.login_token), "");
-        loginData.ssologin=sharedPreferences.getBoolean(String.valueOf(R.string.ssologin), false);
+        loginData.ssologin=sharedPreferences.getBoolean(getString(R.string.ssologin), false);
 
         if (loginData.ssologin) {
             try {

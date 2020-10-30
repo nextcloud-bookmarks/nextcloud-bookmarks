@@ -87,7 +87,6 @@ public class OCBookmarksRestConnector {
             }
             try {
                 url = new URL(apiRootUrl + relativeUrl);
-                BufferedReader in = null;
                 StringBuilder response = new StringBuilder();
                 HttpURLConnection connection = null;
                 connection = (HttpURLConnection) url.openConnection();
@@ -96,9 +95,7 @@ public class OCBookmarksRestConnector {
                 connection.addRequestProperty("Content-Type", "application/json");
                 connection.addRequestProperty("Authorization", "Basic " + new String(Base64.encodeBase64((usr + ":" + pwd).getBytes())));
                 Log.e(TAG, "Connection success!!");
-                try {
-                    in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
                     String inputLine;
                     while ((inputLine = in.readLine()) != null) {
                         response.append(inputLine);
@@ -108,15 +105,6 @@ public class OCBookmarksRestConnector {
                         throw new PermissionException(e);
                     }
                     throw new RequestException(e);
-                } finally {
-                    try {
-                        if (in != null) {
-                            in.close();
-                        }
-                        connection.disconnect();
-                    } catch (Exception e) {
-                        throw new RequestException("Could not close connection", e);
-                    }
                 }
                 return parseJson(methode, url.toString(), response.toString());
             } catch (IOException e) {

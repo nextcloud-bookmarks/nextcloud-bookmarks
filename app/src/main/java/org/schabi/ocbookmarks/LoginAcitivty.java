@@ -247,36 +247,35 @@ public class LoginAcitivty extends AppCompatActivity {
         }
 
         protected void onPostExecute(Integer result) {
+            ssoButton.setVisibility(View.VISIBLE);
             connectButton.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
-            switch (result) {
-                case OK:
-                    storeLogin(loginData);
-                    deleteFiles();
-                    finish();
-                    break;
-                case CONNECTION_FAIL:
-                    errorView.setText(getString(R.string.connection_failed_login));
-                    errorView.setVisibility(View.VISIBLE);
-                    break;
-                case HOST_NOT_FOUND:
-                    errorView.setText(getString(R.string.login_host_not_found));
-                    errorView.setVisibility(View.VISIBLE);
-                    break;
-                case FILE_NOT_FOUND:
-                    errorView.setText(getString(R.string.login_failed));
-                    errorView.setVisibility(View.VISIBLE);
-                    break;
-                case TIME_OUT:
-                    errorView.setText(getString(R.string.login_timeout));
-                    errorView.setVisibility(View.VISIBLE);
-                    break;
-                case SSO_FAILED:
-                    errorView.setText(getString(R.string.sso_failed));
-                    errorView.setVisibility(View.VISIBLE);
-                    break;
-                default:
-                    break;
+            if (result == OK) {
+                storeLogin(loginData);
+                deleteFiles();
+                finish();
+            } else {
+                SingleAccountHelper.setCurrentAccount(LoginAcitivty.this, null);
+                errorView.setVisibility(View.VISIBLE);
+                switch (result) {
+                    case CONNECTION_FAIL:
+                        errorView.setText(getString(R.string.connection_failed_login));
+                        break;
+                    case HOST_NOT_FOUND:
+                        errorView.setText(getString(R.string.login_host_not_found));
+                        break;
+                    case FILE_NOT_FOUND:
+                        errorView.setText(getString(R.string.login_failed));
+                        break;
+                    case TIME_OUT:
+                        errorView.setText(getString(R.string.login_timeout));
+                        break;
+                    case SSO_FAILED:
+                        errorView.setText(getString(R.string.sso_failed));
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
