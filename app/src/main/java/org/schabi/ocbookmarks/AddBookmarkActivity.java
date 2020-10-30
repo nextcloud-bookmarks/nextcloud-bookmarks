@@ -10,6 +10,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.nextcloud.android.sso.api.NextcloudAPI;
+import com.nextcloud.android.sso.exceptions.NextcloudFilesAppAccountNotFoundException;
+import com.nextcloud.android.sso.exceptions.NoCurrentAccountSelectedException;
+import com.nextcloud.android.sso.helper.SingleAccountHelper;
+
 import org.schabi.ocbookmarks.REST.Bookmark;
 import org.schabi.ocbookmarks.REST.OCBookmarksRestConnector;
 
@@ -45,15 +50,27 @@ public class AddBookmarkActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
 
+                if(loginData.ssologin) {
+
+                }
+
                 AsyncTask<Void, Void, String> updateTask = new AsyncTask<Void, Void, String>() {
                     @Override
                     protected String doInBackground(Void... params) {
+                        NextcloudAPI nextcloudAPI = null;
+                        if (loginData.ssologin) {
+                            try {
+                                nextcloudAPI = SSOUtil.getNextcloudAPI(AddBookmarkActivity.this, SingleAccountHelper.getCurrentSingleSignOnAccount(AddBookmarkActivity.this));
+                            } catch (NextcloudFilesAppAccountNotFoundException | NoCurrentAccountSelectedException e) {
+                                e.printStackTrace();
+                                return null;
+                            }
+                        }
                         OCBookmarksRestConnector connector = new OCBookmarksRestConnector(
                                 loginData.url,
                                 loginData.user,
                                 loginData.password,
-                                loginData.token,
-                                loginData.ssologin);
+                                nextcloudAPI);
                         try {
                             connector.addBookmark(bookmark);
                         } catch (Exception e) {

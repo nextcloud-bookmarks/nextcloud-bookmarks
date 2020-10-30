@@ -20,9 +20,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.nextcloud.android.sso.AccountImporter;
+import com.nextcloud.android.sso.api.NextcloudAPI;
 import com.nextcloud.android.sso.exceptions.AccountImportCancelledException;
 import com.nextcloud.android.sso.exceptions.AndroidGetAccountsPermissionNotGranted;
+import com.nextcloud.android.sso.exceptions.NextcloudFilesAppAccountNotFoundException;
 import com.nextcloud.android.sso.exceptions.NextcloudFilesAppNotInstalledException;
+import com.nextcloud.android.sso.exceptions.NoCurrentAccountSelectedException;
 import com.nextcloud.android.sso.helper.SingleAccountHelper;
 import com.nextcloud.android.sso.ui.UiExceptionManager;
 
@@ -36,9 +39,10 @@ public class LoginAcitivty extends AppCompatActivity {
     // reply info
     private static final int OK = 0;
     private static final int CONNECTION_FAIL = 1;
-    private static final int HOST_NOT_FOUND= 2;
+    private static final int HOST_NOT_FOUND = 2;
     private static final int FILE_NOT_FOUND = 3;
     private static final int TIME_OUT = 4;
+    private static final int SSO_FAILED = 5;
     private boolean mPasswordVisible = false;
 
     LoginData loginData = new LoginData();
@@ -69,12 +73,12 @@ public class LoginAcitivty extends AppCompatActivity {
         userInput = (EditText) findViewById(R.id.userInput);
         passwordInput = (EditText) findViewById(R.id.passwordInput);
         connectButton = (Button) findViewById(R.id.connectButton);
-        ssoButton= (Button) findViewById(R.id.ssoButton);
+        ssoButton = (Button) findViewById(R.id.ssoButton);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         errorView = (TextView) findViewById(R.id.loginErrorView);
-        mImageViewShowPwd= (ImageView) findViewById(R.id.imgView_ShowPassword);
-        mOldLoginWrapper=(RelativeLayout) findViewById(R.id.old_login_wrapper);
-        mtv_manual_login= (TextView) findViewById(R.id.tv_manual_login);
+        mImageViewShowPwd = (ImageView) findViewById(R.id.imgView_ShowPassword);
+        mOldLoginWrapper = (RelativeLayout) findViewById(R.id.old_login_wrapper);
+        mtv_manual_login = (TextView) findViewById(R.id.tv_manual_login);
         errorView.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
 
@@ -85,7 +89,7 @@ public class LoginAcitivty extends AppCompatActivity {
         userInput.setText(sharedPrefs.getString(getString(R.string.login_user), ""));
         passwordInput.setText(sharedPrefs.getString(getString(R.string.login_pwd), ""));
 
-        if(!passwordInput.getText().toString().isEmpty()) {
+        if (!passwordInput.getText().toString().isEmpty()) {
             mImageViewShowPwd.setVisibility(View.GONE);
         }
         connectButton.setOnClickListener(new View.OnClickListener() {
@@ -104,17 +108,11 @@ public class LoginAcitivty extends AppCompatActivity {
                 connectButton.setVisibility(View.INVISIBLE);
             }
         });
-        ssoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    AccountImporter.pickNewAccount(LoginAcitivty.this);
-                }
-                catch (NextcloudFilesAppNotInstalledException e)
-                {
-                    UiExceptionManager.showDialogForException(LoginAcitivty.this, e);
-                } catch (AndroidGetAccountsPermissionNotGranted e)
-                { UiExceptionManager.showDialogForException(LoginAcitivty.this, e); }
+        ssoButton.setOnClickListener(v -> {
+            try {
+                AccountImporter.pickNewAccount(LoginAcitivty.this);
+            } catch (NextcloudFilesAppNotInstalledException | AndroidGetAccountsPermissionNotGranted e) {
+                UiExceptionManager.showDialogForException(LoginAcitivty.this, e);
             }
         });
 
@@ -126,19 +124,19 @@ public class LoginAcitivty extends AppCompatActivity {
 
         try {
             AccountImporter.onActivityResult(requestCode, resultCode, data, this, (account) -> {
-                SingleAccountHelper.setCurrentAccount(this,account.name);
-                loginData.url=account.url;
-                loginData.user=account.userId;
+                SingleAccountHelper.setCurrentAccount(this, account.name);
+                loginData.url = account.url;
+                loginData.user = account.userId;
                 loginData.ssologin = true;
-                loginData.token = account.token;;
-                loginData.password="";
-//                storeLogin(loginData);
-                finish();
-                testLoginTask = new TestLoginTask();
-                testLoginTask.execute(loginData);
+                loginData.token = account.token;
+                ;
+                loginData.password = "";
                 progressBar.setVisibility(View.VISIBLE);
                 connectButton.setVisibility(View.INVISIBLE);
                 ssoButton.setVisibility(View.INVISIBLE);
+                SingleAccountHelper.setCurrentAccount(this, account.name);
+                testLoginTask = new TestLoginTask();
+                testLoginTask.execute(loginData);
             });
         } catch (AccountImportCancelledException e) {
             Log.i("log", "Account import has been canceled.");
@@ -166,19 +164,20 @@ public class LoginAcitivty extends AppCompatActivity {
         public void onClick(View v) {
             mPasswordVisible = !mPasswordVisible;
 
-            if(mPasswordVisible) {
+            if (mPasswordVisible) {
                 passwordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
             } else {
                 passwordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             }
         }
     };
+
     private String fixUrl(String rawUrl) {
-        if(!rawUrl.startsWith("http")) {
+        if (!rawUrl.startsWith("http")) {
             rawUrl = "https://" + rawUrl;
         }
-        if(rawUrl.endsWith("/")) {
-            rawUrl = rawUrl.substring(0, rawUrl.length()-1);
+        if (rawUrl.endsWith("/")) {
+            rawUrl = rawUrl.substring(0, rawUrl.length() - 1);
         }
         return rawUrl;
     }
@@ -189,11 +188,9 @@ public class LoginAcitivty extends AppCompatActivity {
         editor.putString(getString(R.string.login_url), loginData.url);
         editor.putString(getString(R.string.login_user), loginData.user);
         editor.putBoolean(getString(R.string.ssologin), loginData.ssologin);
-        if (loginData.ssologin){
+        if (loginData.ssologin) {
             editor.putString(getString(R.string.login_token), loginData.token);
-        }
-        else
-        {
+        } else {
             editor.putString(getString(R.string.login_pwd), loginData.password);
         }
 
@@ -203,8 +200,8 @@ public class LoginAcitivty extends AppCompatActivity {
     private void deleteFiles() {
         // delete files from a previous login
         File homeDir = getApplicationContext().getFilesDir();
-        for(File file : homeDir.listFiles()) {
-            if(file.toString().contains(".png") ||
+        for (File file : homeDir.listFiles()) {
+            if (file.toString().contains(".png") ||
                     file.toString().contains(".noicon") ||
                     file.toString().contains(".json")) {
                 file.delete();
@@ -214,24 +211,33 @@ public class LoginAcitivty extends AppCompatActivity {
 
     private class TestLoginTask extends AsyncTask<LoginData, Void, Integer> {
         protected Integer doInBackground(LoginData... loginDatas) {
+            NextcloudAPI nextcloudAPI = null;
+            if (loginData.ssologin) {
+                try {
+                    nextcloudAPI = SSOUtil.getNextcloudAPI(LoginAcitivty.this, SingleAccountHelper.getCurrentSingleSignOnAccount(LoginAcitivty.this));
+                } catch (NextcloudFilesAppAccountNotFoundException | NoCurrentAccountSelectedException e) {
+                    e.printStackTrace();
+                    return SSO_FAILED;
+                }
+            }
+
             LoginData loginData = loginDatas[0];
-            OCBookmarksRestConnector connector =
-                    new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token, loginData.ssologin);
+            OCBookmarksRestConnector connector = new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password, nextcloudAPI);
             try {
                 connector.getBookmarks();
                 return OK;
             } catch (RequestException re) {
-                if(BuildConfig.DEBUG) {
+                if (BuildConfig.DEBUG) {
                     re.printStackTrace();
                 }
 
-                if(re.getMessage().contains("FileNotFound")) {
+                if (re.getMessage().contains("FileNotFound")) {
                     return FILE_NOT_FOUND;
                 }
-                if(re.getMessage().contains("UnknownHost")) {
+                if (re.getMessage().contains("UnknownHost")) {
                     return HOST_NOT_FOUND;
                 }
-                if(re.getMessage().contains("SocketTimeout")) {
+                if (re.getMessage().contains("SocketTimeout")) {
                     return TIME_OUT;
                 }
                 return CONNECTION_FAIL;
@@ -263,6 +269,10 @@ public class LoginAcitivty extends AppCompatActivity {
                     break;
                 case TIME_OUT:
                     errorView.setText(getString(R.string.login_timeout));
+                    errorView.setVisibility(View.VISIBLE);
+                    break;
+                case SSO_FAILED:
+                    errorView.setText(getString(R.string.sso_failed));
                     errorView.setVisibility(View.VISIBLE);
                     break;
                 default:

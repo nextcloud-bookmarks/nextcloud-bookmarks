@@ -28,6 +28,11 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.nextcloud.android.sso.api.NextcloudAPI;
+import com.nextcloud.android.sso.exceptions.NextcloudFilesAppAccountNotFoundException;
+import com.nextcloud.android.sso.exceptions.NoCurrentAccountSelectedException;
+import com.nextcloud.android.sso.helper.SingleAccountHelper;
+import com.nextcloud.android.sso.model.SingleSignOnAccount;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
 
     private Toolbar mToolbar;
+
+    private NextcloudAPI mNextcloudAPI = null;
 
     private static final String BOOKMARK_FRAGMENT = "bookmark_fragment";
     private BookmarkFragment mBookmarkFragment = null;
@@ -225,8 +232,7 @@ public class MainActivity extends AppCompatActivity {
                                 loginData.url,
                                 loginData.user,
                                 loginData.password,
-                                loginData.token,
-                                loginData.ssologin);
+                                mNextcloudAPI);
                         try {
                             connector.deleteBookmark(bookmark);
                         } catch (Exception e) {
@@ -256,8 +262,7 @@ public class MainActivity extends AppCompatActivity {
                         loginData.url,
                         loginData.user,
                         loginData.password,
-                        loginData.token,
-                        loginData.ssologin);
+                        mNextcloudAPI);
                 if(bookmark.getId() < 0) {
                     // add new bookmark
                     try {
@@ -316,8 +321,7 @@ public class MainActivity extends AppCompatActivity {
                                         loginData.url,
                                         loginData.user,
                                         loginData.password,
-                                        loginData.token,
-                                        loginData.ssologin);
+                                        mNextcloudAPI);
                         try {
                             connector.renameTag(oldTag, newTag);
                         } catch (Exception e) {
@@ -349,8 +353,7 @@ public class MainActivity extends AppCompatActivity {
                                 loginData.url,
                                 loginData.user,
                                 loginData.password,
-                                loginData.token,
-                                loginData.ssologin);
+                                mNextcloudAPI);
                         try {
                             connector.deleteTag(tag);
                         } catch (Exception e) {
@@ -385,6 +388,16 @@ public class MainActivity extends AppCompatActivity {
         loginData.password = sharedPreferences.getString(getString(R.string.login_pwd), "");
         loginData.token=sharedPreferences.getString(getString(R.string.login_token), "");
         loginData.ssologin=sharedPreferences.getBoolean(String.valueOf(R.string.ssologin), false);
+
+        if (loginData.ssologin) {
+            try {
+                mNextcloudAPI = SSOUtil.getNextcloudAPI(this, SingleAccountHelper.getCurrentSingleSignOnAccount(this));
+            } catch (NextcloudFilesAppAccountNotFoundException | NoCurrentAccountSelectedException e) {
+                e.printStackTrace();
+                SSOUtil.invalidateAPICache();
+            }
+        }
+
         if(loginData.url.isEmpty()) {
             Intent intent = new Intent(this, LoginAcitivty.class);
             startActivity(intent);
@@ -500,7 +513,7 @@ public class MainActivity extends AppCompatActivity {
         protected Bookmark[] doInBackground(Void... bla) {
             try {
                 OCBookmarksRestConnector connector =
-                        new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token,loginData.ssologin);
+                        new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password, mNextcloudAPI);
                 JSONArray data = connector.getRawBookmarks();
                 storeToFile(data);
                 return connector.getFromRawJson(data);
@@ -625,8 +638,7 @@ public class MainActivity extends AppCompatActivity {
                         new OCBookmarksRestConnector(loginData.url,
                                 loginData.user,
                                 loginData.password,
-                                loginData.token,
-                                loginData.ssologin);
+                                mNextcloudAPI);
                 Bookmark[] bookmarks = connector.getFromRawJson(new JSONArray(text.toString()));
                 mTagsFragment.updateData(Bookmark.getTagsFromBookmarks(bookmarks));
                 mBookmarkFragment.updateData(bookmarks);
