@@ -93,6 +93,7 @@ public class OCBookmarksRestConnector {
     /**
      * Sending traditionally old school way
      */
+    @Deprecated
     public JSONObject sendWithoutSSO(String methode, String relativeUrl) throws RequestException {
         Log.e(TAG, "Connection String for Debug!" + apiRootUrl); //For Debug purpose
         final URL url;
@@ -235,6 +236,7 @@ public class OCBookmarksRestConnector {
         }
     }
 
+    @Deprecated
     private String createBookmarkParameterString(Bookmark bookmark) {
         if (!bookmark.getTitle().isEmpty() && !bookmark.getUrl().startsWith("http")) {
             //tittle can only be set if the sheme is given
@@ -262,10 +264,10 @@ public class OCBookmarksRestConnector {
     }
 
     private Map<String, String> createBookmarkParameter(Bookmark bookmark) {
-        Map<String, String> parameter = new HashMap<>();
+        final Map<String, String> parameter = new HashMap<>(3 + bookmark.getTags().length);
         if (!bookmark.getTitle().isEmpty() && !bookmark.getUrl().startsWith("http")) {
-            //tittle can only be set if the sheme is given
-            //this is a bug we need to fix
+            // Title can only be set if the sheme is given
+            // This is a bug we need to fix
             bookmark.setUrl("http://" + bookmark.getUrl());
         }
 
@@ -330,7 +332,7 @@ public class OCBookmarksRestConnector {
         } else {
             Map<String, String> parameter = createBookmarkParameter(bookmark);
             parameter.put("record_id", Integer.toString(newRecordId));
-            return getBookmarkFromJsonO(sendWithSSO("PUT", "/bookmark" + bookmark.getId(), parameter));
+            return getBookmarkFromJsonO(sendWithSSO("PUT", "/bookmark/" + bookmark.getId(), parameter));
         }
     }
 
