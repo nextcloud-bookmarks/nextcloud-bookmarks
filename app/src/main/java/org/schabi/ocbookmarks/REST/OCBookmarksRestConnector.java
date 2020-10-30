@@ -2,6 +2,7 @@ package org.schabi.ocbookmarks.REST;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.nextcloud.android.sso.aidl.NextcloudRequest;
@@ -17,11 +18,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by the-scrabi on 14.05.17.
@@ -53,63 +55,74 @@ public class OCBookmarksRestConnector {
         if (this.nextcloudAPI == null) {
             apiRootUrl = rootUrl + "/index.php/apps/bookmarks/public/rest/v2";
         } else {
+            // host is defined by SingleSignOnAccount
             apiRootUrl = "/index.php/apps/bookmarks/public/rest/v2";
         }
     }
 
-    public JSONObject send(String methode, String relativeUrl) throws RequestException {
-        Log.e(TAG, "Connection String for Debug!" + apiRootUrl); //For Debug purpose
-        if (nextcloudAPI != null) {
-            final NextcloudRequest request = new NextcloudRequest
-                    .Builder()
-                    .setMethod(methode)
-                    .setUrl(apiRootUrl + relativeUrl)
-                    .build();
-            final Response response;
-            try {
-                response = this.nextcloudAPI.performNetworkRequestV2(request);
+    /**
+     * Sending SSO fancy way
+     */
+    public JSONObject sendWithSSO(@NonNull String methode, @NonNull String relativeUrl, @NonNull Map<String, String> parameter) throws RequestException {
+        if (this.nextcloudAPI == null) {
+            throw new RequestException("Trying to send request via SSO, but API is null.");
+        }
+        final NextcloudRequest request = new NextcloudRequest
+                .Builder()
+                .setMethod(methode)
+                .setUrl(apiRootUrl + relativeUrl)
+                .setParameter(parameter)
+                .build();
+        final Response response;
+        try {
+            response = this.nextcloudAPI.performNetworkRequestV2(request);
 
-                final StringBuilder result = new StringBuilder();
-                final BufferedReader rd = new BufferedReader(new InputStreamReader(response.getBody()));
-                String line;
-                while ((line = rd.readLine()) != null) {
-                    result.append(line);
+            final StringBuilder result = new StringBuilder();
+            final BufferedReader rd = new BufferedReader(new InputStreamReader(response.getBody()));
+            String line;
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+            response.getBody().close();
+            return parseJson(methode, apiRootUrl + relativeUrl, result.toString());
+        } catch (Exception e) {
+            throw new RequestException(e);
+        }
+    }
+
+    /**
+     * Sending traditionally old school way
+     */
+    public JSONObject sendWithoutSSO(String methode, String relativeUrl) throws RequestException {
+        Log.e(TAG, "Connection String for Debug!" + apiRootUrl); //For Debug purpose
+        final URL url;
+        if (apiRootUrl.startsWith("https")) {
+            Log.e(TAG, "apiRootUrl value is https:" + apiRootUrl); //#TODO: add functionality for http and https.
+        }
+        try {
+            url = new URL(apiRootUrl + relativeUrl);
+            StringBuilder response = new StringBuilder();
+            HttpURLConnection connection = null;
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod(methode);
+            connection.setConnectTimeout(TIME_OUT);
+            connection.addRequestProperty("Content-Type", "application/json");
+            connection.addRequestProperty("Authorization", "Basic " + new String(Base64.encodeBase64((usr + ":" + pwd).getBytes())));
+            Log.e(TAG, "Connection success!!");
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
                 }
-                response.getBody().close();
-                return parseJson(methode, apiRootUrl + relativeUrl, result.toString());
             } catch (Exception e) {
-                throw new RequestException(e);
-            }
-        } else {
-            final URL url;
-            if (apiRootUrl.startsWith("https")) {
-                Log.e(TAG, "apiRootUrl value is https:" + apiRootUrl); //#TODO: add functionality for http and https.
-            }
-            try {
-                url = new URL(apiRootUrl + relativeUrl);
-                StringBuilder response = new StringBuilder();
-                HttpURLConnection connection = null;
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod(methode);
-                connection.setConnectTimeout(TIME_OUT);
-                connection.addRequestProperty("Content-Type", "application/json");
-                connection.addRequestProperty("Authorization", "Basic " + new String(Base64.encodeBase64((usr + ":" + pwd).getBytes())));
-                Log.e(TAG, "Connection success!!");
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                    String inputLine;
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
-                    }
-                } catch (Exception e) {
-                    if (e.getMessage().contains("500")) {
-                        throw new PermissionException(e);
-                    }
-                    throw new RequestException(e);
+                if (e.getMessage().contains("500")) {
+                    throw new PermissionException(e);
                 }
-                return parseJson(methode, url.toString(), response.toString());
-            } catch (IOException e) {
                 throw new RequestException(e);
             }
+            return parseJson(methode, url.toString(), response.toString());
+        } catch (IOException e) {
+            throw new RequestException(e);
         }
     }
 
@@ -160,8 +173,9 @@ public class OCBookmarksRestConnector {
 
     public JSONArray getRawBookmarks() throws RequestException {
         try {
-            return send("GET", "/bookmark?page=-1")
-                    .getJSONArray("data");
+            return this.nextcloudAPI == null
+                    ? sendWithoutSSO("GET", "/bookmark?page=-1").getJSONArray("data")
+                    : sendWithSSO("GET", "/bookmark?page=-1", Collections.emptyMap()).getJSONArray("data");
         } catch (JSONException e) {
             throw new RequestException("Could not parse data", e);
         }
@@ -221,7 +235,7 @@ public class OCBookmarksRestConnector {
         }
     }
 
-    private String createBookmarkParameter(Bookmark bookmark) {
+    private String createBookmarkParameterString(Bookmark bookmark) {
         if (!bookmark.getTitle().isEmpty() && !bookmark.getUrl().startsWith("http")) {
             //tittle can only be set if the sheme is given
             //this is a bug we need to fix
@@ -247,15 +261,36 @@ public class OCBookmarksRestConnector {
         return url;
     }
 
+    private Map<String, String> createBookmarkParameter(Bookmark bookmark) {
+        Map<String, String> parameter = new HashMap<>();
+        if (!bookmark.getTitle().isEmpty() && !bookmark.getUrl().startsWith("http")) {
+            //tittle can only be set if the sheme is given
+            //this is a bug we need to fix
+            bookmark.setUrl("http://" + bookmark.getUrl());
+        }
+
+        parameter.put("url", bookmark.getUrl());
+        parameter.put("title", bookmark.getTitle());
+        parameter.put("description", bookmark.getDescription());
+
+        for (String tag : bookmark.getTags()) {
+            parameter.put("tags[]", tag);
+        }
+
+        return parameter;
+    }
+
     public Bookmark addBookmark(Bookmark bookmark) throws RequestException {
         try {
             if (bookmark.getId() == -1) {
-                String url = "/bookmark" + createBookmarkParameter(bookmark);
+                JSONObject reply;
+                if (this.nextcloudAPI == null) {
+                    reply = sendWithoutSSO("POST", "/bookmark" + createBookmarkParameterString(bookmark));
+                } else {
+                    reply = sendWithSSO("POST", "/bookmark", createBookmarkParameter(bookmark));
+                }
 
-                Log.e(TAG, "url String" + url);
-
-                JSONObject replay = send("POST", url);
-                return getBookmarkFromJsonO(replay.getJSONObject("item"));
+                return getBookmarkFromJsonO(reply.getJSONObject("item"));
             } else {
                 throw new RequestException("Bookmark id is set. Maybe this bookmark already exist: id=" + bookmark.getId());
             }
@@ -268,7 +303,11 @@ public class OCBookmarksRestConnector {
         if (bookmark.getId() < 0) {
             return;
         }
-        send("DELETE", "/bookmark/" + Integer.toString(bookmark.getId()));
+        if (nextcloudAPI == null) {
+            sendWithoutSSO("DELETE", "/bookmark/" + bookmark.getId());
+        } else {
+            sendWithSSO("DELETE", "/bookmark/" + bookmark.getId(), Collections.emptyMap());
+        }
     }
 
     public Bookmark editBookmark(Bookmark bookmark) throws RequestException {
@@ -283,10 +322,16 @@ public class OCBookmarksRestConnector {
         if (bookmark.getUrl().isEmpty()) {
             throw new RequestException("Bookmark has no url. Maybe you want to add a bookmark?");
         }
-        String url = "/bookmark/" + Integer.toString(bookmark.getId()) + createBookmarkParameter(bookmark);
-        url += "&record_id=" + Integer.toString(newRecordId);
 
-        return getBookmarkFromJsonO(send("PUT", url));
+        if (this.nextcloudAPI == null) {
+            String url = "/bookmark/" + Integer.toString(bookmark.getId()) + createBookmarkParameterString(bookmark);
+            url += "&record_id=" + Integer.toString(newRecordId);
+            return getBookmarkFromJsonO(sendWithoutSSO("PUT", url));
+        } else {
+            Map<String, String> parameter = createBookmarkParameter(bookmark);
+            parameter.put("record_id", Integer.toString(newRecordId));
+            return getBookmarkFromJsonO(sendWithSSO("PUT", "/bookmark" + bookmark.getId(), parameter));
+        }
     }
 
     // ++++++++++++++++++
@@ -295,7 +340,12 @@ public class OCBookmarksRestConnector {
 
     public String[] getTags() throws RequestException {
         try {
-            JSONArray data = send("GET", "/tag").getJSONArray("data");
+            JSONArray data;
+            if (this.nextcloudAPI == null) {
+                data = sendWithoutSSO("GET", "/tag").getJSONArray("data");
+            } else {
+                data = sendWithSSO("GET", "/tag", Collections.emptyMap()).getJSONArray("data");
+            }
 
             String[] tags = new String[data.length()];
             for (int i = 0; i < tags.length; i++) {
@@ -309,11 +359,22 @@ public class OCBookmarksRestConnector {
     }
 
     public void deleteTag(String tag) throws RequestException {
-        send("DELETE", "/tag?old_name=" + URLEncoder.encode(tag));
+        if (this.nextcloudAPI == null) {
+            sendWithoutSSO("DELETE", "/tag?old_name=" + URLEncoder.encode(tag));
+        } else {
+            sendWithSSO("DELETE", "/tag", Collections.singletonMap("old_name", tag));
+        }
     }
 
     public void renameTag(String oldName, String newName) throws RequestException {
-        send("POST", "/tag?old_name=" + URLEncoder.encode(oldName)
-                + "&new_name=" + URLEncoder.encode(newName));
+        if (this.nextcloudAPI == null) {
+            sendWithoutSSO("POST", "/tag?old_name=" + URLEncoder.encode(oldName)
+                    + "&new_name=" + URLEncoder.encode(newName));
+        } else {
+            final Map<String, String> parameter = new HashMap<>(2);
+            parameter.put("old_name", oldName);
+            parameter.put("new_name", newName);
+            sendWithSSO("POST", "/tag", parameter);
+        }
     }
 }

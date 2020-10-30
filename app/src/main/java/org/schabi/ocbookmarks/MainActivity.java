@@ -32,13 +32,11 @@ import com.nextcloud.android.sso.api.NextcloudAPI;
 import com.nextcloud.android.sso.exceptions.NextcloudFilesAppAccountNotFoundException;
 import com.nextcloud.android.sso.exceptions.NoCurrentAccountSelectedException;
 import com.nextcloud.android.sso.helper.SingleAccountHelper;
-import com.nextcloud.android.sso.model.SingleSignOnAccount;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.schabi.ocbookmarks.REST.Bookmark;
 import org.schabi.ocbookmarks.REST.OCBookmarksRestConnector;
-import org.schabi.ocbookmarks.REST.RequestException;
 
 import java.io.BufferedReader;
 import java.io.File;

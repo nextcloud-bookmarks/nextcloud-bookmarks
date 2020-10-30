@@ -41,6 +41,7 @@ public class AddBookmarkActivity extends AppCompatActivity {
                 loginData.url = preferences.getString(getString(R.string.login_url), "");
                 loginData.user = preferences.getString(getString(R.string.login_user), "");
                 loginData.password = preferences.getString(getString(R.string.login_pwd), "");
+                loginData.ssologin = preferences.getBoolean(getString(R.string.ssologin), false);
                 if(loginData.url.isEmpty()) {
                     //this means the user is not yet loged in
                     Toast.makeText(AddBookmarkActivity.this,
@@ -48,10 +49,6 @@ public class AddBookmarkActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(AddBookmarkActivity.this, MainActivity.class);
                     startActivity(intent);
-                }
-
-                if(loginData.ssologin) {
-
                 }
 
                 AsyncTask<Void, Void, String> updateTask = new AsyncTask<Void, Void, String>() {
