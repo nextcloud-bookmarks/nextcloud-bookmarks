@@ -58,7 +58,7 @@ public class OCBookmarksRestConnector {
             connection.addRequestProperty("Content-Type", "application/json");
             if (mSsologin)
             {
-                connection.addRequestProperty("Authorization", "bearer " + new String(Base64.encodeBase64((usr + ":" + token).getBytes())));
+                connection.addRequestProperty("Authorization", "Bearer " + new String(Base64.encodeBase64((usr + ":" + token).getBytes())));
             }
             else {
                 connection.addRequestProperty("Authorization", "Basic " + new String(Base64.encodeBase64((usr + ":" + pwd).getBytes())));
