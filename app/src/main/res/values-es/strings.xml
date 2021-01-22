@@ -1,0 +1,56 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<!--Created by The Translator <https://play.google.com/store/apps/details?id=com.sunilpaulmathew.translator>-->
+
+    <string name="app_name">Nextcloud Bookmarks</string>
+     <string name="app_name_short">Marcadores</string>
+     <string name="oc_bookmark_login"></string>
+     <string name="action_change_login">Cambiar datos de sesión</string>
+     <string name="tags">Etiquetas</string>
+     <string name="bookmarks">Marcadores</string>
+     <string name="loginUserHint">Nombre de usuario</string>
+     <string name="loginPasswordHint">Contraseña</string>
+     <string name="loginUrlHint">Dirección del servidor https://&#8230;</string>
+     <string name="connect">Iniciar sesión</string>
+     <string name="connect_sso">Nextcloud Single Sign On (SSO)</string>
+     <string name="login_manual">Inicio manual</string>
+     <string name="save">Guardar</string>
+     <string name="edit">Editar</string>
+     <string name="delete">Borrar</string>
+     <string name="share">Compartir</string>
+     <string name="sure_to_delete_bookmark">¿Borrar este marcador?</string>
+     <string name="bookmark_url_hint">URL</string>
+     <string name="bookmark_title_hint">Título</string>
+     <string name="bookmark_description_hint">Descripción</string>
+     <string name="edit_tag">Editar etiqueta</string>
+     <string name="cancel">Cancelar</string>
+     <string name="add_tags">Añadir etiqueta</string>
+     <string name="sure_to_delete_tag">¿Eliminar esta etiqueta?</string>
+     <string name="yes">Sí</string>
+     <string name="no">No</string>
+     <string name="could_not_update_tag">No se pudo actualizar la etiqueta</string>
+     <string name="could_not_delete_tag">No se pudo eliminar la etiqueta</string>
+     <string name="no_url_entered">No se escribió una URL</string>
+     <string name="no_title_entered">No se escribió un título</string>
+     <string name="could_not_add_bookmark">No se pudo añadir el marcador</string>
+     <string name="could_not_change_bookmark">No se pudo modificar el marcador</string>
+     <string name="could_not_delete_bookmark">No se pudo borrar el marcador</string>
+     <string name="not_yet_logged_in">Aún no has iniciado sesión</string>
+     <string name="bookmark_saved">Marcador guardado</string>
+     <string name="reload_icons">Recargar iconos</string>
+     <string name="backup_data">Respaldar marcadores en un archivo</string>
+     <string name="connectino_failed">Conexión fallida</string>
+     <string name="content_desc_tap_to_refresh">tocar para actualizar</string>
+     <string name="connection_failed_login">Conexión fallida. Comprueba si\n &#x2022; tienes acceso a Internet\n &#x2022; la URL es correcta.\n &#x2022; has importado certificados autofirmados.</string>
+     <string name="login_host_not_found">Conexión fallida. Comprueba si\n &#x2022; la URL es correcta.</string>
+     <string name="login_failed">Inicio de sesión fallido. Comprueba si\n &#x2022; La URL es correcta.\n &#x2022; el nombre de usuario/contraseña es correcto.\n &#x2022; la versión v0.10.1 o mayor de Bookmark App\n está instalada en Nextcloud</string>
+     <string name="login_timeout">Conexión fallida. Comprueba si\n &#x2022; tienes acceso a Internet.\n &#x2022; la URL es correcta.\n &#x2022; has ingresado el número de puerto correcto.</string>
+     <string name="email_subject">Ayuda de Nextcloud Bookmarks</string>
+     <string name="email_body">Por favor
+ explique el problema debajo</string>
+     <string name="support_email">biswajitbangalore@gmail.com</string>
+     <string name="send_email">Enviar correo</string>
+     <string name="E_mail">Correo</string>
+     <string name="content_desc_show_password">mostrar contraseña</string>
+     <string name="backup_successful">Marcadores respaldados en %1s</string>
+     <string name="backup_failed">Failed to create backup of bookmarks</string>
+</resources>
