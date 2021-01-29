@@ -19,12 +19,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.nextcloud.android.sso.AccountImporter;
-import com.nextcloud.android.sso.exceptions.AccountImportCancelledException;
-import com.nextcloud.android.sso.exceptions.AndroidGetAccountsPermissionNotGranted;
-import com.nextcloud.android.sso.exceptions.NextcloudFilesAppNotInstalledException;
-import com.nextcloud.android.sso.helper.SingleAccountHelper;
-import com.nextcloud.android.sso.ui.UiExceptionManager;
+//import com.nextcloud.android.sso.AccountImporter;
+//import com.nextcloud.android.sso.exceptions.AccountImportCancelledException;
+//import com.nextcloud.android.sso.exceptions.AndroidGetAccountsPermissionNotGranted;
+//import com.nextcloud.android.sso.exceptions.NextcloudFilesAppNotInstalledException;
+//import com.nextcloud.android.sso.helper.SingleAccountHelper;
+//import com.nextcloud.android.sso.ui.UiExceptionManager;
 
 import org.schabi.ocbookmarks.REST.OCBookmarksRestConnector;
 import org.schabi.ocbookmarks.REST.RequestException;
@@ -94,8 +94,8 @@ public class LoginAcitivty extends AppCompatActivity {
                 loginData.url = fixUrl(urlInput.getText().toString());
                 loginData.user = userInput.getText().toString();
                 loginData.password = passwordInput.getText().toString();
-                loginData.ssologin = false;
-                loginData.token = "";
+//                loginData.ssologin = false;
+//                loginData.token = "";
                 urlInput.setText(loginData.url);
 
                 testLoginTask = new TestLoginTask();
@@ -104,53 +104,53 @@ public class LoginAcitivty extends AppCompatActivity {
                 connectButton.setVisibility(View.INVISIBLE);
             }
         });
-        ssoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    AccountImporter.pickNewAccount(LoginAcitivty.this);
-                }
-                catch (NextcloudFilesAppNotInstalledException e)
-                {
-                    UiExceptionManager.showDialogForException(LoginAcitivty.this, e);
-                } catch (AndroidGetAccountsPermissionNotGranted e)
-                { UiExceptionManager.showDialogForException(LoginAcitivty.this, e); }
-            }
-        });
+//        ssoButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                try {
+//                    AccountImporter.pickNewAccount(LoginAcitivty.this);
+//                }
+//                catch (NextcloudFilesAppNotInstalledException e)
+//                {
+//                    UiExceptionManager.showDialogForException(LoginAcitivty.this, e);
+//                } catch (AndroidGetAccountsPermissionNotGranted e)
+//                { UiExceptionManager.showDialogForException(LoginAcitivty.this, e); }
+//            }
+//        });
 
 
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        try {
-            AccountImporter.onActivityResult(requestCode, resultCode, data, this, (account) -> {
-                SingleAccountHelper.setCurrentAccount(this,account.name);
-                loginData.url=account.url;
-                loginData.user=account.userId;
-                loginData.ssologin = true;
-                loginData.token = account.token;;
-                loginData.password="";
-//                storeLogin(loginData);
-                finish();
-                testLoginTask = new TestLoginTask();
-                testLoginTask.execute(loginData);
-                progressBar.setVisibility(View.VISIBLE);
-                connectButton.setVisibility(View.INVISIBLE);
-                ssoButton.setVisibility(View.INVISIBLE);
-            });
-        } catch (AccountImportCancelledException e) {
-            Log.i("log", "Account import has been canceled.");
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        AccountImporter.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-    }
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        try {
+//            AccountImporter.onActivityResult(requestCode, resultCode, data, this, (account) -> {
+//                SingleAccountHelper.setCurrentAccount(this,account.name);
+//                loginData.url=account.url;
+//                loginData.user=account.userId;
+//                loginData.ssologin = true;
+//                loginData.token = account.token;;
+//                loginData.password="";
+////                storeLogin(loginData);
+//                finish();
+//                testLoginTask = new TestLoginTask();
+//                testLoginTask.execute(loginData);
+//                progressBar.setVisibility(View.VISIBLE);
+//                connectButton.setVisibility(View.INVISIBLE);
+//                ssoButton.setVisibility(View.INVISIBLE);
+//            });
+//        } catch (AccountImportCancelledException e) {
+//            Log.i("log", "Account import has been canceled.");
+//        }
+//    }
+//
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//
+//        AccountImporter.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+//    }
 
 
     public void onClick(View v) {
@@ -188,14 +188,15 @@ public class LoginAcitivty extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPrefs.edit();
         editor.putString(getString(R.string.login_url), loginData.url);
         editor.putString(getString(R.string.login_user), loginData.user);
-        editor.putBoolean(getString(R.string.ssologin), loginData.ssologin);
-        if (loginData.ssologin){
-            editor.putString(getString(R.string.login_token), loginData.token);
-        }
-        else
-        {
-            editor.putString(getString(R.string.login_pwd), loginData.password);
-        }
+        editor.putString(getString(R.string.login_pwd), loginData.password);
+//        editor.putBoolean(getString(R.string.ssologin), loginData.ssologin);
+//        if (loginData.ssologin){
+//            editor.putString(getString(R.string.login_token), loginData.token);
+//        }
+//        else
+//        {
+//            editor.putString(getString(R.string.login_pwd), loginData.password);
+//        }
 
         editor.apply();
     }
@@ -216,7 +217,8 @@ public class LoginAcitivty extends AppCompatActivity {
         protected Integer doInBackground(LoginData... loginDatas) {
             LoginData loginData = loginDatas[0];
             OCBookmarksRestConnector connector =
-                    new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token, loginData.ssologin);
+                    new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password);
+                    //new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token, loginData.ssologin);
             try {
                 connector.getBookmarks();
                 return OK;

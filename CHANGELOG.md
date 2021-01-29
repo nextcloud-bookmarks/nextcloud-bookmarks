@@ -1,3 +1,7 @@
+# [v1.16](https://gitlab.com/bisada/OCBookmarks/tags/v1.16)
+
+- SSO Removed as requested #67
+
 # [v1.15](https://gitlab.com/bisada/OCBookmarks/tags/v1.15)
 
 - Bookmark description &  Title depend on API.
