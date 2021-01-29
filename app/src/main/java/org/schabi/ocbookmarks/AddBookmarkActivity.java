@@ -51,9 +51,10 @@ public class AddBookmarkActivity extends AppCompatActivity {
                         OCBookmarksRestConnector connector = new OCBookmarksRestConnector(
                                 loginData.url,
                                 loginData.user,
-                                loginData.password,
-                                loginData.token,
-                                loginData.ssologin);
+                                loginData.password
+//                                loginData.token,
+//                                loginData.ssologin
+                                );
                         try {
                             connector.addBookmark(bookmark);
                         } catch (Exception e) {
