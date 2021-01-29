@@ -11,8 +11,8 @@
      <string name="loginPasswordHint">Contraseña</string>
      <string name="loginUrlHint">Dirección del servidor https://&#8230;</string>
      <string name="connect">Iniciar sesión</string>
-     <string name="connect_sso">Nextcloud Single Sign On (SSO)</string>
-     <string name="login_manual">Inicio manual</string>
+     <string name="connect_sso">Nextcloud Single Sign On (WIP)</string>
+     <string name="login_manual">Inicio</string>
      <string name="save">Guardar</string>
      <string name="edit">Editar</string>
      <string name="delete">Borrar</string>

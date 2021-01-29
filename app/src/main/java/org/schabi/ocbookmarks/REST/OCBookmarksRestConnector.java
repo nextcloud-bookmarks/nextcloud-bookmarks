@@ -24,20 +24,20 @@ public class OCBookmarksRestConnector {
     private String apiRootUrl;
     private String usr;
     private String pwd;
-    private String token;
-    private boolean mSsologin;
+//    private String token;
+//    private boolean mSsologin;
 
     private static final int TIME_OUT = 10000; // in milliseconds
 
     private static final String TAG = "ocbookmarks";
 
 
-    public OCBookmarksRestConnector(String owncloudRootUrl, String user, String password, String mtoken, boolean Ssologin) {
+    public OCBookmarksRestConnector(String owncloudRootUrl, String user, String password){ //), String mtoken, boolean Ssologin) {
         apiRootUrl = owncloudRootUrl + "/index.php/apps/bookmarks/public/rest/v2";
         usr = user;
         pwd = password;
-        token = mtoken;
-        mSsologin =Ssologin;
+//        token = mtoken;
+//        mSsologin =Ssologin;
     }
 
     public JSONObject send(String methode, String relativeUrl) throws RequestException {
@@ -56,13 +56,13 @@ public class OCBookmarksRestConnector {
             connection.setRequestMethod(methode);
             connection.setConnectTimeout(TIME_OUT);
             connection.addRequestProperty("Content-Type", "application/json");
-            if (mSsologin)
-            {
-                connection.addRequestProperty("Authorization", "Bearer " + new String(Base64.encodeBase64((usr + ":" + token).getBytes())));
-            }
-            else {
+//            if (mSsologin)
+//            {
+//                connection.addRequestProperty("Authorization", "Bearer " + new String(Base64.encodeBase64((usr + ":" + token).getBytes())));
+//            }
+//            else {
                 connection.addRequestProperty("Authorization", "Basic " + new String(Base64.encodeBase64((usr + ":" + pwd).getBytes())));
-            }
+//            }
             Log.e(TAG, "Connection String for Debug!"+url.toString()); //For Debug purpose
             Log.e(TAG,"Connection success!!");
         } catch (Exception e) {

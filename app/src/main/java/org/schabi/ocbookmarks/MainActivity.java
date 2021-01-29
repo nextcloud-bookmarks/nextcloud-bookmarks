@@ -224,9 +224,10 @@ public class MainActivity extends AppCompatActivity {
                         OCBookmarksRestConnector connector = new OCBookmarksRestConnector(
                                 loginData.url,
                                 loginData.user,
-                                loginData.password,
-                                loginData.token,
-                                loginData.ssologin);
+                                loginData.password
+//                                loginData.token,
+//                                loginData.ssologin
+                            );
                         try {
                             connector.deleteBookmark(bookmark);
                         } catch (Exception e) {
@@ -255,9 +256,9 @@ public class MainActivity extends AppCompatActivity {
                 OCBookmarksRestConnector connector = new OCBookmarksRestConnector(
                         loginData.url,
                         loginData.user,
-                        loginData.password,
-                        loginData.token,
-                        loginData.ssologin);
+                        loginData.password);
+//                        loginData.token,
+//                        loginData.ssologin);
                 if(bookmark.getId() < 0) {
                     // add new bookmark
                     try {
@@ -315,9 +316,10 @@ public class MainActivity extends AppCompatActivity {
                                 new OCBookmarksRestConnector(
                                         loginData.url,
                                         loginData.user,
-                                        loginData.password,
-                                        loginData.token,
-                                        loginData.ssologin);
+                                        loginData.password
+//                                        loginData.token,
+//                                        loginData.ssologin
+                                );
                         try {
                             connector.renameTag(oldTag, newTag);
                         } catch (Exception e) {
@@ -348,9 +350,9 @@ public class MainActivity extends AppCompatActivity {
                         OCBookmarksRestConnector connector = new OCBookmarksRestConnector(
                                 loginData.url,
                                 loginData.user,
-                                loginData.password,
-                                loginData.token,
-                                loginData.ssologin);
+                                loginData.password);
+//                                loginData.token,
+//                                loginData.ssologin);
                         try {
                             connector.deleteTag(tag);
                         } catch (Exception e) {
@@ -383,8 +385,8 @@ public class MainActivity extends AppCompatActivity {
         loginData.url = sharedPreferences.getString(getString(R.string.login_url), "");
         loginData.user = sharedPreferences.getString(getString(R.string.login_user), "");
         loginData.password = sharedPreferences.getString(getString(R.string.login_pwd), "");
-        loginData.token=sharedPreferences.getString(getString(R.string.login_token), "");
-        loginData.ssologin=sharedPreferences.getBoolean(String.valueOf(R.string.ssologin), false);
+//        loginData.token=sharedPreferences.getString(getString(R.string.login_token), "");
+//        loginData.ssologin=sharedPreferences.getBoolean(String.valueOf(R.string.ssologin), false);
         if(loginData.url.isEmpty()) {
             Intent intent = new Intent(this, LoginAcitivty.class);
             startActivity(intent);
@@ -500,7 +502,8 @@ public class MainActivity extends AppCompatActivity {
         protected Bookmark[] doInBackground(Void... bla) {
             try {
                 OCBookmarksRestConnector connector =
-                        new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token,loginData.ssologin);
+                        new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password);
+                        //new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token,loginData.ssologin);
                 JSONArray data = connector.getRawBookmarks();
                 storeToFile(data);
                 return connector.getFromRawJson(data);
@@ -624,9 +627,10 @@ public class MainActivity extends AppCompatActivity {
                 OCBookmarksRestConnector connector =
                         new OCBookmarksRestConnector(loginData.url,
                                 loginData.user,
-                                loginData.password,
-                                loginData.token,
-                                loginData.ssologin);
+                                loginData.password);
+//                                ,
+//                                loginData.token,
+//                                loginData.ssologin);
                 Bookmark[] bookmarks = connector.getFromRawJson(new JSONArray(text.toString()));
                 mTagsFragment.updateData(Bookmark.getTagsFromBookmarks(bookmarks));
                 mBookmarkFragment.updateData(bookmarks);

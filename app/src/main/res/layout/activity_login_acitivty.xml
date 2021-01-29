@@ -30,6 +30,7 @@
                 android:background="@drawable/shape"
                 android:layout_below="@id/starImageView"
                 android:layout_centerHorizontal="true"
+                android:enabled="false"
                 android:padding="16dp"
                 android:layout_marginTop="27dp"
                 android:text="@string/connect_sso" />
@@ -39,6 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
+                android:enabled="false"
                 android:onClick="onClick"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
@@ -53,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_below="@id/tv_manual_login"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/urlInputLayout"
