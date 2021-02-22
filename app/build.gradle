@@ -35,7 +35,7 @@ android {
             applicationId "org.schabi.nxbookmarks"
         }
         playstore{
-            applicationId "org.bisw.nxbookmarks"
+            applicationId "org.schabi.nxbookmarks"
         }
         amazon{
             applicationId "org.bisw.nxbookmarks"
