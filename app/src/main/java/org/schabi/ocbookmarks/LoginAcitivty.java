@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.nextcloud.android.sso.AccountImporter;
+import com.nextcloud.android.sso.BuildConfig;
 import com.nextcloud.android.sso.api.NextcloudAPI;
 import com.nextcloud.android.sso.exceptions.AccountImportCancelledException;
 import com.nextcloud.android.sso.exceptions.AndroidGetAccountsPermissionNotGranted;
@@ -169,18 +170,6 @@ public class LoginAcitivty extends AppCompatActivity {
         }
     };
 
-    private View.OnClickListener ImgViewShowPasswordListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            mPasswordVisible = !mPasswordVisible;
-
-            if(mPasswordVisible) {
-                passwordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-            } else {
-                passwordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            }
-        }
-    };
     private String fixUrl(String rawUrl) {
         if (!rawUrl.startsWith("http")) {
             rawUrl = "https://" + rawUrl;
