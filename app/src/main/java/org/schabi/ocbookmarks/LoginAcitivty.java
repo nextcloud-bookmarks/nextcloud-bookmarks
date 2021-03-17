@@ -169,6 +169,18 @@ public class LoginAcitivty extends AppCompatActivity {
         }
     };
 
+    private View.OnClickListener ImgViewShowPasswordListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mPasswordVisible = !mPasswordVisible;
+
+            if(mPasswordVisible) {
+                passwordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            } else {
+                passwordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            }
+        }
+    };
     private String fixUrl(String rawUrl) {
         if (!rawUrl.startsWith("http")) {
             rawUrl = "https://" + rawUrl;
@@ -215,6 +227,7 @@ public class LoginAcitivty extends AppCompatActivity {
 
             LoginData loginData = loginDatas[0];
             OCBookmarksRestConnector connector = new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password, nextcloudAPI);
+                    //new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token, loginData.ssologin);
             try {
                 connector.getBookmarks();
                 return OK;

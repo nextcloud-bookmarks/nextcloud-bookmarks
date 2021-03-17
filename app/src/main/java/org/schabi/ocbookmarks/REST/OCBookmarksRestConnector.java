@@ -22,6 +22,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Date;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -108,7 +109,15 @@ public class OCBookmarksRestConnector {
             connection.setRequestMethod(methode);
             connection.setConnectTimeout(TIME_OUT);
             connection.addRequestProperty("Content-Type", "application/json");
-            connection.addRequestProperty("Authorization", "Basic " + new String(Base64.encodeBase64((usr + ":" + pwd).getBytes())));
+//            if (mSsologin)
+//            {
+//                connection.addRequestProperty("Authorization", "Bearer " + new String(Base64.encodeBase64((usr + ":" + token).getBytes())));
+//            }
+//            else {
+                connection.addRequestProperty("Authorization", "Basic " + new String(Base64.encodeBase64((usr + ":" + pwd).getBytes())));
+//            }
+            Log.e(TAG, "Connection String for Debug!"+url.toString()); //For Debug purpose
+            Log.e(TAG,"Connection success!!");
             Log.e(TAG, "Connection success!!");
             try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
                 String inputLine;

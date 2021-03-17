@@ -262,6 +262,8 @@ public class MainActivity extends AppCompatActivity {
                         loginData.user,
                         loginData.password,
                         mNextcloudAPI);
+//                        loginData.token,
+//                        loginData.ssologin);
                 if(bookmark.getId() < 0) {
                     // add new bookmark
                     try {
@@ -353,6 +355,8 @@ public class MainActivity extends AppCompatActivity {
                                 loginData.user,
                                 loginData.password,
                                 mNextcloudAPI);
+//                                loginData.token,
+//                                loginData.ssologin);
                         try {
                             connector.deleteTag(tag);
                         } catch (Exception e) {
@@ -512,6 +516,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 OCBookmarksRestConnector connector =
                         new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password, mNextcloudAPI);
+                        //new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token,loginData.ssologin);
                 JSONArray data = connector.getRawBookmarks();
                 storeToFile(data);
                 return connector.getFromRawJson(data);
@@ -637,6 +642,9 @@ public class MainActivity extends AppCompatActivity {
                                 loginData.user,
                                 loginData.password,
                                 mNextcloudAPI);
+//                                ,
+//                                loginData.token,
+//                                loginData.ssologin);
                 Bookmark[] bookmarks = connector.getFromRawJson(new JSONArray(text.toString()));
                 mTagsFragment.updateData(Bookmark.getTagsFromBookmarks(bookmarks));
                 mBookmarkFragment.updateData(bookmarks);

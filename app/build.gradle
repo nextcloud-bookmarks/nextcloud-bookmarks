@@ -6,8 +6,8 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 15
-        versionName "1.15"
+        versionCode 16
+        versionName "1.16"
         applicationId "org.bisw.nxbookmarks"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -16,7 +16,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    
+
     flavorDimensions "default"
     buildTypes {
         release {
@@ -35,7 +35,7 @@ android {
             applicationId "org.schabi.nxbookmarks"
         }
         playstore{
-            applicationId "org.bisw.nxbookmarks"
+            applicationId "org.schabi.nxbookmarks"
         }
         amazon{
             applicationId "org.bisw.nxbookmarks"

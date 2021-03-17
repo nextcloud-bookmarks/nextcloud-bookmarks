@@ -13,7 +13,7 @@
     <string name="loginUrlHint">Server address https://&#8230;</string>
     <string name="connect">Sign in</string>
     <string name="connect_sso">Nextcloud Single Sign On (SSO)</string>
-    <string name="login_manual">Manual login</string>
+    <string name="login_manual">Login</string>
     <string name="save">Save</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
