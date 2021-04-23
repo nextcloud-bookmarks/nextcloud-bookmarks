@@ -1,9 +1,9 @@
 ## :link: Nextcloud Bookmarks Android App
 
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://gitlab.com/bisada/OCBookmarks/activity)
 [![Android CI](https://gitlab.com/bisada/OCBookmarks/badges/master/pipeline.svg)](https://gitlab.com/bisada/OCBookmarks/-/pipelines)
 [![Gitter](https://badges.gitter.im/nextcloud-bookmarks/community.svg)](https://gitter.im/nextcloud-bookmarks/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![Open Issues !](https://img.shields.io/badge/Open%20Feature-Request-1abc9c.svg)](https://gitlab.com/bisada/OCBookmarks/-/issues)
+[![Open a new issue](https://img.shields.io/badge/Open%20Feature-Request-1abc9c.svg)](https://gitlab.com/bisada/OCBookmarks/-/issues)
 [![Connect it on telegram](https://img.shields.io/badge/Connect%20via-%20telegram-0088cc.svg)](https://t.me/nextcloudbookmarks)
 
 ## :arrow_forward: Access
@@ -17,7 +17,6 @@
       height="80">](https://liberapay.com/bisasda/donate)
 
 [<img src="assets/nx/icon.png" width=160px>](/)
-[![PlayStore](./assets/ps_badge.png)](https://t.me/nextcloudbookmarks)
 [![F-Droid](./assets/fdroid_badge.png)](https://f-droid.org/packages/org.schabi.nxbookmarks/)
 [![Amazon](https://images-na.ssl-images-amazon.com/images/G/01/mobile-apps/devportal2/res/images/amazon-appstore-badge-english-white.png)](https://www.amazon.com/dp/B08L5RKHMM/ref=apps_sf_sta)
 
@@ -60,7 +59,7 @@ by NextCloudBookmarks version [3.2.1](https://github.com/nextcloud/bookmarks/rel
 
   * Test the app with different devices
   * Report issues in the [issue tracker](https://gitlab.com/bisada/OCBookmarks/issues)
-  * [Pick a good first issue](https://github.com/nextcloud/server/labels/good%20first%20issue) :notebook:
+  * [Pick an issue](https://gitlab.com/bisada/OCBookmarks/-/issues?label_name%5B%5D=help+wanted) :notebook:
   * Create a [Pull Request](https://opensource.guide/how-to-contribute/#opening-a-pull-request)
   * Buy this app on [Amazon App Store](https://www.amazon.com/dp/B08L5RKHMM/ref=apps_sf_sta)
   * Send me a bottle of your favorite beer :beers: :wink:
