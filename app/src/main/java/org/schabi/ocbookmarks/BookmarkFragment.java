@@ -11,6 +11,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
+import tellh.com.recyclertreeview_lib.TreeNode;
+import tellh.com.recyclertreeview_lib.TreeViewAdapter;
+
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,9 +23,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.schabi.ocbookmarks.REST.Bookmark;
+import org.schabi.ocbookmarks.viewbinder.DirectoryNodeBinder;
+import org.schabi.ocbookmarks.viewbinder.FileNodeBinder;
+import tellh.com.recyclertreeview_lib.TreeNode;
+import tellh.com.recyclertreeview_lib.TreeViewAdapter;
+
+import org.schabi.ocbookmarks.bean.Dir;
+import org.schabi.ocbookmarks.bean.File;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by the-scrabi on 15.05.17.
@@ -34,6 +46,12 @@ public class BookmarkFragment extends Fragment {
     private ArrayList<Bookmark> bookmarkToShowList = new ArrayList<>();
     private BookmarksRecyclerViewAdapter mAdapter;
     private SwipeRefreshLayout refreshLayout;
+
+    //for treeview
+    private RecyclerView rv;
+    private TreeViewAdapter adapter;
+    private String[] folders;
+    //END Treeview
 
     public interface OnRequestReloadListener {
         void requestReload();
@@ -61,13 +79,70 @@ public class BookmarkFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fagment_bookmarks, container, false);
 
+
+
         refreshLayout =
                 (SwipeRefreshLayout) rootView.findViewById(R.id.swiperefresh_bookmarks);
-        RecyclerView recyclerView =
-                (RecyclerView) rootView.findViewById(R.id.bookmark_recycler_view);
-        mAdapter = new BookmarksRecyclerViewAdapter(getActivity());
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+
+
+//        RecyclerView recyclerView =
+//                (RecyclerView) rootView.findViewById(R.id.bookmark_recycler_view);
+//        mAdapter = new BookmarksRecyclerViewAdapter(getActivity());
+//        recyclerView.setAdapter(mAdapter);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        //For tree view
+        rv = (RecyclerView) rootView.findViewById(R.id.rv);
+        List<TreeNode> nodes = new ArrayList<>();
+        TreeNode<Dir> top = new TreeNode<>(new Dir("All Bookmarks"));
+        nodes.add(top); //The plan is to keep this top always as All Bookmarks.
+
+        top.addChild(
+                new TreeNode<>(new Dir("manifests"))
+                        .addChild(new TreeNode<>(new File("AndroidManifest.xml")))
+        );
+        TreeNode<Dir> res = new TreeNode<>(new Dir("res"));
+        nodes.add(res);
+        res.addChild(
+                new TreeNode<>(new Dir("layout")) // lock this TreeNode
+                        .addChild(new TreeNode<>(new File("activity_main.xml")))
+                        .addChild(new TreeNode<>(new File("item_dir.xml")))
+                        .addChild(new TreeNode<>(new File("item_file.xml")))
+        );
+        res.addChild(
+                new TreeNode<>(new Dir("mipmap"))
+                        .addChild(new TreeNode<>(new File("ic_launcher.png")))
+        );
+
+        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new TreeViewAdapter(nodes, Arrays.asList(new FileNodeBinder(), new DirectoryNodeBinder()));
+        // whether collapse child nodes when their parent node was close.
+//        adapter.ifCollapseChildWhileCollapseParent(true);
+        adapter.setOnTreeNodeListener(new TreeViewAdapter.OnTreeNodeListener() {
+            @Override
+            public boolean onClick(TreeNode node, RecyclerView.ViewHolder holder) {
+                if (!node.isLeaf()) {
+                    //Update and toggle the node.
+                    onToggle(!node.isExpand(), holder);
+//                    if (!node.isExpand())
+//                        adapter.collapseBrotherNode(node);
+                }
+                return false;
+            }
+
+            @Override
+            public void onToggle(boolean isExpand, RecyclerView.ViewHolder holder) {
+                DirectoryNodeBinder.ViewHolder dirViewHolder = (DirectoryNodeBinder.ViewHolder) holder;
+                final ImageView ivArrow = dirViewHolder.getIvArrow();
+                int rotateDegree = isExpand ? 90 : -90;
+                ivArrow.animate().rotationBy(rotateDegree)
+                        .start();
+            }
+        });
+        rv.setAdapter(adapter);
+        //End of treeview
+
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -79,6 +154,21 @@ public class BookmarkFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.id_action_close_all:
+                adapter.collapseAll();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void showByTag(String tag) {
