@@ -98,6 +98,17 @@ public class OCBookmarksRestConnector {
     private JSONObject parseJson(String methode, String url, String response) throws RequestException {
 
         JSONObject data = null;
+        if(methode.equals("GET") && url.endsWith("/folder")) {
+            JSONArray array = null;
+            try {
+                array = new JSONArray(response);
+                data = new JSONObject();
+                data.put("data", array);
+            } catch (JSONException je) {
+                throw new RequestException("Parsing error, maybe owncloud does not support bookmark api", je);
+            }
+            return data;
+        }
         if(methode.equals("GET") && url.endsWith("/tag")) {
             // we have to handle GET /tag different:
             // https://github.com/nextcloud/bookmarks#list-all-tags
@@ -181,6 +192,18 @@ public class OCBookmarksRestConnector {
             throw new RequestException("Could not parse array", je);
         }
 
+        String[] folders;
+        try {
+            JSONArray jfolders = jBookmark.getJSONArray("folders");
+            folders = new String[jfolders.length()];
+            for (int j = 0; j < folders.length; j++) {
+                folders[j] = jfolders.getString(j);
+            }
+        } catch (JSONException je) {
+            throw new RequestException("Could not parse folder array", je);
+        }
+
+
         //another api error we need to fix
         if(tags.length == 1 && tags[0].isEmpty()) {
             tags = new String[0];
@@ -197,7 +220,8 @@ public class OCBookmarksRestConnector {
 //                    .setAdded(new Date(jBookmark.getLong("added") * 1000))
                     .setLastModified(new Date(jBookmark.getLong("lastmodified") * 1000))
                     .setClickcount(jBookmark.getInt("clickcount"))
-                    .setTags(tags);
+                    .setTags(tags)
+                    .setFolders(folders);
         } catch (JSONException je) {
             throw new RequestException("Could not gather all data", je);
         }
@@ -270,6 +294,26 @@ public class OCBookmarksRestConnector {
 
         return getBookmarkFromJsonO(send("PUT", url));
     }
+
+    // ++++++++++++++++++
+    // +      folders      +
+    // ++++++++++++++++++
+
+    public String[] getFolders() throws RequestException {
+        try {
+            JSONArray data = send("GET", "/folder").getJSONArray("data");
+
+            String[] folders = new String[data.length()];
+            for (int i = 0; i < folders.length; i++) {
+                folders[i] = data.getString(i);
+            }
+
+            return folders;
+        } catch (JSONException je) {
+            throw new RequestException("Could not get all folders", je);
+        }
+    }
+
 
     // ++++++++++++++++++
     // +      tags      +

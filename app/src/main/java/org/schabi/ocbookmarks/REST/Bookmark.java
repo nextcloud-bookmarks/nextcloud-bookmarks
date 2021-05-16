@@ -18,6 +18,7 @@ public class Bookmark {
     private int clickcount = -1;
 //    private boolean isPublic = false;
     private String[] tags = new String[0];
+    private String[] folders=new String[0];
 
     public static Bookmark emptyInstance() {
         return new Bookmark();
@@ -76,6 +77,10 @@ public class Bookmark {
         return this;
     }
 
+    public Bookmark setFolders(String[] folders) {
+        this.folders = folders;
+        return this;
+    }
 //    public Bookmark setPublic(boolean aPublic) {
 //        isPublic = aPublic;
 //        return this;
@@ -113,6 +118,9 @@ public class Bookmark {
     public String[] getTags() {
         return tags;
     }
+    public String[] getFolders(){
+        return folders;
+    }
 //    public boolean isPublic() {
 //        return isPublic;
 //    }
@@ -124,6 +132,13 @@ public class Bookmark {
             tagsString += tag + ",";
         }
         tagsString += "]";
+
+        String foldersString = "[";
+        for(String folder : folders) {
+            foldersString += folder + ",";
+        }
+        foldersString += "]";
+
         return "id:" + Integer.toString(id) + "\n" +
                 "url:" + url + "\n" +
                 "title:" + title + "\n" +
@@ -132,7 +147,8 @@ public class Bookmark {
 //                "added:" + added.toString() + "\n" +
                 "lastModified:" + lastModified.toString() + "\n" +
                 "clickount:" + clickcount + "\n" +
-                "tags:" + tagsString;
+                "tags:" + tagsString+ "\n" +
+                "folders:"+foldersString;
 //                "isPublic:" + Boolean.toString(isPublic);
     }
 
@@ -152,5 +168,22 @@ public class Bookmark {
             returnTagList[i] = tagList.get(i);
         }
         return returnTagList;
+    }
+
+    public static String[] getFoldersFromBookmarks(Bookmark[] bookmarks) {
+        Vector<String> folderList = new Vector<>();
+        for(Bookmark b : bookmarks) {
+            for(String folder : b.getFolders()) {
+                if(!folderList.contains(folder)) {
+                    folderList.add(folder);
+                }
+            }
+        }
+
+        String[] returnFolderList = new String[folderList.size()];
+        for(int i = 0; i < returnFolderList.length; i++) {
+            returnFolderList[i] = folderList.get(i);
+        }
+        return returnFolderList;
     }
 }
