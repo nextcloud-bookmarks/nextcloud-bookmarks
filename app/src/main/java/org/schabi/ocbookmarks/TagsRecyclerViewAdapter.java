@@ -253,7 +253,7 @@ class TagsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public void onClick(View view) {
             final EditText editText = new EditText(context);
             AlertDialog dialog = new AlertDialog.Builder(context)
-                    .setTitle(R.string.edit_tag)
+                    .setTitle(R.string.new_tag)
                     .setView(editText)
                     .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
                         @Override
