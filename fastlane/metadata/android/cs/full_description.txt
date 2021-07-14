@@ -1,0 +1,15 @@
+Plně open source aplikace Nextcloud Záložky.
+
+Aplikace pro Android, která je nadstavbou pro Nextcloud/Owncloud aplikaci Záložky, založená na REST API, které bylo uvedeno v Záložky verze 0.10.1. Prostřednictvím této aplikace je možné přidávat/upravovat/mazat a zobrazovat záložky a synchronizovat je s vámi využívanou instancí Nextcloud.
+Nicméně je zapotřebí, aby na serveru byla nainstalována a zapnutá aplikace Záložky ve verzi přinejmenším 0.10.1.
+
+Pokud potřebujete více informací o Nextcloud aplikaci Záložky (server), následujte <a href="https://apps.nextcloud.com/apps/bookmarks">tento odkaz</a>.
+
+<b>Funkce:</b><ul>
+<li>Funguje i bez připojení k serveru 🔌</li>
+<li>Zařazování záložek mezi oblíbené</li>
+<li>Uspořádávání záložek pomocí štítků 🔖</li>
+<li>Správa štítků 🏷</li>
+<li>Přeloženo do mnoha jazyků 🌎</li>
+<li>Vícero účtů</li>
+<li>SSO : Nextcloud jednotné přihlášení (zatím nedokončeno)</li></ul>
