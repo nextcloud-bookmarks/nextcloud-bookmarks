@@ -10,7 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.schabi.ocbookmarks.REST.Bookmark;
+import org.schabi.ocbookmarks.REST.model.Bookmark;
 import org.schabi.ocbookmarks.REST.OCBookmarksRestConnector;
 
 public class AddBookmarkActivity extends AppCompatActivity {

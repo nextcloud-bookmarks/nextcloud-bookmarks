@@ -22,11 +22,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.schabi.ocbookmarks.REST.Bookmark;
+import org.schabi.ocbookmarks.REST.model.Bookmark;
+import org.schabi.ocbookmarks.REST.model.Folder;
 import org.schabi.ocbookmarks.viewbinder.DirectoryNodeBinder;
 import org.schabi.ocbookmarks.viewbinder.FileNodeBinder;
-import tellh.com.recyclertreeview_lib.TreeNode;
-import tellh.com.recyclertreeview_lib.TreeViewAdapter;
 
 import org.schabi.ocbookmarks.bean.Dir;
 import org.schabi.ocbookmarks.bean.File;
@@ -50,7 +49,7 @@ public class BookmarkFragment extends Fragment {
     //for treeview
     private RecyclerView rv;
     private TreeViewAdapter adapter;
-    private String[] folders;
+    private Folder hierarchy;
     //END Treeview
 
     public interface OnRequestReloadListener {
@@ -94,29 +93,12 @@ public class BookmarkFragment extends Fragment {
 
         //For tree view
         rv = (RecyclerView) rootView.findViewById(R.id.rv);
-        List<TreeNode> nodes = new ArrayList<>();
-        TreeNode<Dir> top = new TreeNode<>(new Dir("All Bookmarks"));
-        nodes.add(top); //The plan is to keep this top always as All Bookmarks.
-
-        top.addChild(
-                new TreeNode<>(new Dir("manifests"))
-                        .addChild(new TreeNode<>(new File("AndroidManifest.xml")))
-        );
-        TreeNode<Dir> res = new TreeNode<>(new Dir("res"));
-        nodes.add(res);
-        res.addChild(
-                new TreeNode<>(new Dir("layout")) // lock this TreeNode
-                        .addChild(new TreeNode<>(new File("activity_main.xml")))
-                        .addChild(new TreeNode<>(new File("item_dir.xml")))
-                        .addChild(new TreeNode<>(new File("item_file.xml")))
-        );
-        res.addChild(
-                new TreeNode<>(new Dir("mipmap"))
-                        .addChild(new TreeNode<>(new File("ic_launcher.png")))
-        );
 
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new TreeViewAdapter(nodes, Arrays.asList(new FileNodeBinder(), new DirectoryNodeBinder()));
+
+        adapter = new TreeViewAdapter(new ArrayList<>(), Arrays.asList(new FileNodeBinder(), new DirectoryNodeBinder()));
+        buildTree();
+
         // whether collapse child nodes when their parent node was close.
 //        adapter.ifCollapseChildWhileCollapseParent(true);
         adapter.setOnTreeNodeListener(new TreeViewAdapter.OnTreeNodeListener() {
@@ -156,6 +138,34 @@ public class BookmarkFragment extends Fragment {
         return rootView;
     }
 
+    private void buildTree() {
+        List<TreeNode> nodes = new ArrayList<>();
+        TreeNode<Dir> top;
+        if (hierarchy == null) {
+            top = new TreeNode<>(new Dir("All Bookmarks"));
+        } else {
+            top = new TreeNode<>(new Dir(hierarchy.getTitle()));
+            fillNode(top, hierarchy);
+        }
+        nodes.add(top); //The plan is to keep this top always as All Bookmarks.
+
+        adapter.refresh(nodes);
+    }
+
+    private void fillNode(TreeNode<Dir> folderNode, Folder folder) {
+        if (folder.getChildren() != null && !folder.getChildren().isEmpty()) {
+            for (Folder childFolder : folder.getChildren()) {
+                TreeNode<Dir> childNode = new TreeNode<>(new Dir(childFolder.getTitle()));
+                folderNode.addChild(childNode);
+                fillNode(childNode, childFolder);
+            }
+        }
+        for (Bookmark b : bookmarkToShowList) {
+            if (b.getFolders().contains(folder.getId())){
+                folderNode.addChild(new TreeNode<>(new File(b.getTitle())));
+            }
+        }
+    }
 
 
     @Override
@@ -191,13 +201,15 @@ public class BookmarkFragment extends Fragment {
         mAdapter.notifyDataSetChanged();
     }
 
-    public void updateData(Bookmark[] bookmarks) {
+    public void updateData(Folder hierarchy, Bookmark[] bookmarks) {
+        this.hierarchy = hierarchy;
         bookmarkList.clear();
         bookmarkToShowList.clear();
         for(Bookmark b : bookmarks) {
             bookmarkList.add(b);
             bookmarkToShowList.add(b);
         }
+        buildTree();
         if(mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
@@ -226,6 +238,7 @@ public class BookmarkFragment extends Fragment {
                     return null;
             }
         }
+
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {

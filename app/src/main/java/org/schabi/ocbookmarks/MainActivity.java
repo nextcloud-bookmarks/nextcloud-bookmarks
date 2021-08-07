@@ -31,8 +31,9 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.schabi.ocbookmarks.REST.Bookmark;
+import org.schabi.ocbookmarks.REST.model.Bookmark;
 import org.schabi.ocbookmarks.REST.OCBookmarksRestConnector;
+import org.schabi.ocbookmarks.REST.model.Folder;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -499,11 +500,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class RelodDataTask extends AsyncTask<Void, Void, Bookmark[]> {
+        OCBookmarksRestConnector connector =
+                new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password);
+        //new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token,loginData.ssologin);
+        Folder root = null;
+
         protected Bookmark[] doInBackground(Void... bla) {
             try {
-                OCBookmarksRestConnector connector =
-                        new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password);
-                        //new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token,loginData.ssologin);
+                root = connector.getFolders();
                 JSONArray data = connector.getRawBookmarks();
                 storeToFile(data);
                 return connector.getFromRawJson(data);
@@ -520,7 +524,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 mainProgressBar.setVisibility(View.GONE);
                 mTagsFragment.updateData(Bookmark.getTagsFromBookmarks(bookmarks));
-                mBookmarkFragment.updateData(bookmarks);
+                mBookmarkFragment.updateData(root, bookmarks);
                 setRefreshing(false);
             }
         }
@@ -633,7 +637,7 @@ public class MainActivity extends AppCompatActivity {
 //                                loginData.ssologin);
                 Bookmark[] bookmarks = connector.getFromRawJson(new JSONArray(text.toString()));
                 mTagsFragment.updateData(Bookmark.getTagsFromBookmarks(bookmarks));
-                mBookmarkFragment.updateData(bookmarks);
+                mBookmarkFragment.updateData(connector.getFolders(), bookmarks);
             } catch (JSONException je) {
                 if (BuildConfig.DEBUG) je.printStackTrace();
             } catch (Exception e) {

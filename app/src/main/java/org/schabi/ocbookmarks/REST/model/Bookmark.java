@@ -1,6 +1,8 @@
-package org.schabi.ocbookmarks.REST;
+package org.schabi.ocbookmarks.REST.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -18,7 +20,7 @@ public class Bookmark {
     private int clickcount = -1;
 //    private boolean isPublic = false;
     private String[] tags = new String[0];
-    private String[] folders=new String[0];
+    private List<Integer> folders=new ArrayList<>();
 
     public static Bookmark emptyInstance() {
         return new Bookmark();
@@ -77,7 +79,7 @@ public class Bookmark {
         return this;
     }
 
-    public Bookmark setFolders(String[] folders) {
+    public Bookmark setFolders(List<Integer> folders) {
         this.folders = folders;
         return this;
     }
@@ -118,7 +120,7 @@ public class Bookmark {
     public String[] getTags() {
         return tags;
     }
-    public String[] getFolders(){
+    public List<Integer> getFolders(){
         return folders;
     }
 //    public boolean isPublic() {
@@ -134,7 +136,7 @@ public class Bookmark {
         tagsString += "]";
 
         String foldersString = "[";
-        for(String folder : folders) {
+        for(int folder : folders) {
             foldersString += folder + ",";
         }
         foldersString += "]";
@@ -170,17 +172,17 @@ public class Bookmark {
         return returnTagList;
     }
 
-    public static String[] getFoldersFromBookmarks(Bookmark[] bookmarks) {
-        Vector<String> folderList = new Vector<>();
+    public static int[] getFoldersFromBookmarks(Bookmark[] bookmarks) {
+        Vector<Integer> folderList = new Vector<>();
         for(Bookmark b : bookmarks) {
-            for(String folder : b.getFolders()) {
+            for(int folder : b.getFolders()) {
                 if(!folderList.contains(folder)) {
                     folderList.add(folder);
                 }
             }
         }
 
-        String[] returnFolderList = new String[folderList.size()];
+        int[] returnFolderList = new int[folderList.size()];
         for(int i = 0; i < returnFolderList.length; i++) {
             returnFolderList[i] = folderList.get(i);
         }

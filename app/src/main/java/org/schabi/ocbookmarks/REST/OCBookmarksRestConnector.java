@@ -6,13 +6,17 @@ import org.apache.commons.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.schabi.ocbookmarks.REST.model.Bookmark;
+import org.schabi.ocbookmarks.REST.model.Folder;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by the-scrabi on 14.05.17.
@@ -99,11 +103,11 @@ public class OCBookmarksRestConnector {
 
         JSONObject data = null;
         if(methode.equals("GET") && url.endsWith("/folder")) {
-            JSONArray array = null;
+            JSONObject array = null;
             try {
-                array = new JSONArray(response);
-                data = new JSONObject();
-                data.put("data", array);
+                data = new JSONObject(response);
+//                data = new JSONObject();
+//                data.put("data", array);
             } catch (JSONException je) {
                 throw new RequestException("Parsing error, maybe owncloud does not support bookmark api", je);
             }
@@ -192,12 +196,12 @@ public class OCBookmarksRestConnector {
             throw new RequestException("Could not parse array", je);
         }
 
-        String[] folders;
+        List<Integer> folders;
         try {
             JSONArray jfolders = jBookmark.getJSONArray("folders");
-            folders = new String[jfolders.length()];
-            for (int j = 0; j < folders.length; j++) {
-                folders[j] = jfolders.getString(j);
+            folders = new ArrayList<>(jfolders.length());
+            for (int j = 0; j < jfolders.length(); j++) {
+                folders.add(jfolders.getInt(j));
             }
         } catch (JSONException je) {
             throw new RequestException("Could not parse folder array", je);
@@ -299,19 +303,40 @@ public class OCBookmarksRestConnector {
     // +      folders      +
     // ++++++++++++++++++
 
-    public String[] getFolders() throws RequestException {
+    public Folder getFolders() throws RequestException {
         try {
             JSONArray data = send("GET", "/folder").getJSONArray("data");
+            Folder root = Folder.createEmptyRootFolder();
 
-            String[] folders = new String[data.length()];
-            for (int i = 0; i < folders.length; i++) {
-                folders[i] = data.getString(i);
-            }
+            fillChildren(root, data);
 
-            return folders;
+            return root;
         } catch (JSONException je) {
             throw new RequestException("Could not get all folders", je);
         }
+    }
+
+    private void fillChildren(Folder rootFolder, JSONArray children) {
+        if (children == null || children.length() < 1) {
+            return;
+        }
+        List<Folder> childFolderList = new ArrayList<>();
+        for (int i = 0; i < children.length(); i++) {
+            try {
+                JSONObject folderJson = children.getJSONObject(i);
+                Folder folder = new Folder();
+                folder.setId(folderJson.getInt("id"));
+                folder.setParentFolderId(folderJson.getInt("parent_folder"));
+                folder.setTitle(folderJson.getString("title"));
+                if (folderJson.has("children")) {
+                    fillChildren(folder, folderJson.getJSONArray("children"));
+                }
+                childFolderList.add(folder);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        rootFolder.setChildren(childFolderList);
     }
 
 
