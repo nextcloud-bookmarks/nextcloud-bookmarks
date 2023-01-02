@@ -1,14 +1,20 @@
 package org.schabi.ocbookmarks.REST;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 
+import com.nextcloud.android.sso.QueryParam;
 import com.nextcloud.android.sso.aidl.NextcloudRequest;
 import com.nextcloud.android.sso.api.NextcloudAPI;
 import com.nextcloud.android.sso.api.Response;
+import com.nextcloud.android.sso.exceptions.NextcloudFilesAppAccountNotFoundException;
+import com.nextcloud.android.sso.exceptions.NoCurrentAccountSelectedException;
+import com.nextcloud.android.sso.helper.SingleAccountHelper;
+import com.nextcloud.android.sso.model.SingleSignOnAccount;
 
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONArray;
@@ -17,6 +23,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -33,50 +40,40 @@ import java.util.Date;
 
 
 public class OCBookmarksRestConnector {
-    private final String apiRootUrl;
-    private final String usr;
-    private final String pwd;
-    @Nullable
+    private String apiRootUrl = "";
     private final NextcloudAPI nextcloudAPI;
+    String TAG = this.getClass().toString();
 
-    private static final int TIME_OUT = 10000; // in milliseconds
-
-    private static final String TAG = "ocbookmarks";
 
     /**
-     * @param rootUrl      root url without trailing slash
-     * @param user         username of the account
-     * @param password     password
      * @param nextcloudAPI will be used if not null instead of traditional user / password authentication
      */
-    public OCBookmarksRestConnector(String rootUrl, String user, String password, @Nullable NextcloudAPI nextcloudAPI) {
-        usr = user;
-        pwd = password;
+    public OCBookmarksRestConnector(NextcloudAPI nextcloudAPI) {
         this.nextcloudAPI = nextcloudAPI;
-        if (this.nextcloudAPI == null) {
-            apiRootUrl = rootUrl + "/index.php/apps/bookmarks/public/rest/v2";
-        } else {
-            // host is defined by SingleSignOnAccount
-            apiRootUrl = "/index.php/apps/bookmarks/public/rest/v2";
-        }
+        // host is defined by SingleSignOnAccount
+
+        apiRootUrl = "/index.php/apps/bookmarks/public/rest/v2";
+        Log.e(TAG,"API Root-Url: "+apiRootUrl);
     }
 
     /**
      * Sending SSO fancy way
      */
-    public JSONObject sendWithSSO(@NonNull String methode, @NonNull String relativeUrl, @NonNull Collection<Pair<String, String>> parameter) throws RequestException {
+    public JSONObject sendWithSSO(@NonNull String methode, @NonNull String relativeUrl, @NonNull Collection<QueryParam> parameter) throws RequestException {
         if (this.nextcloudAPI == null) {
+            Log.e(TAG,"API not set up.");
             throw new RequestException("Trying to send request via SSO, but API is null.");
         }
-        final NextcloudRequest request = new NextcloudRequest
+
+        Log.i(TAG,"API is already set up");
+        NextcloudRequest request = new NextcloudRequest
                 .Builder()
                 .setMethod(methode)
                 .setUrl(apiRootUrl + relativeUrl)
                 .setParameter(parameter)
                 .build();
-        final Response response;
         try {
-            response = this.nextcloudAPI.performNetworkRequestV2(request);
+            Response response = nextcloudAPI.performNetworkRequestV2(request);
 
             final StringBuilder result = new StringBuilder();
             final BufferedReader rd = new BufferedReader(new InputStreamReader(response.getBody()));
@@ -85,53 +82,10 @@ public class OCBookmarksRestConnector {
                 result.append(line);
             }
             response.getBody().close();
+
             return parseJson(methode, apiRootUrl + relativeUrl, result.toString());
         } catch (Exception e) {
-            throw new RequestException(e);
-        }
-    }
-
-    /**
-     * Sending traditionally old school way
-     */
-    @Deprecated
-    public JSONObject sendWithoutSSO(String methode, String relativeUrl) throws RequestException {
-        Log.e(TAG, "Connection String for Debug!" + apiRootUrl); //For Debug purpose
-        final URL url;
-        if (apiRootUrl.startsWith("https")) {
-            Log.e(TAG, "apiRootUrl value is https:" + apiRootUrl); //#TODO: add functionality for http and https.
-        }
-        try {
-            url = new URL(apiRootUrl + relativeUrl);
-            StringBuilder response = new StringBuilder();
-            HttpURLConnection connection = null;
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod(methode);
-            connection.setConnectTimeout(TIME_OUT);
-            connection.addRequestProperty("Content-Type", "application/json");
-//            if (mSsologin)
-//            {
-//                connection.addRequestProperty("Authorization", "Bearer " + new String(Base64.encodeBase64((usr + ":" + token).getBytes())));
-//            }
-//            else {
-                connection.addRequestProperty("Authorization", "Basic " + new String(Base64.encodeBase64((usr + ":" + pwd).getBytes())));
-//            }
-            Log.e(TAG, "Connection String for Debug!"+url.toString()); //For Debug purpose
-            Log.e(TAG,"Connection success!!");
-            Log.e(TAG, "Connection success!!");
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                String inputLine;
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-            } catch (Exception e) {
-                if (e.getMessage().contains("500")) {
-                    throw new PermissionException(e);
-                }
-                throw new RequestException(e);
-            }
-            return parseJson(methode, url.toString(), response.toString());
-        } catch (IOException e) {
+            e.printStackTrace();
             throw new RequestException(e);
         }
     }
@@ -183,9 +137,24 @@ public class OCBookmarksRestConnector {
 
     public JSONArray getRawBookmarks() throws RequestException {
         try {
-            return this.nextcloudAPI == null
-                    ? sendWithoutSSO("GET", "/bookmark?page=-1").getJSONArray("data")
-                    : sendWithSSO("GET", "/bookmark?page=-1", Collections.emptyList()).getJSONArray("data");
+            JSONArray bookmarks = new JSONArray();
+            int pageSize = 300;
+            int resultLength = pageSize;
+            int page = 0;
+
+            while (resultLength == pageSize) {
+                Collection<QueryParam> parameter = new ArrayList<>();
+                parameter.add(new QueryParam("page", String.valueOf(page++)));
+                parameter.add(new QueryParam("limit", "300"));
+                JSONObject now = sendWithSSO("GET", "/bookmark", parameter);
+                JSONArray data = now.getJSONArray("data");
+                for (int i = 0; i < data.length(); i++) {
+                    JSONObject bm = (JSONObject) data.get(i);
+                    bookmarks.put(bm);
+                }
+                resultLength = bookmarks.length();
+            }
+            return bookmarks;
         } catch (JSONException e) {
             throw new RequestException("Could not parse data", e);
         }
@@ -272,20 +241,20 @@ public class OCBookmarksRestConnector {
         return url;
     }
 
-    private Collection<Pair<String, String>> createBookmarkParameter(Bookmark bookmark) {
-        final Collection<Pair<String, String>> parameter = new ArrayList<>(3 + bookmark.getTags().length);
+    private Collection<QueryParam> createBookmarkParameter(Bookmark bookmark) {
+        final Collection<QueryParam> parameter = new ArrayList<>(3 + bookmark.getTags().length);
         if (!bookmark.getTitle().isEmpty() && !bookmark.getUrl().startsWith("http")) {
             // Title can only be set if the sheme is given
             // This is a bug we need to fix
             bookmark.setUrl("http://" + bookmark.getUrl());
         }
 
-        parameter.add(new Pair<>("url", bookmark.getUrl()));
-        parameter.add(new Pair<>("title", bookmark.getTitle()));
-        parameter.add(new Pair<>("description", bookmark.getDescription()));
+        parameter.add(new QueryParam("url", bookmark.getUrl()));
+        parameter.add(new QueryParam("title", bookmark.getTitle()));
+        parameter.add(new QueryParam("description", bookmark.getDescription()));
 
         for (String tag : bookmark.getTags()) {
-            parameter.add(new Pair<>("tags[]", tag));
+            parameter.add(new QueryParam("tags[]", tag));
         }
 
         return parameter;
@@ -295,12 +264,9 @@ public class OCBookmarksRestConnector {
         try {
             if (bookmark.getId() == -1) {
                 JSONObject reply;
-                if (this.nextcloudAPI == null) {
-                    reply = sendWithoutSSO("POST", "/bookmark" + createBookmarkParameterString(bookmark));
-                } else {
-                    reply = sendWithSSO("POST", "/bookmark", createBookmarkParameter(bookmark));
-                }
+                reply = sendWithSSO("POST", "/bookmark", createBookmarkParameter(bookmark));
 
+                Log.e(TAG, "Bookmark Creation Reply: "+reply);
                 return getBookmarkFromJsonO(reply.getJSONObject("item"));
             } else {
                 throw new RequestException("Bookmark id is set. Maybe this bookmark already exist: id=" + bookmark.getId());
@@ -314,11 +280,7 @@ public class OCBookmarksRestConnector {
         if (bookmark.getId() < 0) {
             return;
         }
-        if (nextcloudAPI == null) {
-            sendWithoutSSO("DELETE", "/bookmark/" + bookmark.getId());
-        } else {
-            sendWithSSO("DELETE", "/bookmark/" + bookmark.getId(), Collections.emptyList());
-        }
+        sendWithSSO("DELETE", "/bookmark/" + bookmark.getId(), Collections.emptyList());
     }
 
     public Bookmark editBookmark(Bookmark bookmark) throws RequestException {
@@ -328,21 +290,15 @@ public class OCBookmarksRestConnector {
     public Bookmark editBookmark(Bookmark bookmark, int newRecordId) throws RequestException {
         if (bookmark.getId() < 0) {
             throw new RequestException("Bookmark has no valid id. Maybe you want to add a bookmark? id="
-                    + Integer.toString((bookmark.getId())));
+                    + bookmark.getId());
         }
         if (bookmark.getUrl().isEmpty()) {
             throw new RequestException("Bookmark has no url. Maybe you want to add a bookmark?");
         }
 
-        if (this.nextcloudAPI == null) {
-            String url = "/bookmark/" + Integer.toString(bookmark.getId()) + createBookmarkParameterString(bookmark);
-            url += "&record_id=" + Integer.toString(newRecordId);
-            return getBookmarkFromJsonO(sendWithoutSSO("PUT", url));
-        } else {
-            Collection<Pair<String, String>> parameter = createBookmarkParameter(bookmark);
-            parameter.add(new Pair<>("record_id", Integer.toString(newRecordId)));
-            return getBookmarkFromJsonO(sendWithSSO("PUT", "/bookmark/" + bookmark.getId(), parameter));
-        }
+        Collection<QueryParam> parameter = createBookmarkParameter(bookmark);
+        parameter.add(new QueryParam("record_id", Integer.toString(newRecordId)));
+        return getBookmarkFromJsonO(sendWithSSO("PUT", "/bookmark/" + bookmark.getId(), parameter));
     }
 
     // ++++++++++++++++++
@@ -352,11 +308,7 @@ public class OCBookmarksRestConnector {
     public String[] getTags() throws RequestException {
         try {
             JSONArray data;
-            if (this.nextcloudAPI == null) {
-                data = sendWithoutSSO("GET", "/tag").getJSONArray("data");
-            } else {
-                data = sendWithSSO("GET", "/tag", Collections.emptyList()).getJSONArray("data");
-            }
+            data = sendWithSSO("GET", "/tag", Collections.emptyList()).getJSONArray("data");
 
             String[] tags = new String[data.length()];
             for (int i = 0; i < tags.length; i++) {
@@ -370,22 +322,13 @@ public class OCBookmarksRestConnector {
     }
 
     public void deleteTag(String tag) throws RequestException {
-        if (this.nextcloudAPI == null) {
-            sendWithoutSSO("DELETE", "/tag?old_name=" + URLEncoder.encode(tag));
-        } else {
-            sendWithSSO("DELETE", "/tag", Collections.singletonList(new Pair<>("old_name", tag)));
-        }
+        sendWithSSO("DELETE", "/tag", Collections.singletonList(new QueryParam("old_name", tag)));
     }
 
     public void renameTag(String oldName, String newName) throws RequestException {
-        if (this.nextcloudAPI == null) {
-            sendWithoutSSO("POST", "/tag?old_name=" + URLEncoder.encode(oldName)
-                    + "&new_name=" + URLEncoder.encode(newName));
-        } else {
-            final Collection<Pair<String, String>> parameter = new ArrayList<>(2);
-            parameter.add(new Pair<>("old_name", oldName));
-            parameter.add(new Pair<>("new_name", newName));
-            sendWithSSO("POST", "/tag", parameter);
-        }
+        final Collection<QueryParam> parameter = new ArrayList<>(2);
+        parameter.add(new QueryParam("old_name", oldName));
+        parameter.add(new QueryParam("new_name", newName));
+        sendWithSSO("POST", "/tag", parameter);
     }
 }

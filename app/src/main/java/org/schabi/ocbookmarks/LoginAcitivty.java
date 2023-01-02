@@ -28,6 +28,7 @@ import com.nextcloud.android.sso.exceptions.NextcloudFilesAppAccountNotFoundExce
 import com.nextcloud.android.sso.exceptions.NextcloudFilesAppNotInstalledException;
 import com.nextcloud.android.sso.exceptions.NoCurrentAccountSelectedException;
 import com.nextcloud.android.sso.helper.SingleAccountHelper;
+import com.nextcloud.android.sso.model.SingleSignOnAccount;
 import com.nextcloud.android.sso.ui.UiExceptionManager;
 
 import org.schabi.ocbookmarks.REST.OCBookmarksRestConnector;
@@ -48,66 +49,26 @@ public class LoginAcitivty extends AppCompatActivity {
 
     LoginData loginData = new LoginData();
 
-    EditText urlInput;
-    EditText userInput;
-    EditText passwordInput;
-    Button connectButton;
     Button ssoButton;
-    ProgressBar progressBar;
     TextView errorView;
-    ImageView mImageViewShowPwd;
-    TextView mtv_manual_login;
-    RelativeLayout mOldLoginWrapper;
 
     SharedPreferences sharedPrefs;
 
     TestLoginTask testLoginTask;
+
+    String TAG = this.getClass().toString();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_acitivty);
 
-        getSupportActionBar().setElevation(0);
-        getSupportActionBar().setTitle(getString(R.string.oc_bookmark_login));
-        urlInput = (EditText) findViewById(R.id.urlInput);
-        userInput = (EditText) findViewById(R.id.userInput);
-        passwordInput = (EditText) findViewById(R.id.passwordInput);
-        connectButton = (Button) findViewById(R.id.connectButton);
-        ssoButton = (Button) findViewById(R.id.ssoButton);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        errorView = (TextView) findViewById(R.id.loginErrorView);
-        mImageViewShowPwd = (ImageView) findViewById(R.id.imgView_ShowPassword);
-        mOldLoginWrapper = (RelativeLayout) findViewById(R.id.old_login_wrapper);
-        mtv_manual_login = (TextView) findViewById(R.id.tv_manual_login);
-        errorView.setVisibility(View.GONE);
-        progressBar.setVisibility(View.GONE);
+        ssoButton = findViewById(R.id.ssoButton);
+        errorView = findViewById(R.id.loginErrorView);
+        errorView.setVisibility(View.VISIBLE);
 
-
-        mImageViewShowPwd.setOnClickListener(ImgViewShowPasswordListener);
         sharedPrefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-        urlInput.setText(sharedPrefs.getString(getString(R.string.login_url), ""));
-        userInput.setText(sharedPrefs.getString(getString(R.string.login_user), ""));
-        passwordInput.setText(sharedPrefs.getString(getString(R.string.login_pwd), ""));
 
-        if (!passwordInput.getText().toString().isEmpty()) {
-            mImageViewShowPwd.setVisibility(View.GONE);
-        }
-        connectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loginData.url = fixUrl(urlInput.getText().toString());
-                loginData.user = userInput.getText().toString();
-                loginData.password = passwordInput.getText().toString();
-                loginData.ssologin = false;
-                urlInput.setText(loginData.url);
-
-                testLoginTask = new TestLoginTask();
-                testLoginTask.execute(loginData);
-                progressBar.setVisibility(View.VISIBLE);
-                connectButton.setVisibility(View.INVISIBLE);
-            }
-        });
         ssoButton.setOnClickListener(v -> {
             try {
                 AccountImporter.pickNewAccount(LoginAcitivty.this);
@@ -115,8 +76,13 @@ public class LoginAcitivty extends AppCompatActivity {
                 UiExceptionManager.showDialogForException(LoginAcitivty.this, e);
             }
         });
+        checkIfSSOIsDone();
+    }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkIfSSOIsDone();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -124,68 +90,33 @@ public class LoginAcitivty extends AppCompatActivity {
 
         try {
             AccountImporter.onActivityResult(requestCode, resultCode, data, this, (account) -> {
-                SingleAccountHelper.setCurrentAccount(this, account.name);
-                loginData.url = account.url;
-                loginData.user = account.userId;
+
+                Log.d(TAG, "Login Attempt: "+account.name);
+                SingleAccountHelper.setCurrentAccount(this.getApplicationContext(), account.name);
                 loginData.ssologin = true;
-                loginData.password = "";
-                progressBar.setVisibility(View.VISIBLE);
-                connectButton.setVisibility(View.INVISIBLE);
-                ssoButton.setVisibility(View.INVISIBLE);
-                SingleAccountHelper.setCurrentAccount(this, account.name);
-                testLoginTask = new TestLoginTask();
-                testLoginTask.execute(loginData);
+                checkIfSSOIsDone();
             });
         } catch (AccountImportCancelledException e) {
             Log.i("log", "Account import has been canceled.");
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        AccountImporter.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-    }
-
-
-    public void onClick(View v) {
-        if (mOldLoginWrapper.getVisibility() == View.VISIBLE) {
-            mOldLoginWrapper.setVisibility(View.INVISIBLE);
-        } else {
-            mOldLoginWrapper.setVisibility(View.VISIBLE);
+    private void checkIfSSOIsDone() {
+        try {
+            SingleAccountHelper.getCurrentSingleSignOnAccount(this.getApplicationContext());
+            // If we pass here, we do have an account set and can continue.
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        } catch (NextcloudFilesAppAccountNotFoundException | NoCurrentAccountSelectedException e) {
+            e.printStackTrace();
         }
     }
 
-    private View.OnClickListener ImgViewShowPasswordListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            mPasswordVisible = !mPasswordVisible;
-
-            if (mPasswordVisible) {
-                passwordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-            } else {
-                passwordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            }
-        }
-    };
-
-    private String fixUrl(String rawUrl) {
-        if (!rawUrl.startsWith("http")) {
-            rawUrl = "https://" + rawUrl;
-        }
-        if (rawUrl.endsWith("/")) {
-            rawUrl = rawUrl.substring(0, rawUrl.length() - 1);
-        }
-        return rawUrl;
-    }
 
     @SuppressLint("ResourceType")
     private void storeLogin(LoginData loginData) {
         SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.putString(getString(R.string.login_url), loginData.url);
-        editor.putString(getString(R.string.login_user), loginData.user);
-        editor.putString(getString(R.string.login_pwd), loginData.password);
         editor.putBoolean(getString(R.string.ssologin), loginData.ssologin);
         editor.apply();
     }
@@ -214,9 +145,7 @@ public class LoginAcitivty extends AppCompatActivity {
                 }
             }
 
-            LoginData loginData = loginDatas[0];
-            OCBookmarksRestConnector connector = new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password, nextcloudAPI);
-                    //new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token, loginData.ssologin);
+            OCBookmarksRestConnector connector = new OCBookmarksRestConnector(nextcloudAPI);
             try {
                 connector.getBookmarks();
                 return OK;
@@ -242,8 +171,7 @@ public class LoginAcitivty extends AppCompatActivity {
 
         protected void onPostExecute(Integer result) {
             ssoButton.setVisibility(View.VISIBLE);
-            connectButton.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
+
             if (result == OK) {
                 storeLogin(loginData);
                 deleteFiles();

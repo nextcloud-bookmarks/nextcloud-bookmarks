@@ -5,8 +5,5 @@ package org.schabi.ocbookmarks;
  */
 
 public class LoginData {
-    public String url;
-    public String user;
-    public String password;
     public boolean ssologin;
 }

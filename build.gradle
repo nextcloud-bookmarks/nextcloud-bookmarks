@@ -1,25 +1,58 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    repositories {
-        jcenter()
-        google()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.3'
+   ext {
+      kotlin_version = '1.6.21'
+      version_navigation = '2.4.2'
+      version_lifecycle_extensions = '2.2.0'
+      version_coroutine = '1.6.2'
+      version_preference = '1.2.0'
+      version_jackson = '2.11.0'
+      version_recyclerview = '1.2.1'
+      version_cardview = '1.0.0'
+      version_constraintlayout = '2.1.4'
+      version_appcompat = '1.4.1'
+      version_material = '1.6.0'
+      version_viewpager2 = '1.1.0-beta01'
+      version_room = '2.4.2'
+      version_serialization = '1.3.3'
+      version_document = '1.0.1'
+      version_datastore = "1.0.0"
+   }
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
+   repositories {
+      google()
+      mavenCentral()
+      maven { url "https://jitpack.io" }
+   }
+   dependencies {
+      classpath 'com.android.tools.build:gradle:7.2.1'
+      classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+      classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$version_navigation"
+   }
 }
 
 allprojects {
-    repositories {
-        jcenter()
-        google()
-    }
+   repositories {
+      google()
+      mavenCentral()
+      maven { url "https://jitpack.io" }
+   }
+
+   //Support @JvmDefault
+   tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+      kotlinOptions {
+         freeCompilerArgs = ['-Xjvm-default=all', '-Xopt-in=kotlin.RequiresOptIn']
+         jvmTarget = '11'
+         //includeRuntime = true
+      }
+   }
+}
+
+wrapper {
+   gradleVersion = "7.4.2"
 }
 
 task clean(type: Delete) {
-    delete rootProject.buildDir
+   delete rootProject.buildDir
 }

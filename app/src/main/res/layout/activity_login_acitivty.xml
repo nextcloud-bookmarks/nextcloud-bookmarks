@@ -23,148 +23,30 @@
                 android:layout_centerHorizontal="true"
                 android:focusable="true"
                 android:focusableInTouchMode="true"/>
+
             <Button
                 android:id="@+id/ssoButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape"
                 android:layout_below="@id/starImageView"
                 android:layout_centerHorizontal="true"
-                android:enabled="false"
+                android:layout_marginTop="27dp"
+                android:background="@drawable/shape"
+                android:enabled="true"
                 android:padding="16dp"
-                android:layout_marginTop="27dp"
                 android:text="@string/connect_sso" />
-
-            <TextView
-                android:id="@+id/tv_manual_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:enabled="false"
-                android:onClick="onClick"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:layout_below="@id/ssoButton"
-                android:gravity="center"
-                android:text="@string/login_manual"
-                android:textColor="@color/material_grey_100" />
-
-        <RelativeLayout
-            android:id="@+id/old_login_wrapper"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_below="@id/tv_manual_login"
-            android:visibility="gone">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/urlInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="27dp"
-                android:layout_below="@id/tv_manual_login"
-                tools:ignore="NotSibling">
-
-            <EditText
-                android:id="@+id/urlInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textUri"
-                android:hint="@string/loginUrlHint"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/userInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                app:counterOverflowTextColor="@android:color/white"
-                android:theme="@style/TextInputLayoutAppearance"
-                android:layout_marginTop="55dp"
-                android:layout_below="@+id/urlInputLayout">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/userInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/loginUserHint"
-                android:inputType="text"/>
-
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/passwordInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/userInputLayout">
-
-                <EditText
-                    android:id="@+id/passwordInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="textPassword"
-                    android:hint="@string/loginPasswordHint"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
 
             <TextView
                 android:id="@+id/loginErrorView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/passwordInputLayout"
+                android:layout_below="@id/ssoButton"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="14dp"
                 android:text="Login Failed"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:textColor="@color/login_error_color"
                 android:textSize="18sp" />
-
-            <ImageView
-                android:id="@+id/imgView_ShowPassword"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/passwordInputLayout"
-                android:layout_alignEnd="@+id/passwordInputLayout"
-                android:layout_alignBottom="@+id/passwordInputLayout"
-                android:layout_gravity="end"
-                android:contentDescription="@string/content_desc_show_password"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:src="@drawable/ic_action_visibility"
-                android:layout_alignRight="@+id/passwordInputLayout" />
-
-            <Button
-                android:id="@+id/connectButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape"
-                android:layout_below="@id/loginErrorView"
-                android:layout_centerHorizontal="true"
-                android:padding="16dp"
-                android:layout_marginTop="18dp"
-                android:text="@string/connect" />
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/loginErrorView"
-                android:layout_marginTop="18dp"
-                android:layout_centerHorizontal="true" />
-        </RelativeLayout>
 
         </RelativeLayout>
     </ScrollView>
