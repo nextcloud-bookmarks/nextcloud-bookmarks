@@ -1,0 +1,61 @@
+<resources>
+    <!-- owncloud/nextcloud -->
+    <string name="app_name">Nextcloud Záložky</string>
+    <string name="app_name_short">Záložky</string>
+    <string name="oc_bookmark_login"></string>
+
+    <!-- persistend stuff -->
+    <string name="action_change_login">Změnit přihlášení</string>
+    <string name="tags">Štítky</string>
+    <string name="bookmarks">Záložky</string>
+    <string name="loginUserHint">Uživatelské jméno</string>
+    <string name="loginPasswordHint">Heslo</string>
+    <string name="loginUrlHint">Adresa serveru https://&#8230;</string>
+    <string name="connect">Přihlásit se</string>
+    <string name="connect_sso">Nextcloud jednotné přihlášení (sso) – nehotové</string>
+    <string name="login_manual">Přihlašovací jméno</string>
+    <string name="save">Uložit</string>
+    <string name="edit">Upravit</string>
+    <string name="delete">Smazat</string>
+    <string name="share">Sdílet</string>
+    <string name="sure_to_delete_bookmark">Smazat tuto záložku?</string>
+    <string name="bookmark_url_hint">URL</string>
+    <string name="bookmark_title_hint">Nadpis</string>
+    <string name="bookmark_description_hint">Popis</string>
+    <string name="edit_tag">Upravit štítek</string>
+    <string name="cancel">Storno</string>
+    <string name="add_tags">Přidat štítky</string>
+    <string name="sure_to_delete_tag">Smazat tento štítek?</string>
+    <string name="yes">Ano</string>
+    <string name="no">Ne</string>
+    <string name="could_not_update_tag">Štítek se nedaří aktualizovat.</string>
+    <string name="could_not_delete_tag">Štítek se nedaří smazat.</string>
+    <string name="no_url_entered">Nezadána žádná URL adresa</string>
+    <string name="no_title_entered">Nezadán žádný nadpis</string>
+    <string name="could_not_add_bookmark">Záložku se nedaří přidat</string>
+    <string name="could_not_change_bookmark">Záložku se nedaří změnit</string>
+    <string name="could_not_delete_bookmark">Záložku se nedaří smazat</string>
+    <string name="not_yet_logged_in">Zatím nejste přihlášení.</string>
+    <string name="bookmark_saved">Záložka uložena</string>
+    <string name="reload_icons">Znovu načíst ikony</string>
+    <string name="backup_data">Zazálohovat záložky do souboru</string>
+    <string name="connectino_failed">Připojení se nezdařilo</string>
+    <string name="content_desc_tap_to_refresh">klepnutím načtete znovu</string>
+
+    <!-- login errors -->
+    <string name="connection_failed_login">Připojení se nezdařilo. Zkontrolujte zda\n &#x2022; Jste připojení k Internetu\n &#x2022; URL adresa je správná.\n &#x2022; jste naimportovali samy sebou podepsané certifikáty.</string>
+    <string name="login_host_not_found">Připojení se nezdařilo. Zkontrolujte zda\n &#x2022; Jste zadali správně URL adresu.</string>
+    <string name="login_failed">Přihlášení se nezdařilo. Zkontrolujte zda\n &#x2022; Je správně URL adresa.\n &#x2022; je správně uživatelské jméno / heslo.\n &#x2022; Na vámi využívané instanci Nextcloud je nainstalovaná aplikace Záložky verze 0.10.1 a\n novější</string>
+    <string name="login_timeout">Připojení se nezdařilo. Zkontrolujte zda\n &#x2022; jste připojení k Internetu.\n &#x2022; URL adresa je správná.\n &#x2022; zadali jste správné číslo portu.</string>
+    <string name="email_subject">Pomoc s NextCloud BookMarks!</string>
+    <string name="email_body">Prosíme níže vysvětlete problém</string>
+    <string name="support_email">biswajitbangalore@gmail.com</string>
+    <string name="send_email">Poslat e-mail</string>
+    <string name="E_mail">E-mail</string>
+    <string name="content_desc_show_password">zobrazit heslo</string>
+
+    <!-- backup result messages -->
+    <string name="backup_successful">Záložky zazálohovány do %1s</string>
+    <string name="backup_failed">Nepodařilo se vytvořit zálohu záložek</string>
+    <string name="new_tag">Nový štítek</string>
+</resources>

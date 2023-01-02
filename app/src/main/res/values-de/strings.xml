@@ -57,4 +57,5 @@
     <!-- backup result messages -->
     <string name="backup_successful">Lesezeichen wurden gesichert nach %1s</string>
     <string name="backup_failed">Sichern der Lesezeichen fehlgeschlagen</string>
+    <string name="new_tag">Neuer Tag</string>
 </resources>
