@@ -12,7 +12,7 @@
     <string name="loginPasswordHint">Password</string>
     <string name="loginUrlHint">Server address https://&#8230;</string>
     <string name="connect">Sign in</string>
-    <string name="connect_sso">Nextcloud Single Sign On (WIP)</string>
+    <string name="connect_sso">Nextcloud Single Sign On (SSO)</string>
     <string name="login_manual">Login</string>
     <string name="save">Save</string>
     <string name="edit">Edit</string>
@@ -47,6 +47,7 @@
     <string name="login_host_not_found">Connection Failed. Check if\n &#x2022; You entered the right URL.</string>
     <string name="login_failed">Login Failed. Check if\n &#x2022; The URL is correct.\n &#x2022; username/password is correct.\n &#x2022; Bookmark App v0.10.1 or\n higher is installed on your Nextcloud</string>
     <string name="login_timeout">Connection Failed. Check if\n &#x2022; you have internet access.\n &#x2022; the URL is correct.\n &#x2022; you entered the right port number.</string>
+    <string name="sso_failed">Could not connect via SSO. Please check that the Nextcloud app is up to date and try to delete storage of both, Nextcloud and Bookmarks in case the issue persists.</string>
     <string name="email_subject">NextCloud BookMarks Help!</string>
     <string name="email_body">Please Explain the issue Below</string>
     <string name="support_email">biswajitbangalore@gmail.com</string>

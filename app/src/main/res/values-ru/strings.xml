@@ -12,7 +12,7 @@
     <string name="loginPasswordHint">Пароль</string>
     <string name="loginUrlHint">Адрес сервера https:// ...</string>
     <string name="connect">Подключиться</string>
-    <string name="connect_sso">Nextcloud Single Sign On (WIP)</string>
+    <string name="connect_sso">Nextcloud Single Sign On (SSO)</string>
     <string name="login_manual">Стандартный вход</string>
     <string name="save">Сохранить</string>
     <string name="edit">Правка</string>

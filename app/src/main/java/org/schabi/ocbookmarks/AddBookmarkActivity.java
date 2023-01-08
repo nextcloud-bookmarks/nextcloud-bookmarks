@@ -10,6 +10,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.nextcloud.android.sso.BuildConfig;
+import com.nextcloud.android.sso.api.NextcloudAPI;
+import com.nextcloud.android.sso.exceptions.NextcloudFilesAppAccountNotFoundException;
+import com.nextcloud.android.sso.exceptions.NoCurrentAccountSelectedException;
+import com.nextcloud.android.sso.helper.SingleAccountHelper;
+import com.nextcloud.android.sso.model.SingleSignOnAccount;
+
 import org.schabi.ocbookmarks.REST.Bookmark;
 import org.schabi.ocbookmarks.REST.OCBookmarksRestConnector;
 
@@ -33,28 +40,29 @@ public class AddBookmarkActivity extends AppCompatActivity {
             @Override
             public void bookmarkChanged(final Bookmark bookmark) {
                 SharedPreferences preferences = getSharedPreferences(getPackageName(), MODE_PRIVATE);
-                loginData.url = preferences.getString(getString(R.string.login_url), "");
-                loginData.user = preferences.getString(getString(R.string.login_user), "");
-                loginData.password = preferences.getString(getString(R.string.login_pwd), "");
-                if(loginData.url.isEmpty()) {
-                    //this means the user is not yet loged in
-                    Toast.makeText(AddBookmarkActivity.this,
-                            R.string.not_yet_logged_in,
-                            Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(AddBookmarkActivity.this, MainActivity.class);
-                    startActivity(intent);
-                }
 
                 AsyncTask<Void, Void, String> updateTask = new AsyncTask<Void, Void, String>() {
                     @Override
                     protected String doInBackground(Void... params) {
-                        OCBookmarksRestConnector connector = new OCBookmarksRestConnector(
-                                loginData.url,
-                                loginData.user,
-                                loginData.password
-//                                loginData.token,
-//                                loginData.ssologin
-                                );
+                        NextcloudAPI nextcloudAPI = null;
+                        try {
+                            SingleSignOnAccount ssoa =  SingleAccountHelper.getCurrentSingleSignOnAccount(AddBookmarkActivity.this.getApplicationContext());
+                            nextcloudAPI = SSOUtil.getNextcloudAPI(AddBookmarkActivity.this, ssoa);
+                        } catch (NextcloudFilesAppAccountNotFoundException e) {
+                            Toast.makeText(AddBookmarkActivity.this,
+                                    R.string.nextcloud_files_app_account_not_found_message,
+                                    Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                            return null;
+                        } catch ( NoCurrentAccountSelectedException e) {
+                            Toast.makeText(AddBookmarkActivity.this,
+                                    R.string.no_current_account_selected_exception_message,
+                                    Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                            return null;
+                        }
+
+                        OCBookmarksRestConnector connector = new OCBookmarksRestConnector(nextcloudAPI);
                         try {
                             connector.addBookmark(bookmark);
                         } catch (Exception e) {

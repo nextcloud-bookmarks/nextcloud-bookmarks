@@ -28,6 +28,12 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.nextcloud.android.sso.BuildConfig;
+import com.nextcloud.android.sso.api.NextcloudAPI;
+import com.nextcloud.android.sso.exceptions.NextcloudFilesAppAccountNotFoundException;
+import com.nextcloud.android.sso.exceptions.NoCurrentAccountSelectedException;
+import com.nextcloud.android.sso.helper.SingleAccountHelper;
+import com.nextcloud.android.sso.model.SingleSignOnAccount;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
 
     private Toolbar mToolbar;
+
+    private NextcloudAPI mNextcloudAPI = null;
 
     private static final String BOOKMARK_FRAGMENT = "bookmark_fragment";
     private BookmarkFragment mBookmarkFragment = null;
@@ -179,6 +187,8 @@ public class MainActivity extends AppCompatActivity {
             mTagsFragment = new TagsFragment();
             setupTagFragmentListener();
         }
+
+        prepareSSO();
     }
 
     @Override
@@ -218,16 +228,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void deleteBookmark(final Bookmark bookmark) {
                 setRefreshing(true);
-                AsyncTask<Void, Void, String> updateTask = new AsyncTask<Void, Void, String>() {
+                new AsyncTask<Void, Void, String>() {
                     @Override
                     protected String doInBackground(Void... params) {
-                        OCBookmarksRestConnector connector = new OCBookmarksRestConnector(
-                                loginData.url,
-                                loginData.user,
-                                loginData.password
-//                                loginData.token,
-//                                loginData.ssologin
-                            );
+                        OCBookmarksRestConnector connector = new OCBookmarksRestConnector(mNextcloudAPI);
                         try {
                             connector.deleteBookmark(bookmark);
                         } catch (Exception e) {
@@ -253,10 +257,7 @@ public class MainActivity extends AppCompatActivity {
         AsyncTask<Void, Void, String> updateTask = new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
-                OCBookmarksRestConnector connector = new OCBookmarksRestConnector(
-                        loginData.url,
-                        loginData.user,
-                        loginData.password);
+                OCBookmarksRestConnector connector = new OCBookmarksRestConnector(mNextcloudAPI);
 //                        loginData.token,
 //                        loginData.ssologin);
                 if(bookmark.getId() < 0) {
@@ -313,13 +314,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     protected String doInBackground(Void... params) {
                         OCBookmarksRestConnector connector =
-                                new OCBookmarksRestConnector(
-                                        loginData.url,
-                                        loginData.user,
-                                        loginData.password
-//                                        loginData.token,
-//                                        loginData.ssologin
-                                );
+                                new OCBookmarksRestConnector(mNextcloudAPI);
                         try {
                             connector.renameTag(oldTag, newTag);
                         } catch (Exception e) {
@@ -347,10 +342,7 @@ public class MainActivity extends AppCompatActivity {
                 AsyncTask<Void, Void, String> updateTask = new AsyncTask<Void, Void, String>() {
                     @Override
                     protected String doInBackground(Void... params) {
-                        OCBookmarksRestConnector connector = new OCBookmarksRestConnector(
-                                loginData.url,
-                                loginData.user,
-                                loginData.password);
+                        OCBookmarksRestConnector connector = new OCBookmarksRestConnector(mNextcloudAPI);
 //                                loginData.token,
 //                                loginData.ssologin);
                         try {
@@ -377,22 +369,30 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        //todo: only reload if no data is stored so fare
-        // start login activity when nececary:
-        sharedPreferences =
-                getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+        prepareSSO();
+    }
+
+    private void prepareSSO() {
+        if(mNextcloudAPI != null) {
+            Log.e(TAG, "API is already set up, we can continue...");
+            return;
+        }
+        sharedPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         loginData = new LoginData();
-        loginData.url = sharedPreferences.getString(getString(R.string.login_url), "");
-        loginData.user = sharedPreferences.getString(getString(R.string.login_user), "");
-        loginData.password = sharedPreferences.getString(getString(R.string.login_pwd), "");
-//        loginData.token=sharedPreferences.getString(getString(R.string.login_token), "");
-//        loginData.ssologin=sharedPreferences.getBoolean(String.valueOf(R.string.ssologin), false);
-        if(loginData.url.isEmpty()) {
+        try {
+            Log.e(TAG, "Prepare the API");
+            SingleSignOnAccount ssoa = SingleAccountHelper.getCurrentSingleSignOnAccount(this.getApplicationContext());
+            Log.e(TAG, "Found user: "+ssoa.name);
+            mNextcloudAPI = SSOUtil.getNextcloudAPI(this, ssoa);
+            Log.e(TAG, "Done!");
+        } catch (NextcloudFilesAppAccountNotFoundException e) {
+            e.printStackTrace();
+            SSOUtil.invalidateAPICache();
+        } catch (NoCurrentAccountSelectedException e) {
+            Log.e(TAG, "Exception: No Account set up, log in again!");
+            Log.e(TAG, e.toString());
             Intent intent = new Intent(this, LoginAcitivty.class);
             startActivity(intent);
-        } else {
-            reloadData();
-            loadFromFile();
         }
     }
 
@@ -489,6 +489,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void reloadData() {
+
+        Log.e("TAG", "RELOAD");
         RelodDataTask relodDataTask = new RelodDataTask();
         relodDataTask.execute();
     }
@@ -501,8 +503,9 @@ public class MainActivity extends AppCompatActivity {
     private class RelodDataTask extends AsyncTask<Void, Void, Bookmark[]> {
         protected Bookmark[] doInBackground(Void... bla) {
             try {
+                prepareSSO();
                 OCBookmarksRestConnector connector =
-                        new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password);
+                        new OCBookmarksRestConnector(mNextcloudAPI);
                         //new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token,loginData.ssologin);
                 JSONArray data = connector.getRawBookmarks();
                 storeToFile(data);
@@ -624,13 +627,7 @@ public class MainActivity extends AppCompatActivity {
                     text.append("\n");
                 }
                 br.close();
-                OCBookmarksRestConnector connector =
-                        new OCBookmarksRestConnector(loginData.url,
-                                loginData.user,
-                                loginData.password);
-//                                ,
-//                                loginData.token,
-//                                loginData.ssologin);
+                OCBookmarksRestConnector connector = new OCBookmarksRestConnector(mNextcloudAPI);
                 Bookmark[] bookmarks = connector.getFromRawJson(new JSONArray(text.toString()));
                 mTagsFragment.updateData(Bookmark.getTagsFromBookmarks(bookmarks));
                 mBookmarkFragment.updateData(bookmarks);

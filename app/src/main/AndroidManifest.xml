@@ -16,18 +16,21 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name_short"
+            android:exported="true"
             android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".LoginAcitivty"
+            android:exported="true"
+            android:theme="@style/LoginStyle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".LoginAcitivty"
-            android:theme="@style/LoginStyle">
-        </activity>
         <activity android:name=".AddBookmarkActivity"
+            android:exported="true"
             android:theme="@style/Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
