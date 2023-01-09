@@ -119,13 +119,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        View headerView = navigationview.getHeaderView(0);
-        TextView userTextView= (TextView)headerView.findViewById(R.id.userTextView);
-        TextView urlTextView= (TextView)headerView.findViewById(R.id.urlTextView);
-        sharedPrefs = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-        urlTextView.setText(sharedPrefs.getString(getString(R.string.login_url), ""));
-        userTextView.setText(sharedPrefs.getString(getString(R.string.login_user), ""));
-
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -385,6 +378,13 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "Found user: "+ssoa.name);
             mNextcloudAPI = SSOUtil.getNextcloudAPI(this, ssoa);
             Log.e(TAG, "Done!");
+
+            View headerView = navigationview.getHeaderView(0);
+            TextView userTextView= (TextView)headerView.findViewById(R.id.userTextView);
+            TextView urlTextView= (TextView)headerView.findViewById(R.id.urlTextView);
+            urlTextView.setText(ssoa.url);
+            userTextView.setText(ssoa.name);
+
         } catch (NextcloudFilesAppAccountNotFoundException e) {
             e.printStackTrace();
             SSOUtil.invalidateAPICache();

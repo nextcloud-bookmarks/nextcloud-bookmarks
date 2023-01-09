@@ -11,7 +11,7 @@
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        card_view:cardBackgroundColor="@android:color/white"
+        card_view:cardBackgroundColor="@color/colorPrimary"
         card_view:cardElevation="4dp"
         card_view:cardUseCompatPadding="true"
         android:clickable="true"
