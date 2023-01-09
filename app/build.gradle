@@ -22,7 +22,7 @@ android {
         targetSdkVersion 32
         versionCode 16
         versionName "1.16"
-        applicationId "org.bisw.nxbookmarks"
+        applicationId "org.bi.nxbookmarks"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
