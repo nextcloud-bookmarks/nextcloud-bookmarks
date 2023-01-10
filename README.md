@@ -117,7 +117,7 @@ by NextCloudBookmarks version [3.2.1](https://github.com/nextcloud/bookmarks/rel
 
 | Step 1 SSO Login | Step 2 Select account | Step 3 Bookmarks screen |  Step 4 Tags Screen |
 | :--: | :--: | :--: | :--: |
-| ![Screenshot of list view](assets/nx/screenshots/9.jpg) | ![Screenshot of edit mode](assets/nx/screenshots/8.jpg)  | ![Screenshot of tag](assets/nx/screenshots/4.jpg) | ![Screenshot of bookmark](assets/nx/screenshots/5.jpg) |
+| ![Screenshot of list view](assets/nx/screenshots/3.jpg) | ![Screenshot of edit mode](assets/nx/screenshots/2.jpg)  | ![Screenshot of tag](assets/nx/screenshots/4.jpg) | ![Screenshot of bookmark](assets/nx/screenshots/5.jpg) |
 
 ### ADD New BookMark
 
