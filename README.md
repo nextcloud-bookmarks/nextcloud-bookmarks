@@ -37,7 +37,7 @@
 * Manage tags 🏷
 * Translated in many languages 🌎
 * Multiple accounts
-* SSO : Nextcloud Single Sign On (WIP)
+* SSO : Nextcloud Single Sign On
 
 
 An Android front end for the Nextcloud [Bookmark App](https://github.com/nextcloud/bookmarks/) 
@@ -104,19 +104,20 @@ by NextCloudBookmarks version [3.2.1](https://github.com/nextcloud/bookmarks/rel
 ### Login to Bookmark App
 
  * Open the Android App "Nextcloud Bookmarks"
- * **Step 1:** Click on **Manual login**. SSO integration is having some [known issues](https://gitlab.com/bisada/OCBookmarks/-/issues/27)
- * **Step 2:** Enter Credentials: 
+ * **Step 1:** Click on **Nextcloud Singn on (SSO)**.
+ * **Step 2:** Register the Nextcoud app for sso: 
     * Enter the "server address" in the field. Eg: https://us.cloudamo.com/
     * Enter the Username in the **user name** field. eg. email id(biswajitxxxxxxxx@nextcloud.com)
     * Enter the credentials **Password** field.
     * Finally click on **SIGN IN** button.
+    * Once added select the account to continue.
  * **Step 3:** It will open the **BOOKMARKS** screen
  * **Step 4:** Click on the **TAGS** tab to open TAGS screen.
 
 
-| Step 1 Manual Login | Step 2 Credentials | Step 3 Bookmarks screen |  Step 4 Tags Screen |
+| Step 1 SSO Login | Step 2 Select account | Step 3 Bookmarks screen |  Step 4 Tags Screen |
 | :--: | :--: | :--: | :--: |
-| ![Screenshot of list view](assets/nx/screenshots/3.jpg) | ![Screenshot of edit mode](assets/nx/screenshots/1.jpg)  | ![Screenshot of tag](assets/nx/screenshots/4.jpg) | ![Screenshot of bookmark](assets/nx/screenshots/5.jpg) |
+| ![Screenshot of list view](assets/nx/screenshots/9.jpg) | ![Screenshot of edit mode](assets/nx/screenshots/8.jpg)  | ![Screenshot of tag](assets/nx/screenshots/4.jpg) | ![Screenshot of bookmark](assets/nx/screenshots/5.jpg) |
 
 ### ADD New BookMark
 
