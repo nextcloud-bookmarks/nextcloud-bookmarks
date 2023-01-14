@@ -72,4 +72,5 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.15.3'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'com.github.TellH:RecyclerTreeView:1.2.0'
 }

@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.schabi.ocbookmarks.REST.Bookmark;
+import org.schabi.ocbookmarks.REST.model.Bookmark;
 
 import java.io.BufferedReader;
 import java.io.File;

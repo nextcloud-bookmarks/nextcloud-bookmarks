@@ -16,4 +16,11 @@
         android:id="@+id/action_backup_data"
         android:title="@string/backup_data"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/id_action_close_all"
+        android:icon="@drawable/ic_menu_delete"
+        android:orderInCategory="100"
+        android:title="delete"
+        app:showAsAction="ifRoom"/>
 </menu>

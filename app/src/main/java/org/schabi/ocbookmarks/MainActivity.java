@@ -37,8 +37,9 @@ import com.nextcloud.android.sso.model.SingleSignOnAccount;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.schabi.ocbookmarks.REST.Bookmark;
+import org.schabi.ocbookmarks.REST.model.Bookmark;
 import org.schabi.ocbookmarks.REST.OCBookmarksRestConnector;
+import org.schabi.ocbookmarks.REST.model.Folder;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -504,6 +505,8 @@ public class MainActivity extends AppCompatActivity {
         protected Bookmark[] doInBackground(Void... bla) {
             try {
                 prepareSSO();
+                Folder root = null;
+                root = connector.getFolders();
                 OCBookmarksRestConnector connector =
                         new OCBookmarksRestConnector(mNextcloudAPI);
                         //new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token,loginData.ssologin);
@@ -523,7 +526,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 mainProgressBar.setVisibility(View.GONE);
                 mTagsFragment.updateData(Bookmark.getTagsFromBookmarks(bookmarks));
-                mBookmarkFragment.updateData(bookmarks);
+                mBookmarkFragment.updateData(root, bookmarks);
                 setRefreshing(false);
             }
         }
@@ -630,7 +633,7 @@ public class MainActivity extends AppCompatActivity {
                 OCBookmarksRestConnector connector = new OCBookmarksRestConnector(mNextcloudAPI);
                 Bookmark[] bookmarks = connector.getFromRawJson(new JSONArray(text.toString()));
                 mTagsFragment.updateData(Bookmark.getTagsFromBookmarks(bookmarks));
-                mBookmarkFragment.updateData(bookmarks);
+                mBookmarkFragment.updateData(connector.getFolders(), bookmarks);
             } catch (JSONException je) {
                 if (BuildConfig.DEBUG) je.printStackTrace();
             } catch (Exception e) {
