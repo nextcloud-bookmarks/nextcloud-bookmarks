@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import tellh.com.recyclertreeview_lib.TreeNode;
 import tellh.com.recyclertreeview_lib.TreeViewAdapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -140,14 +141,21 @@ public class BookmarkFragment extends Fragment {
 
     private void buildTree() {
         List<TreeNode> nodes = new ArrayList<>();
-        TreeNode<Dir> top;
-        if (hierarchy == null) {
-            top = new TreeNode<>(new Dir("All Bookmarks"));
-        } else {
-            top = new TreeNode<>(new Dir(hierarchy.getTitle()));
-            fillNode(top, hierarchy);
+
+        if(hierarchy != null) {
+            for (Folder f: hierarchy.getChildren()) {
+                TreeNode<Dir> top;
+                top = new TreeNode<>(new Dir(f.getTitle()));
+                fillNode(top, f);
+                nodes.add(top); //The plan is to keep this top always as All Bookmarks.
+            }
         }
-        nodes.add(top); //The plan is to keep this top always as All Bookmarks.
+
+        for (Bookmark b : bookmarkList) {
+            if (b.getFolders().contains(hierarchy.getId())){
+                nodes.add(new TreeNode<>(new File(b.getTitle())));
+            }
+        }
 
         adapter.refresh(nodes);
     }

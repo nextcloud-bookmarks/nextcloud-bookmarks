@@ -502,14 +502,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class RelodDataTask extends AsyncTask<Void, Void, Bookmark[]> {
+        Folder root = null;
         protected Bookmark[] doInBackground(Void... bla) {
             try {
                 prepareSSO();
-                Folder root = null;
-                root = connector.getFolders();
                 OCBookmarksRestConnector connector =
                         new OCBookmarksRestConnector(mNextcloudAPI);
                         //new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token,loginData.ssologin);
+                root = connector.getFolders();
                 JSONArray data = connector.getRawBookmarks();
                 storeToFile(data);
                 return connector.getFromRawJson(data);

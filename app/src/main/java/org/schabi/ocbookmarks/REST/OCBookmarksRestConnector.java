@@ -335,11 +335,9 @@ public class OCBookmarksRestConnector {
 
     public Folder getFolders() throws RequestException {
         try {
-            JSONArray data = send("GET", "/folder").getJSONArray("data");
+            JSONArray data = sendWithSSO("GET", "/folder", Collections.emptyList()).getJSONArray("data");
             Folder root = Folder.createEmptyRootFolder();
-
             fillChildren(root, data);
-
             return root;
         } catch (JSONException je) {
             throw new RequestException("Could not get all folders", je);
