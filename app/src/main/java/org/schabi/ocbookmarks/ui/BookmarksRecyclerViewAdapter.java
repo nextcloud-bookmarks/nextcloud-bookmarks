@@ -1,13 +1,13 @@
-package org.schabi.ocbookmarks;
+package org.schabi.ocbookmarks.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,20 +17,24 @@ import android.widget.TextView;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.schabi.ocbookmarks.EditBookmarkDialog;
+import org.schabi.ocbookmarks.R;
 import org.schabi.ocbookmarks.REST.model.Bookmark;
 import org.schabi.ocbookmarks.REST.model.BookmarkListElement;
 import org.schabi.ocbookmarks.REST.model.Folder;
+import org.schabi.ocbookmarks.listener.BookmarkListener;
 import org.schabi.ocbookmarks.listener.FolderListener;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-class BookmarksRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class BookmarksRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final ArrayList<BookmarkListElement> mListElements;
     Context mContext;
     LayoutInflater mInflater;
     FolderListener mFolderCallback;
+    BookmarkListener mBookmarkCallback;
 
     private static final int FOLDER_TYPE = 0;
     private static final int BOOKMARK_TYPE = 1;
@@ -46,6 +50,10 @@ class BookmarksRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.mListElements.clear();
         this.mListElements.addAll(listElements);
         notifyDataSetChanged();
+    }
+
+    public void setBookmarkListener(BookmarkListener listener) {
+        this.mBookmarkCallback = listener;
     }
 
     @Override
@@ -128,7 +136,7 @@ class BookmarksRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             inflater.inflate(R.menu.edit_bookmark_item_menu, popup.getMenu());
 
 
-            // try setting force show icons via reflections (android is a peace of shit)
+            // try setting force show icons via reflections
             Object menuHelper;
             Class[] argTypes;
             try {
@@ -141,52 +149,41 @@ class BookmarksRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 e.printStackTrace();
             }
 
-            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    int id = item.getItemId();
-                    Bookmark bookmark = mListElements.get(relatedBookmarkId).getBookmark();
+            popup.setOnMenuItemClickListener(item -> {
+                int id = item.getItemId();
+                Bookmark bookmark = mListElements.get(relatedBookmarkId).getBookmark();
 
-                    switch (id) {
-                        case R.id.share:
-                            Intent intent = new Intent(Intent.ACTION_SEND);
-                            intent.setType("text/plain");
-                            intent.putExtra(Intent.EXTRA_SUBJECT, bookmark.getTitle());
-                            intent.putExtra(Intent.EXTRA_TEXT, bookmark.getUrl());
-                            mContext.startActivity(intent);
-                            return true;
-                        case R.id.edit_menu:
-                            EditBookmarkDialog bookmarkDialog = new EditBookmarkDialog();
-                            bookmarkDialog.getDialog((Activity) mContext,
-                                    bookmark,
-                                    new EditBookmarkDialog.OnBookmarkChangedListener() {
-                                        @Override
-                                        public void bookmarkChanged(Bookmark bookmark) {
-                                            //onBookmarkChangedListener.bookmarkChanged(bookmark);
-                                        }
-                                    }).show();
-
-                            return true;
-                        case R.id.delete_menu:
-                            showDeleteDialog();
-                            return true;
-                    }
-
-                    return false;
+                switch (id) {
+                    case R.id.share:
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        intent.setType("text/plain");
+                        intent.putExtra(Intent.EXTRA_SUBJECT, bookmark.getTitle());
+                        intent.putExtra(Intent.EXTRA_TEXT, bookmark.getUrl());
+                        mContext.startActivity(intent);
+                        return true;
+                    case R.id.edit_menu:
+                        EditBookmarkDialog bookmarkDialog = new EditBookmarkDialog();
+                        bookmarkDialog.getDialog((Activity) mContext,
+                                bookmark,
+                                mBookmarkCallback
+                        ).show();
+                        return true;
+                    case R.id.delete_menu:
+                        showDeleteDialog();
+                        return true;
                 }
+
+                return false;
             });
         }
 
         private void showDeleteDialog() {
-            /*AlertDialog dialog = new AlertDialog.Builder(bookmarkFragment.getActivity())
+            AlertDialog dialog = new AlertDialog.Builder(mContext)
                     .setTitle(R.string.sure_to_delete_bookmark)
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if (bookmarkFragment.onBookmarkChangedListener != null) {
-                                bookmarkFragment.onBookmarkDeleteListener
-                                        .deleteBookmark(bookmarkFragment.filteredBookmarks.get(relatedBookmarkId));
-                            }
+                            mBookmarkCallback.deleteBookmark(mListElements.get(relatedBookmarkId).getBookmark());
                         }
                     })
                     .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -194,7 +191,7 @@ class BookmarksRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
-                    }).show();*/
+                    }).show();
         }
 
         @Override

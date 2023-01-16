@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.schabi.ocbookmarks.REST.model.Bookmark;
+import org.schabi.ocbookmarks.listener.BookmarkListener;
+import org.schabi.ocbookmarks.ui.TagsRecyclerViewAdapter;
 
 import java.util.ArrayList;
 
@@ -28,17 +30,14 @@ public class EditBookmarkDialog {
     String title = "";
     String url = "";
 
-    public interface OnBookmarkChangedListener {
-        void bookmarkChanged(Bookmark bookmark);
-    }
-    private OnBookmarkChangedListener onBookmarkChangedListener;
+    private BookmarkListener onBookmarkChangedListener;
 
     public void newBookmark(final String title, final String url) {
         this.title = title;
         this.url = url;
     }
 
-    public AlertDialog getDialog(final Activity context, Bookmark b, OnBookmarkChangedListener listener) {
+    public AlertDialog getDialog(final Activity context, Bookmark b, BookmarkListener listener) {
         onBookmarkChangedListener = listener;
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

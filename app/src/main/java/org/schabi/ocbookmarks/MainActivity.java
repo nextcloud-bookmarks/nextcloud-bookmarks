@@ -40,7 +40,12 @@ import org.json.JSONException;
 import org.schabi.ocbookmarks.REST.model.Bookmark;
 import org.schabi.ocbookmarks.REST.OCBookmarksRestConnector;
 import org.schabi.ocbookmarks.REST.model.Folder;
+import org.schabi.ocbookmarks.api.LoginData;
+import org.schabi.ocbookmarks.api.SSOUtil;
+import org.schabi.ocbookmarks.listener.BookmarkListener;
 import org.schabi.ocbookmarks.listener.OnRequestReloadListener;
+import org.schabi.ocbookmarks.ui.IconHandler;
+import org.schabi.ocbookmarks.ui.TagsRecyclerViewAdapter;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -143,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 EditBookmarkDialog bookmarkDialog = new EditBookmarkDialog();
-                AlertDialog dialog = bookmarkDialog.getDialog(MainActivity.this, null, new EditBookmarkDialog.OnBookmarkChangedListener() {
+                AlertDialog dialog = bookmarkDialog.getDialog(MainActivity.this, null, new BookmarkListener() {
                     @Override
                     public void bookmarkChanged(Bookmark bookmark) {
                         addEditBookmark(bookmark);
@@ -212,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mBookmarkFragment.setOnBookmarkChangedListener(new EditBookmarkDialog.OnBookmarkChangedListener() {
+        mBookmarkFragment.setOnBookmarkChangedListener(new BookmarkListener() {
             @Override
             public void bookmarkChanged(Bookmark bookmark) {
                 addEditBookmark(bookmark);

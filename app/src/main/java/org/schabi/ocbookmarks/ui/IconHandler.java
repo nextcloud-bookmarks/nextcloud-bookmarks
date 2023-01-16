@@ -1,4 +1,4 @@
-package org.schabi.ocbookmarks;
+package org.schabi.ocbookmarks.ui;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.schabi.ocbookmarks.BuildConfig;
 import org.schabi.ocbookmarks.REST.model.Bookmark;
 
 import java.io.BufferedReader;

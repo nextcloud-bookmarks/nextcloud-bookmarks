@@ -8,7 +8,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import org.schabi.ocbookmarks.REST.model.BookmarkListElement;
 import org.schabi.ocbookmarks.REST.model.Folder;
 import org.schabi.ocbookmarks.listener.FolderListener;
 import org.schabi.ocbookmarks.listener.OnRequestReloadListener;
+import org.schabi.ocbookmarks.ui.BookmarksRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,11 +44,6 @@ public class BookmarkFragment extends Fragment implements FolderListener {
     private OnRequestReloadListener onRequestReloadListener = null;
     public void setOnRequestReloadListener(OnRequestReloadListener listener) {
         onRequestReloadListener = listener;
-    }
-
-    private EditBookmarkDialog.OnBookmarkChangedListener onBookmarkChangedListener = null;
-    public void setOnBookmarkChangedListener(EditBookmarkDialog.OnBookmarkChangedListener listener) {
-        onBookmarkChangedListener = listener;
     }
 
     public boolean onBackHandled() {
@@ -85,14 +80,6 @@ public class BookmarkFragment extends Fragment implements FolderListener {
         return null;
     }
 
-    public interface OnBookmarkDeleteListener {
-        void deleteBookmark(Bookmark bookmark);
-    }
-    private OnBookmarkDeleteListener onBookmarkDeleteListener = null;
-    public void setOnBookmarkDeleteListener(OnBookmarkDeleteListener listener) {
-        onBookmarkDeleteListener = listener;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fagment_bookmarks, container, false);
@@ -106,12 +93,9 @@ public class BookmarkFragment extends Fragment implements FolderListener {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if(onRequestReloadListener != null) {
-                    onRequestReloadListener.requestReload();
-                }
+        refreshLayout.setOnRefreshListener(() -> {
+            if(onRequestReloadListener != null) {
+                onRequestReloadListener.requestReload();
             }
         });
 

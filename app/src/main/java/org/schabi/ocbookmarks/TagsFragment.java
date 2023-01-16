@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import org.schabi.ocbookmarks.ui.TagsRecyclerViewAdapter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 

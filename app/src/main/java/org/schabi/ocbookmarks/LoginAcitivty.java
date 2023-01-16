@@ -6,17 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.nextcloud.android.sso.AccountImporter;
@@ -28,11 +22,12 @@ import com.nextcloud.android.sso.exceptions.NextcloudFilesAppAccountNotFoundExce
 import com.nextcloud.android.sso.exceptions.NextcloudFilesAppNotInstalledException;
 import com.nextcloud.android.sso.exceptions.NoCurrentAccountSelectedException;
 import com.nextcloud.android.sso.helper.SingleAccountHelper;
-import com.nextcloud.android.sso.model.SingleSignOnAccount;
 import com.nextcloud.android.sso.ui.UiExceptionManager;
 
 import org.schabi.ocbookmarks.REST.OCBookmarksRestConnector;
 import org.schabi.ocbookmarks.REST.RequestException;
+import org.schabi.ocbookmarks.api.LoginData;
+import org.schabi.ocbookmarks.api.SSOUtil;
 
 import java.io.File;
 
