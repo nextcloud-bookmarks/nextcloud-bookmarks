@@ -19,8 +19,8 @@ public class Bookmark {
     private Date lastModified = null;
     private int clickcount = -1;
 //    private boolean isPublic = false;
-    private String[] tags = new String[0];
-    private List<Integer> folders=new ArrayList<>();
+    private ArrayList<String> tags = new ArrayList<>();
+    private List<Integer> folders = new ArrayList<>();
 
     private boolean isFolder = false;
 
@@ -76,7 +76,7 @@ public class Bookmark {
         return this;
     }
 
-    public Bookmark setTags(String[] tags) {
+    public Bookmark setTags(ArrayList<String> tags) {
         this.tags = tags;
         return this;
     }
@@ -119,7 +119,7 @@ public class Bookmark {
     public int getClickcount() {
         return clickcount;
     }
-    public String[] getTags() {
+    public ArrayList<String> getTags() {
         return tags;
     }
     public List<Integer> getFolders(){

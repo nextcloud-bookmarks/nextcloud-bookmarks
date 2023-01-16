@@ -19,6 +19,7 @@ import org.schabi.ocbookmarks.REST.model.Bookmark;
 import org.schabi.ocbookmarks.listener.BookmarkListener;
 import org.schabi.ocbookmarks.ui.TagsRecyclerViewAdapter;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static android.os.Build.VERSION.SDK_INT;
@@ -96,11 +97,7 @@ public class EditBookmarkDialog {
                         Toast.makeText(context, R.string.no_url_entered, Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        String[] tags = new String[tagList.size()];
-                        for (int i = 0; i < tags.length; i++) {
-                            tags[i] = tagList.get(i);
-                        }
-                        bookmark.setTags(tags);
+                        bookmark.setTags(tagList);
                         if (onBookmarkChangedListener != null) {
                             onBookmarkChangedListener.bookmarkChanged(bookmark);
                         }

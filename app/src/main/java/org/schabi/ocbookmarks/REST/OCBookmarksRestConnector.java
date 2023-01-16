@@ -196,12 +196,12 @@ public class OCBookmarksRestConnector {
 
     private Bookmark getBookmarkFromJsonO(JSONObject jBookmark) throws RequestException {
 
-        String[] tags;
+        ArrayList<String> tags;
         try {
             JSONArray jTags = jBookmark.getJSONArray("tags");
-            tags = new String[jTags.length()];
-            for (int j = 0; j < tags.length; j++) {
-                tags[j] = jTags.getString(j);
+            tags = new ArrayList<>();
+            for (int j = 0; j < jTags.length(); j++) {
+                tags.add(jTags.getString(j));
             }
         } catch (JSONException je) {
             throw new RequestException("Could not parse array", je);
@@ -219,9 +219,9 @@ public class OCBookmarksRestConnector {
         }
 
 
-        //another api error we need to fix
-        if (tags.length == 1 && tags[0].isEmpty()) {
-            tags = new String[0];
+        // Todo: another api error we need to fix
+        if (tags.size() == 1 && tags.get(0).isEmpty()) {
+            tags = new ArrayList<>();
         }
 
         try {
@@ -270,7 +270,7 @@ public class OCBookmarksRestConnector {
     }
 
     private Collection<QueryParam> createBookmarkParameter(Bookmark bookmark) {
-        final Collection<QueryParam> parameter = new ArrayList<>(3 + bookmark.getTags().length);
+        final Collection<QueryParam> parameter = new ArrayList<>(3 + bookmark.getTags().size());
         if (!bookmark.getTitle().isEmpty() && !bookmark.getUrl().startsWith("http")) {
             // Title can only be set if the sheme is given
             // This is a bug we need to fix

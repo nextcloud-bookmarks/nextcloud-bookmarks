@@ -8,6 +8,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ import java.util.Arrays;
 
 public class BookmarkFragment extends Fragment implements FolderListener {
 
-    private ArrayList<Bookmark> bookmarkList = new ArrayList<>();
+    private ArrayList<Bookmark> mBookmarkList = new ArrayList<>();
     private ArrayList<BookmarkListElement> mFilteredBookmarks = new ArrayList<>();
     private BookmarksRecyclerViewAdapter mAdapter;
     private SwipeRefreshLayout refreshLayout;
@@ -37,7 +38,8 @@ public class BookmarkFragment extends Fragment implements FolderListener {
     private Folder mRootFolder;
     private Folder mCurrentFolder;
 
-    private ArrayList<String> tagFilter = new ArrayList<>();
+    private String mTagFilter = "";
+    private String mSearchTerm = "";
 
 
     private OnRequestReloadListener onRequestReloadListener = null;
@@ -125,8 +127,22 @@ public class BookmarkFragment extends Fragment implements FolderListener {
             mFilteredBookmarks.add(new BookmarkListElement(f));
         }
 
-        for (Bookmark b : bookmarkList) {
-            if (b.getFolders().contains(currentFolder.getId())){
+        for (Bookmark b : mBookmarkList) {
+            boolean shouldAdd = true;
+
+            if(!mSearchTerm.equals("") &&
+                    !b.getTitle().contains(mSearchTerm) &&
+                    !b.getDescription().contains(mSearchTerm) &&
+                    !b.getUrl().contains(mSearchTerm)
+            ) {
+                shouldAdd = false;
+            }
+
+            if(!mTagFilter.equals("") && !b.getTags().contains(mTagFilter)) {
+                shouldAdd = false;
+            }
+
+            if (b.getFolders().contains(currentFolder.getId()) && shouldAdd){
                 mFilteredBookmarks.add(new BookmarkListElement(b));
             }
         }
@@ -135,30 +151,30 @@ public class BookmarkFragment extends Fragment implements FolderListener {
     }
 
     public void showByTag(String tag) {
-        mFilteredBookmarks.clear();
-        for(Bookmark b : bookmarkList) {
-            for(String bTag : b.getTags()) {
-                if(bTag.equals(tag)) {
-                    //mFilteredBookmarks.add(b);
-                }
-            }
-        }
-        mAdapter.notifyDataSetChanged();
+        mTagFilter = tag;
+        buildCurrentView(mCurrentFolder);
     }
 
     public void releaseTag() {
-        mFilteredBookmarks.clear();
-        for(Bookmark b : bookmarkList) {
-           // mFilteredBookmarks.add(b);
-        }
-        mAdapter.notifyDataSetChanged();
+        mTagFilter = "";
+        buildCurrentView(mCurrentFolder);
+    }
+
+    public void search(String term) {
+        mSearchTerm = term;
+        buildCurrentView(mCurrentFolder);
+    }
+
+    public void clearSearch() {
+        mSearchTerm = "";
+        buildCurrentView(mCurrentFolder);
     }
 
     public void updateData(Folder hierarchy, Bookmark[] bookmarks) {
         mRootFolder = hierarchy;
-        bookmarkList.clear();
+        mBookmarkList.clear();
         mFilteredBookmarks.clear();
-        bookmarkList.addAll(Arrays.asList(bookmarks));
+        mBookmarkList.addAll(Arrays.asList(bookmarks));
         buildCurrentView(mRootFolder);
     }
 
