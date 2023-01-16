@@ -404,6 +404,7 @@ public class MainActivity extends AppCompatActivity {
             TextView urlTextView= (TextView)headerView.findViewById(R.id.urlTextView);
             urlTextView.setText(ssoa.url);
             userTextView.setText(ssoa.name);
+            reloadData();
 
         } catch (NextcloudFilesAppAccountNotFoundException e) {
             e.printStackTrace();

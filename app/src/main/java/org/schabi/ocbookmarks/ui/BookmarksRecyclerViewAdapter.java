@@ -183,7 +183,9 @@ public class BookmarksRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            mBookmarkCallback.deleteBookmark(mListElements.get(relatedBookmarkId).getBookmark());
+                            if(mBookmarkCallback != null) {
+                                mBookmarkCallback.deleteBookmark(mListElements.get(relatedBookmarkId).getBookmark());
+                            }
                         }
                     })
                     .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {

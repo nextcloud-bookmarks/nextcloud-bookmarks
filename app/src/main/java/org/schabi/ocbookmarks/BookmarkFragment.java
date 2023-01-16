@@ -101,6 +101,7 @@ public class BookmarkFragment extends Fragment implements FolderListener {
 
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.rv);
         mAdapter = new BookmarksRecyclerViewAdapter(mFilteredBookmarks, getContext());
+        mAdapter.setBookmarkListener(bookmarkListener);
         mAdapter.setBookmarkFolderListener(this);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -164,5 +165,4 @@ public class BookmarkFragment extends Fragment implements FolderListener {
     public void setRefreshing(boolean refresh) {
         refreshLayout.setRefreshing(refresh);
     }
-
 }
