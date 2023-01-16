@@ -40,6 +40,7 @@ import org.json.JSONException;
 import org.schabi.ocbookmarks.REST.model.Bookmark;
 import org.schabi.ocbookmarks.REST.OCBookmarksRestConnector;
 import org.schabi.ocbookmarks.REST.model.Folder;
+import org.schabi.ocbookmarks.listener.OnRequestReloadListener;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -204,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupBookmarkFragmentListener() {
-        mBookmarkFragment.setOnRequestReloadListener(new BookmarkFragment.OnRequestReloadListener() {
+        mBookmarkFragment.setOnRequestReloadListener(new OnRequestReloadListener() {
             @Override
             public void requestReload() {
                 reloadData();
@@ -365,6 +366,16 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         prepareSSO();
     }
+
+    @Override
+    public void onBackPressed() {
+        Log.e(TAG, "onBackPressed");
+        if(!mBookmarkFragment.onBackHandled()){
+            Log.e(TAG, "onBackPressed, not handled yet!");
+            super.onBackPressed();
+        }
+    }
+
 
     private void prepareSSO() {
         if(mNextcloudAPI != null) {

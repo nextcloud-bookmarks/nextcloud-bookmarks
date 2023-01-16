@@ -22,6 +22,8 @@ public class Bookmark {
     private String[] tags = new String[0];
     private List<Integer> folders=new ArrayList<>();
 
+    private boolean isFolder = false;
+
     public static Bookmark emptyInstance() {
         return new Bookmark();
     }
@@ -187,5 +189,13 @@ public class Bookmark {
             returnFolderList[i] = folderList.get(i);
         }
         return returnFolderList;
+    }
+
+    public boolean isFolder() {
+        return isFolder;
+    }
+
+    public void setFolder(boolean folder) {
+        isFolder = folder;
     }
 }
