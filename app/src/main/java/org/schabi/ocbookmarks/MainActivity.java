@@ -153,6 +153,11 @@ public class MainActivity extends AppCompatActivity {
                     public void bookmarkChanged(Bookmark bookmark) {
                         addEditBookmark(bookmark);
                     }
+
+                    @Override
+                    public void deleteBookmark(Bookmark bookmark) {
+
+                    }
                 });
                 dialog.show();
             }
@@ -217,14 +222,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mBookmarkFragment.setOnBookmarkChangedListener(new BookmarkListener() {
+        mBookmarkFragment.setBookmarkListener(new BookmarkListener() {
             @Override
             public void bookmarkChanged(Bookmark bookmark) {
                 addEditBookmark(bookmark);
             }
-        });
 
-        mBookmarkFragment.setOnBookmarkDeleteListener(new BookmarkFragment.OnBookmarkDeleteListener() {
             @Override
             public void deleteBookmark(final Bookmark bookmark) {
                 setRefreshing(true);

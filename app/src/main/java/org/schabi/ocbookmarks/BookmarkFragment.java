@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import org.schabi.ocbookmarks.REST.model.Bookmark;
 import org.schabi.ocbookmarks.REST.model.BookmarkListElement;
 import org.schabi.ocbookmarks.REST.model.Folder;
+import org.schabi.ocbookmarks.listener.BookmarkListener;
 import org.schabi.ocbookmarks.listener.FolderListener;
 import org.schabi.ocbookmarks.listener.OnRequestReloadListener;
 import org.schabi.ocbookmarks.ui.BookmarksRecyclerViewAdapter;
@@ -36,12 +37,24 @@ public class BookmarkFragment extends Fragment implements FolderListener {
     private Folder mRootFolder;
     private Folder mCurrentFolder;
 
+    private ArrayList<String> tagFilter = new ArrayList<>();
+
+
+    private OnRequestReloadListener onRequestReloadListener = null;
+    private BookmarkListener bookmarkListener = null;
+
+
+
     @Override
     public void changeFolderCallback(@NonNull Folder f) {
         buildCurrentView(f);
     }
 
-    private OnRequestReloadListener onRequestReloadListener = null;
+
+    public void setBookmarkListener(BookmarkListener listener) {
+        bookmarkListener = listener;
+    }
+
     public void setOnRequestReloadListener(OnRequestReloadListener listener) {
         onRequestReloadListener = listener;
     }
