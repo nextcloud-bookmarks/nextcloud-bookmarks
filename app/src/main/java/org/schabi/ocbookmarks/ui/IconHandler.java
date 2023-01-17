@@ -1,4 +1,7 @@
 package org.schabi.ocbookmarks.ui;
+
+import static org.schabi.ocbookmarks.R.drawable.*;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +13,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.schabi.ocbookmarks.BuildConfig;
+import org.schabi.ocbookmarks.R;
 import org.schabi.ocbookmarks.REST.model.Bookmark;
 
 import java.io.BufferedReader;
@@ -34,7 +38,9 @@ public class IconHandler {
     public void loadIcon(final ImageView imageView, final Bookmark bookmark) {
 
         if(siteHasNoIcon(bookmark)) {
-            imageView.setImageBitmap(null);
+            Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
+                    ic_globe);
+            imageView.setImageBitmap(icon);
             return;
         }
 
