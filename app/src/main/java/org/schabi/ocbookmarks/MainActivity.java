@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
 import com.nextcloud.android.sso.BuildConfig;
 import com.nextcloud.android.sso.api.NextcloudAPI;
 import com.nextcloud.android.sso.exceptions.NextcloudFilesAppAccountNotFoundException;
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String DATA_FILE_NAME = "data.json";
     private static final String DATA_BACKUP_FILE_NAME = "data-backup.json";
+    private static final int TAGLIST_MIN_ID = 10;
 
 
     private Toolbar mToolbar;
@@ -63,13 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private BookmarkFragment mBookmarkFragment = null;
     private ProgressBar mainProgressBar;
 
-    private SharedPreferences sharedPreferences;
-    private static LoginData loginData;
-
-    private DrawerLayout drawerLayout;
     private NavigationView navigationview;
-    SharedPreferences sharedPrefs;
-
     private static final String TAG = MainActivity.class.toString();
 
     @Override
@@ -79,51 +76,45 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Get Navigationview and do the action
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        navigationview = (NavigationView)findViewById(R.id.nvView);
-        navigationview.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                switch(id)
-                {
-                    case R.id.bookmarks:
-                        //Toast.makeText(MainActivity.this, "Report issues to Developer",Toast.LENGTH_SHORT).show();break;
-                    default:
-                        return true;
-                }
+        navigationview = findViewById(R.id.nvView);
+        navigationview.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
 
+            Log.e(TAG, "onNavigationItemSelected: " + item.getTitle().toString());
 
+            if(id >= TAGLIST_MIN_ID) {
+                String tag = item.getTitle().toString();
+                mBookmarkFragment.showByTag(tag);
+
+                Log.e(TAG, "show: " + tag);
             }
+            return false;
         });
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditBookmarkDialog bookmarkDialog = new EditBookmarkDialog();
-                AlertDialog dialog = bookmarkDialog.getDialog(MainActivity.this, null, new BookmarkListener() {
-                    @Override
-                    public void bookmarkChanged(Bookmark bookmark) {
-                        addEditBookmark(bookmark);
-                    }
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(view -> {
+            EditBookmarkDialog bookmarkDialog = new EditBookmarkDialog();
+            AlertDialog dialog = bookmarkDialog.getDialog(MainActivity.this, null, new BookmarkListener() {
+                @Override
+                public void bookmarkChanged(Bookmark bookmark) {
+                    addEditBookmark(bookmark);
+                }
 
-                    @Override
-                    public void deleteBookmark(Bookmark bookmark) {
+                @Override
+                public void deleteBookmark(Bookmark bookmark) {
 
-                    }
-                });
-                dialog.show();
-            }
+                }
+            });
+            dialog.show();
         });
 
-        mainProgressBar = (ProgressBar) findViewById(R.id.mainProgressBar);
+        mainProgressBar = findViewById(R.id.mainProgressBar);
 
 
         if(savedInstanceState == null) {
@@ -319,12 +310,10 @@ public class MainActivity extends AppCompatActivity {
                 this.onBackPressed();
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     private void reloadData() {
-        Log.e("TAG", "RELOAD");
         RelodDataTask relodDataTask = new RelodDataTask();
         relodDataTask.execute();
     }
@@ -342,6 +331,7 @@ public class MainActivity extends AppCompatActivity {
                         new OCBookmarksRestConnector(mNextcloudAPI);
                         //new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token,loginData.ssologin);
                 root = connector.getFolders();
+
                 JSONArray data = connector.getRawBookmarks();
                 storeToFile(data);
                 return connector.getFromRawJson(data);
@@ -358,6 +348,17 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 mainProgressBar.setVisibility(View.GONE);
                 mBookmarkFragment.updateData(root, bookmarks);
+
+
+                Menu menu = navigationview.getMenu();
+                menu.removeGroup(R.id.tag_group);
+                SubMenu subMenu = menu.addSubMenu(R.id.tag_group, 1, Menu.NONE, R.string.nav_drawer_tags_header);
+
+                int i = TAGLIST_MIN_ID;
+                for (String tag: Bookmark.getTagsFromBookmarks(bookmarks)) {
+                    MenuItem menuItem = subMenu.add(i, i++, Menu.NONE, tag);
+                    menuItem.setIcon(R.drawable.ic_tag);
+                }
                 setRefreshing(false);
             }
         }
