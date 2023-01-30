@@ -174,6 +174,8 @@ public class BookmarkFragment extends Fragment implements FolderListener {
         mRootFolder = hierarchy;
         mBookmarkList.clear();
         mFilteredBookmarks.clear();
+        mSearchTerm = "";
+        mTagFilter = "";
         mBookmarkList.addAll(Arrays.asList(bookmarks));
         buildCurrentView(mRootFolder);
     }
