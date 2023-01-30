@@ -21,6 +21,11 @@ public class Folder implements Serializable {
     }
      */
 
+
+    public static final int ROOT_ID = -1;
+    public static final int UP_ID = -2;
+
+
     private int id;
     private String title;
     private int parentFolderId;
@@ -29,9 +34,9 @@ public class Folder implements Serializable {
 
     public static Folder createEmptyRootFolder() {
         Folder root = new Folder();
-        root.setId(-1);
+        root.setId(ROOT_ID);
         root.setTitle("All Bookmarks");
-        root.setParentFolderId(-1);
+        root.setParentFolderId(ROOT_ID);
         return root;
     }
 

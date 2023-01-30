@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -67,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar mainProgressBar;
 
     private NavigationView navigationview;
+    private DrawerLayout drawerLayout;
+
     private static final String TAG = MainActivity.class.toString();
 
     @Override
@@ -76,25 +79,31 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Get Navigationview and do the action
+        drawerLayout = findViewById(R.id.drawer_layout);
         navigationview = findViewById(R.id.nvView);
         navigationview.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
 
-            Log.e(TAG, "onNavigationItemSelected: " + item.getTitle().toString());
-
             if(id >= TAGLIST_MIN_ID) {
                 String tag = item.getTitle().toString();
                 mBookmarkFragment.showByTag(tag);
-
-                Log.e(TAG, "show: " + tag);
+            } else {
+                mBookmarkFragment.releaseTag();
             }
-            return false;
+            drawerLayout.closeDrawer(this.navigationview);
+            return true;
         });
 
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+
+
 
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -306,7 +315,12 @@ public class MainActivity extends AppCompatActivity {
                 new BackupDataTask(this).execute();
                 return true;
             case android.R.id.home:
-                mBookmarkFragment.releaseTag();
+                if (drawerLayout.isDrawerOpen(this.navigationview)) {
+                    drawerLayout.closeDrawer(this.navigationview);
+                } else {
+                    drawerLayout.openDrawer(this.navigationview);
+                }
+
                 this.onBackPressed();
                 return true;
         }

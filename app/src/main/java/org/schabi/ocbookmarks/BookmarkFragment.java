@@ -49,6 +49,9 @@ public class BookmarkFragment extends Fragment implements FolderListener {
 
     @Override
     public void changeFolderCallback(@NonNull Folder f) {
+        if(f.getId() == Folder.UP_ID) {
+            f = getFolderFromID(mCurrentFolder.getParentFolderId());
+        }
         buildCurrentView(f);
     }
 
@@ -118,11 +121,17 @@ public class BookmarkFragment extends Fragment implements FolderListener {
         return rootView;
     }
 
-
-
     public void buildCurrentView(Folder currentFolder) {
         mCurrentFolder = currentFolder;
         mFilteredBookmarks = new ArrayList<>();
+
+        if(!isCurrentFolderRoot()) {
+            Folder up = new Folder();
+            up.setTitle("..");
+            up.setId(Folder.UP_ID);
+            mFilteredBookmarks.add(new BookmarkListElement(up));
+        }
+
         for (Folder f: currentFolder.getChildren()) {
             mFilteredBookmarks.add(new BookmarkListElement(f));
         }
@@ -178,6 +187,10 @@ public class BookmarkFragment extends Fragment implements FolderListener {
         mTagFilter = "";
         mBookmarkList.addAll(Arrays.asList(bookmarks));
         buildCurrentView(mRootFolder);
+    }
+
+    public boolean isCurrentFolderRoot() {
+        return mRootFolder.equals(mCurrentFolder);
     }
 
     public void setRefreshing(boolean refresh) {
