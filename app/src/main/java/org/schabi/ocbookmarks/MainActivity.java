@@ -1,6 +1,5 @@
 package org.schabi.ocbookmarks;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -8,26 +7,23 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
 import com.nextcloud.android.sso.BuildConfig;
 import com.nextcloud.android.sso.api.NextcloudAPI;
 import com.nextcloud.android.sso.exceptions.NextcloudFilesAppAccountNotFoundException;
@@ -45,7 +41,6 @@ import org.schabi.ocbookmarks.api.SSOUtil;
 import org.schabi.ocbookmarks.listener.BookmarkListener;
 import org.schabi.ocbookmarks.listener.OnRequestReloadListener;
 import org.schabi.ocbookmarks.ui.IconHandler;
-import org.schabi.ocbookmarks.ui.TagsRecyclerViewAdapter;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -61,21 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String DATA_FILE_NAME = "data.json";
     private static final String DATA_BACKUP_FILE_NAME = "data-backup.json";
+    private static final int TAGLIST_MIN_ID = 10;
 
-    /**
-     * The {@link PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    private ViewPager mViewPager;
 
     private Toolbar mToolbar;
 
@@ -83,16 +65,10 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String BOOKMARK_FRAGMENT = "bookmark_fragment";
     private BookmarkFragment mBookmarkFragment = null;
-    private static final String TAGS_FRAGMENT = "tags_fragment";
-    private TagsFragment mTagsFragment = null;
     private ProgressBar mainProgressBar;
 
-    private SharedPreferences sharedPreferences;
-    private static LoginData loginData;
-
-    private DrawerLayout drawerLayout;
     private NavigationView navigationview;
-    SharedPreferences sharedPrefs;
+    private DrawerLayout drawerLayout;
 
     private static final String TAG = MainActivity.class.toString();
 
@@ -103,94 +79,56 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Get Navigationview and do the action
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        navigationview = (NavigationView)findViewById(R.id.nvView);
-        navigationview.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                switch(id)
-                {
-                    case R.id.email:
-                    Intent intent = new Intent(Intent.ACTION_SENDTO);
-                    intent.setType("text/plain");
-                    intent.putExtra(Intent.EXTRA_EMAIL, getString(R.string.support_email));
-                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject));
-                    intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.email_body));
-                    startActivity(Intent.createChooser(intent, getString(R.string.send_email)));
-                    //Toast.makeText(MainActivity.this, "Report issues to Developer",Toast.LENGTH_SHORT).show();break;
-                    default:
-                        return true;
-                }
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationview = findViewById(R.id.nvView);
+        navigationview.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
 
-
+            if(id >= TAGLIST_MIN_ID) {
+                String tag = item.getTitle().toString();
+                mBookmarkFragment.showByTag(tag);
+            } else {
+                mBookmarkFragment.releaseTag();
             }
+            drawerLayout.closeDrawer(this.navigationview);
+            return true;
         });
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
 
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        //setup sliding tabs
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditBookmarkDialog bookmarkDialog = new EditBookmarkDialog();
-                AlertDialog dialog = bookmarkDialog.getDialog(MainActivity.this, null, new BookmarkListener() {
-                    @Override
-                    public void bookmarkChanged(Bookmark bookmark) {
-                        addEditBookmark(bookmark);
-                    }
-
-                    @Override
-                    public void deleteBookmark(Bookmark bookmark) {
-
-                    }
-                });
-                dialog.show();
-            }
-        });
-
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if(position != 1) {
-                    mBookmarkFragment.releaseTag();
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(view -> {
+            EditBookmarkDialog bookmarkDialog = new EditBookmarkDialog();
+            AlertDialog dialog = bookmarkDialog.getDialog(MainActivity.this, null, new BookmarkListener() {
+                @Override
+                public void bookmarkChanged(Bookmark bookmark) {
+                    addEditBookmark(bookmark);
                 }
-            }
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
+                @Override
+                public void deleteBookmark(Bookmark bookmark) {
 
-            }
+                }
+            });
+            dialog.show();
         });
 
-        mainProgressBar = (ProgressBar) findViewById(R.id.mainProgressBar);
+        mainProgressBar = findViewById(R.id.mainProgressBar);
 
 
         if(savedInstanceState == null) {
             mBookmarkFragment = new BookmarkFragment();
             setupBookmarkFragmentListener();
-            mTagsFragment = new TagsFragment();
-            setupTagFragmentListener();
         }
 
         prepareSSO();
@@ -201,9 +139,7 @@ public class MainActivity extends AppCompatActivity {
         super.onRestoreInstanceState(inState);
         FragmentManager fm = getSupportFragmentManager();
         mBookmarkFragment = (BookmarkFragment) fm.getFragment(inState, BOOKMARK_FRAGMENT);
-        mTagsFragment = (TagsFragment) fm.getFragment(inState, TAGS_FRAGMENT);
         setupBookmarkFragmentListener();
-        setupTagFragmentListener();
     }
 
     @Override
@@ -211,10 +147,15 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         FragmentManager fm = getSupportFragmentManager();
         fm.putFragment(outState, BOOKMARK_FRAGMENT, mBookmarkFragment);
-        fm.putFragment(outState, TAGS_FRAGMENT, mTagsFragment);
     }
 
     private void setupBookmarkFragmentListener() {
+
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction()
+                .add(R.id.container, mBookmarkFragment)
+                .commit();
+
         mBookmarkFragment.setOnRequestReloadListener(new OnRequestReloadListener() {
             @Override
             public void requestReload() {
@@ -292,83 +233,6 @@ public class MainActivity extends AppCompatActivity {
         }.execute();
     }
 
-    private void setupTagFragmentListener() {
-        mTagsFragment.setOnTagTapedListener(new TagsFragment.OnTagTapedListener() {
-            @Override
-            public void onTagTaped(String tag) {
-                mBookmarkFragment.showByTag(tag);
-                mViewPager.setCurrentItem(1);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            }
-        });
-
-        mTagsFragment.setOnRequestReloadListener(new TagsFragment.OnRequestReloadListener() {
-            @Override
-            public void requestReload() {
-                reloadData();
-            }
-        });
-
-        mTagsFragment.setOnTagEditedListener(new TagsRecyclerViewAdapter.OnTagEditedListener() {
-            @Override
-            public void onTagEdited(final String oldTag, final String newTag) {
-                setRefreshing(true);
-                AsyncTask<Void, Void, String> updateTask = new AsyncTask<Void, Void, String>() {
-                    @Override
-                    protected String doInBackground(Void... params) {
-                        OCBookmarksRestConnector connector =
-                                new OCBookmarksRestConnector(mNextcloudAPI);
-                        try {
-                            connector.renameTag(oldTag, newTag);
-                        } catch (Exception e) {
-                            return getString(R.string.could_not_update_tag);
-                        }
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(String result) {
-                        if(result != null) {
-                            Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
-                        }
-                        reloadData();
-                    }
-                };
-                updateTask.execute();
-            }
-        });
-
-        mTagsFragment.setOnTagDeletedListener(new TagsRecyclerViewAdapter.OnTagDeletedListener() {
-            @Override
-            public void onTagDeleted(final String tag) {
-                setRefreshing(true);
-                AsyncTask<Void, Void, String> updateTask = new AsyncTask<Void, Void, String>() {
-                    @Override
-                    protected String doInBackground(Void... params) {
-                        OCBookmarksRestConnector connector = new OCBookmarksRestConnector(mNextcloudAPI);
-//                                loginData.token,
-//                                loginData.ssologin);
-                        try {
-                            connector.deleteTag(tag);
-                        } catch (Exception e) {
-                            return getString(R.string.could_not_delete_tag);
-                        }
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(String result) {
-                        if(result != null) {
-                            Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG);
-                        }
-                        reloadData();
-                    }
-                };
-                updateTask.execute();
-            }
-        });
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -377,11 +241,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Log.e(TAG, "onBackPressed");
-        if(!mBookmarkFragment.onBackHandled()){
-            Log.e(TAG, "onBackPressed, not handled yet!");
-            super.onBackPressed();
-        }
+        mBookmarkFragment.onBackHandled();
     }
 
 
@@ -390,8 +250,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "API is already set up, we can continue...");
             return;
         }
-        sharedPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-        loginData = new LoginData();
+
         try {
             Log.e(TAG, "Prepare the API");
             SingleSignOnAccount ssoa = SingleAccountHelper.getCurrentSingleSignOnAccount(this.getApplicationContext());
@@ -456,69 +315,25 @@ public class MainActivity extends AppCompatActivity {
                 new BackupDataTask(this).execute();
                 return true;
             case android.R.id.home:
-                mBookmarkFragment.releaseTag();
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                mViewPager.setCurrentItem(0);
+                if (drawerLayout.isDrawerOpen(this.navigationview)) {
+                    drawerLayout.closeDrawer(this.navigationview);
+                } else {
+                    drawerLayout.openDrawer(this.navigationview);
+                }
+
+                this.onBackPressed();
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            // return PlaceholderFragment.newInstance(position + 1);
-            switch (position) {
-                case 0:
-                    return mTagsFragment;
-                case 1:
-                    return mBookmarkFragment;
-                default:
-                    Log.e(TAG, "Fragment not found");
-                    return null;
-            }
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 2;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return getString(R.string.tags);
-                case 1:
-                    return getString(R.string.bookmarks);
-            }
-            return null;
-        }
-    }
-
     private void reloadData() {
-
-        Log.e("TAG", "RELOAD");
         RelodDataTask relodDataTask = new RelodDataTask();
         relodDataTask.execute();
     }
 
     private void setRefreshing(boolean refresh) {
         mBookmarkFragment.setRefreshing(refresh);
-        mTagsFragment.setRefreshing(refresh);
     }
 
     private class RelodDataTask extends AsyncTask<Void, Void, Bookmark[]> {
@@ -530,6 +345,7 @@ public class MainActivity extends AppCompatActivity {
                         new OCBookmarksRestConnector(mNextcloudAPI);
                         //new OCBookmarksRestConnector(loginData.url, loginData.user, loginData.password,loginData.token,loginData.ssologin);
                 root = connector.getFolders();
+
                 JSONArray data = connector.getRawBookmarks();
                 storeToFile(data);
                 return connector.getFromRawJson(data);
@@ -545,8 +361,18 @@ public class MainActivity extends AppCompatActivity {
                         .show();
             } else {
                 mainProgressBar.setVisibility(View.GONE);
-                mTagsFragment.updateData(Bookmark.getTagsFromBookmarks(bookmarks));
                 mBookmarkFragment.updateData(root, bookmarks);
+
+
+                Menu menu = navigationview.getMenu();
+                menu.removeGroup(R.id.tag_group);
+                SubMenu subMenu = menu.addSubMenu(R.id.tag_group, 1, Menu.NONE, R.string.nav_drawer_tags_header);
+
+                int i = TAGLIST_MIN_ID;
+                for (String tag: Bookmark.getTagsFromBookmarks(bookmarks)) {
+                    MenuItem menuItem = subMenu.add(i, i++, Menu.NONE, tag);
+                    menuItem.setIcon(R.drawable.ic_tag);
+                }
                 setRefreshing(false);
             }
         }
@@ -652,7 +478,6 @@ public class MainActivity extends AppCompatActivity {
                 br.close();
                 OCBookmarksRestConnector connector = new OCBookmarksRestConnector(mNextcloudAPI);
                 Bookmark[] bookmarks = connector.getFromRawJson(new JSONArray(text.toString()));
-                mTagsFragment.updateData(Bookmark.getTagsFromBookmarks(bookmarks));
                 mBookmarkFragment.updateData(connector.getFolders(), bookmarks);
             } catch (JSONException je) {
                 if (BuildConfig.DEBUG) je.printStackTrace();

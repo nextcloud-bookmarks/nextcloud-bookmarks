@@ -90,6 +90,7 @@ public class BookmarksRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
             folderView.relatedBookmarkId = holder.getAdapterPosition();
             Folder f = mListElements.get(holder.getAdapterPosition()).getFolder();
             folderView.folderTitle.setText(f.getTitle());
+            folderView.setUpFolder(f.getId() == Folder.UP_ID);
         }
 
 
@@ -216,14 +217,29 @@ public class BookmarksRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         final TextView folderTitle;
         int relatedBookmarkId;
 
+        private final ImageView upImage;
+        private final ImageView folderImage;
+
         FolderViewHolder(View view) {
             super(view);
-            folderTitle = (TextView) view.findViewById(R.id.folder_title);
+            folderTitle = view.findViewById(R.id.folder_title);
+            upImage = view.findViewById(R.id.icon_back);
+            folderImage = view.findViewById(R.id.icon);
 
             ((RelativeLayout) view.findViewById(R.id.layout)).setOnClickListener(view1 -> {
                 Folder f = mListElements.get(relatedBookmarkId).getFolder();
                 mFolderCallback.changeFolderCallback(f);
             });
+        }
+
+        public void setUpFolder(boolean isUp) {
+            if(isUp) {
+                upImage.setVisibility(View.VISIBLE);
+                folderImage.setVisibility(View.INVISIBLE);
+            } else {
+                upImage.setVisibility(View.INVISIBLE);
+                folderImage.setVisibility(View.VISIBLE);
+            }
         }
     }
 }
