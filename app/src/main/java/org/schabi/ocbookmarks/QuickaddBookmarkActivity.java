@@ -3,6 +3,10 @@ package org.schabi.ocbookmarks;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +29,11 @@ public class QuickaddBookmarkActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_bookmark_activity);
         setTitle("");
+
+
+        TextView stateView = findViewById(R.id.adding_text_view);
+        ProgressBar progressView = findViewById(R.id.progressView);
+        ImageView successView = findViewById(R.id.successView);
 
         Intent intent = getIntent();
         String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
@@ -69,6 +78,9 @@ public class QuickaddBookmarkActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(String result) {
+                progressView.setVisibility(View.GONE);
+                successView.setVisibility(View.VISIBLE);
+                stateView.setText(getString(R.string.bookmark_saved));
                 if(result != null) {
                     Toast.makeText(QuickaddBookmarkActivity.this,
                             result,
@@ -78,6 +90,7 @@ public class QuickaddBookmarkActivity extends AppCompatActivity {
                             R.string.bookmark_saved,
                             Toast.LENGTH_SHORT).show();
                 }
+                finish();
             }
         }.execute();
 
