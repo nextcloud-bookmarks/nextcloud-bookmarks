@@ -31,6 +31,7 @@
         </activity>
         <activity android:name=".AddBookmarkActivity"
             android:exported="true"
+            android:label="@string/share_target_normal"
             android:theme="@style/Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
