@@ -47,7 +47,7 @@
      <string name="email_subject">Ayuda de Nextcloud Bookmarks</string>
      <string name="email_body">Por favor
  explique el problema debajo</string>
-     <string name="support_email">biswajitbangalore@gmail.com</string>
+     <string name="support_email">support@nextcloud-bookmarks.com</string>
      <string name="send_email">Enviar correo</string>
      <string name="E_mail">Correo</string>
      <string name="content_desc_show_password">mostrar contraseña</string>

@@ -20,6 +20,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.schabi.ocbookmarks.REST.model.Bookmark;
+import org.schabi.ocbookmarks.REST.model.Folder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,7 +33,9 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by the-scrabi on 14.05.17.
@@ -93,6 +97,17 @@ public class OCBookmarksRestConnector {
     private JSONObject parseJson(String methode, String url, String response) throws RequestException {
 
         JSONObject data = null;
+        if("GET".equals(methode) && url.endsWith("/folder")) {
+            JSONObject array = null;
+            try {
+                data = new JSONObject(response);
+//                data = new JSONObject();
+//                data.put("data", array);
+            } catch (JSONException je) {
+                throw new RequestException("Parsing error, maybe owncloud does not support bookmark api", je);
+            }
+            return data;
+        }
         if ("GET".equals(methode) && url.endsWith("/tag")) {
             // we have to handle GET /tag different:
             // https://github.com/nextcloud/bookmarks#list-all-tags
@@ -181,20 +196,32 @@ public class OCBookmarksRestConnector {
 
     private Bookmark getBookmarkFromJsonO(JSONObject jBookmark) throws RequestException {
 
-        String[] tags;
+        ArrayList<String> tags;
         try {
             JSONArray jTags = jBookmark.getJSONArray("tags");
-            tags = new String[jTags.length()];
-            for (int j = 0; j < tags.length; j++) {
-                tags[j] = jTags.getString(j);
+            tags = new ArrayList<>();
+            for (int j = 0; j < jTags.length(); j++) {
+                tags.add(jTags.getString(j));
             }
         } catch (JSONException je) {
             throw new RequestException("Could not parse array", je);
         }
 
-        //another api error we need to fix
-        if (tags.length == 1 && tags[0].isEmpty()) {
-            tags = new String[0];
+        List<Integer> folders;
+        try {
+            JSONArray jfolders = jBookmark.getJSONArray("folders");
+            folders = new ArrayList<>(jfolders.length());
+            for (int j = 0; j < jfolders.length(); j++) {
+                folders.add(jfolders.getInt(j));
+            }
+        } catch (JSONException je) {
+            throw new RequestException("Could not parse folder array", je);
+        }
+
+
+        // Todo: another api error we need to fix
+        if (tags.size() == 1 && tags.get(0).isEmpty()) {
+            tags = new ArrayList<>();
         }
 
         try {
@@ -208,7 +235,8 @@ public class OCBookmarksRestConnector {
 //                    .setAdded(new Date(jBookmark.getLong("added") * 1000))
                     .setLastModified(new Date(jBookmark.getLong("lastmodified") * 1000))
                     .setClickcount(jBookmark.getInt("clickcount"))
-                    .setTags(tags);
+                    .setTags(tags)
+                    .setFolders(folders);
         } catch (JSONException je) {
             throw new RequestException("Could not gather all data", je);
         }
@@ -242,7 +270,7 @@ public class OCBookmarksRestConnector {
     }
 
     private Collection<QueryParam> createBookmarkParameter(Bookmark bookmark) {
-        final Collection<QueryParam> parameter = new ArrayList<>(3 + bookmark.getTags().length);
+        final Collection<QueryParam> parameter = new ArrayList<>(3 + bookmark.getTags().size());
         if (!bookmark.getTitle().isEmpty() && !bookmark.getUrl().startsWith("http")) {
             // Title can only be set if the sheme is given
             // This is a bug we need to fix
@@ -300,6 +328,45 @@ public class OCBookmarksRestConnector {
         parameter.add(new QueryParam("record_id", Integer.toString(newRecordId)));
         return getBookmarkFromJsonO(sendWithSSO("PUT", "/bookmark/" + bookmark.getId(), parameter));
     }
+
+    // ++++++++++++++++++
+    // +      folders      +
+    // ++++++++++++++++++
+
+    public Folder getFolders() throws RequestException {
+        try {
+            JSONArray data = sendWithSSO("GET", "/folder", Collections.emptyList()).getJSONArray("data");
+            Folder root = Folder.createEmptyRootFolder();
+            fillChildren(root, data);
+            return root;
+        } catch (JSONException je) {
+            throw new RequestException("Could not get all folders", je);
+        }
+    }
+
+    private void fillChildren(Folder rootFolder, JSONArray children) {
+        if (children == null || children.length() < 1) {
+            return;
+        }
+        List<Folder> childFolderList = new ArrayList<>();
+        for (int i = 0; i < children.length(); i++) {
+            try {
+                JSONObject folderJson = children.getJSONObject(i);
+                Folder folder = new Folder();
+                folder.setId(folderJson.getInt("id"));
+                folder.setParentFolderId(folderJson.getInt("parent_folder"));
+                folder.setTitle(folderJson.getString("title"));
+                if (folderJson.has("children")) {
+                    fillChildren(folder, folderJson.getJSONArray("children"));
+                }
+                childFolderList.add(folder);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        rootFolder.setChildren(childFolderList);
+    }
+
 
     // ++++++++++++++++++
     // +      tags      +

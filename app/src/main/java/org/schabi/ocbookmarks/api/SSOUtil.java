@@ -1,4 +1,4 @@
-package org.schabi.ocbookmarks;
+package org.schabi.ocbookmarks.api;
 
 import android.content.Context;
 import android.util.Log;
