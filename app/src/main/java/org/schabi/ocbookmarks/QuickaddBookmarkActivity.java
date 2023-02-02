@@ -19,9 +19,11 @@ import com.nextcloud.android.sso.exceptions.NoCurrentAccountSelectedException;
 import com.nextcloud.android.sso.helper.SingleAccountHelper;
 import com.nextcloud.android.sso.model.SingleSignOnAccount;
 
-import org.schabi.ocbookmarks.REST.Bookmark;
+import org.schabi.ocbookmarks.REST.model.Bookmark;
 import org.schabi.ocbookmarks.REST.OCBookmarksRestConnector;
+import org.schabi.ocbookmarks.api.SSOUtil;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -46,7 +48,11 @@ public class QuickaddBookmarkActivity extends AppCompatActivity {
         Bookmark bookmark = Bookmark.emptyInstance();
         bookmark.setTitle(title);
         bookmark.setUrl(url);
-        bookmark.setTags(new String[] {this.getString(R.string.share_target_quick)});
+//        bookmark.setTags(new String[] {this.getString(R.string.share_target_quick)});
+        ArrayList<String> list;
+        list = new ArrayList<String>();
+        list.add(String.valueOf(R.string.share_target_quick));
+        bookmark.setTags(list);
 
 
 
