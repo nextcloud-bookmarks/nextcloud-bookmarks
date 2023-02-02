@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/email"
-        android:icon="@drawable/ic_menu_email"
-        android:title="@string/E_mail"/>
+    <item android:id="@+id/bookmarks"
+        android:icon="@drawable/star"
+        android:title="@string/bookmarks"/>
+
+    <group android:id="@+id/tag_group" />
+    <item android:id="@+id/settings"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/settings"/>
 
 </menu>

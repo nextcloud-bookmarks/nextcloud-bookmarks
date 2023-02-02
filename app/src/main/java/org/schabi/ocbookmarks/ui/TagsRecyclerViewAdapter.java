@@ -1,4 +1,4 @@
-package org.schabi.ocbookmarks;
+package org.schabi.ocbookmarks.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.app.Activity;
 
+import org.schabi.ocbookmarks.R;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
@@ -22,7 +24,7 @@ import java.util.ArrayList;
  * Created by the-scrabi on 25.05.17.
  */
 
-class TagsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class TagsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     ArrayList<String> tagList = new ArrayList<>();
     Activity context;
     LayoutInflater inflater;

@@ -58,7 +58,7 @@
  • Номер порта</string>
     <string name="email_subject">Справка NextCloud BookMarks!</string>
     <string name="email_body">Пожалуйста, объясните проблему ниже</string>
-    <string name="support_email">biswajitbangalore@gmail.com</string>
+    <string name="support_email">support@nextcloud-bookmarks.com</string>
     <string name="send_email">отправить письмо</string>
     <string name="E_mail">E-mail</string>
     <string name="content_desc_show_password">показать пароль</string>

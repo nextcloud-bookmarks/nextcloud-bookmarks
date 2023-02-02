@@ -50,7 +50,7 @@
     <string name="sso_failed">Could not connect via SSO. Please check that the Nextcloud app is up to date and try to delete storage of both, Nextcloud and Bookmarks in case the issue persists.</string>
     <string name="email_subject">NextCloud BookMarks Help!</string>
     <string name="email_body">Please Explain the issue Below</string>
-    <string name="support_email">biswajitbangalore@gmail.com</string>
+    <string name="support_email">support@nextcloud-bookmarks.com</string>
     <string name="send_email">Send Email</string>
     <string name="E_mail">E-mail</string>
     <string name="content_desc_show_password">show password</string>
@@ -59,4 +59,8 @@
     <string name="backup_successful">Bookmarks backed up to %1s</string>
     <string name="backup_failed">Failed to create backup of bookmarks</string>
     <string name="new_tag">New tag</string>
+    <string name="nav_drawer_tags_header">Tags</string>
+    <string name="settings">Settings</string>
+    <string name="nav_open">Open Drawer</string>
+    <string name="nav_close">Close Drawer</string>
 </resources>

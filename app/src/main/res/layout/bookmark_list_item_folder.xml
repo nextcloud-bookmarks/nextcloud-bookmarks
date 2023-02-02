@@ -1,47 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
     android:clickable="true"
-    android:longClickable="true"
-    android:background="?attr/selectableItemBackground">
+    android:longClickable="true">
 
     <ImageView
-        android:id="@+id/site_icon"
+        android:id="@+id/icon"
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:layout_centerVertical="true"
-        android:scaleType="fitXY"
         android:gravity="center"
-        android:padding="15dp"/>
+        android:padding="15dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/ic_folder_light_blue_700_24dp" />
+
+    <ImageView
+        android:id="@+id/icon_back"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:padding="15dp"
+        android:scaleType="fitXY"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_arrow_back_white_24dp" />
 
     <LinearLayout
-        android:id="@+id/item_name_and_size"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/site_icon"
-        android:layout_toEndOf="@id/site_icon"
         android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/icon"
+        android:layout_toRightOf="@id/icon"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/bookmark_title"
+            android:id="@+id/folder_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
             android:padding="6dp"
             android:singleLine="true"
-            android:ellipsize="end"
-            android:text="Example"
+            android:text="Folder"
             android:textSize="16sp"
             android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/bookmark_url_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="6dp"
-            android:text="https://example.org"
-            android:textSize="12sp"/>
 
     </LinearLayout>
 

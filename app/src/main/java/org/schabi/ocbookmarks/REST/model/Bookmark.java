@@ -1,6 +1,8 @@
-package org.schabi.ocbookmarks.REST;
+package org.schabi.ocbookmarks.REST.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -17,7 +19,10 @@ public class Bookmark {
     private Date lastModified = null;
     private int clickcount = -1;
 //    private boolean isPublic = false;
-    private String[] tags = new String[0];
+    private ArrayList<String> tags = new ArrayList<>();
+    private List<Integer> folders = new ArrayList<>();
+
+    private boolean isFolder = false;
 
     public static Bookmark emptyInstance() {
         return new Bookmark();
@@ -71,11 +76,15 @@ public class Bookmark {
         return this;
     }
 
-    public Bookmark setTags(String[] tags) {
+    public Bookmark setTags(ArrayList<String> tags) {
         this.tags = tags;
         return this;
     }
 
+    public Bookmark setFolders(List<Integer> folders) {
+        this.folders = folders;
+        return this;
+    }
 //    public Bookmark setPublic(boolean aPublic) {
 //        isPublic = aPublic;
 //        return this;
@@ -110,8 +119,11 @@ public class Bookmark {
     public int getClickcount() {
         return clickcount;
     }
-    public String[] getTags() {
+    public ArrayList<String> getTags() {
         return tags;
+    }
+    public List<Integer> getFolders(){
+        return folders;
     }
 //    public boolean isPublic() {
 //        return isPublic;
@@ -124,6 +136,13 @@ public class Bookmark {
             tagsString += tag + ",";
         }
         tagsString += "]";
+
+        String foldersString = "[";
+        for(int folder : folders) {
+            foldersString += folder + ",";
+        }
+        foldersString += "]";
+
         return "id:" + Integer.toString(id) + "\n" +
                 "url:" + url + "\n" +
                 "title:" + title + "\n" +
@@ -132,7 +151,8 @@ public class Bookmark {
 //                "added:" + added.toString() + "\n" +
                 "lastModified:" + lastModified.toString() + "\n" +
                 "clickount:" + clickcount + "\n" +
-                "tags:" + tagsString;
+                "tags:" + tagsString+ "\n" +
+                "folders:"+foldersString;
 //                "isPublic:" + Boolean.toString(isPublic);
     }
 
@@ -152,5 +172,30 @@ public class Bookmark {
             returnTagList[i] = tagList.get(i);
         }
         return returnTagList;
+    }
+
+    public static int[] getFoldersFromBookmarks(Bookmark[] bookmarks) {
+        Vector<Integer> folderList = new Vector<>();
+        for(Bookmark b : bookmarks) {
+            for(int folder : b.getFolders()) {
+                if(!folderList.contains(folder)) {
+                    folderList.add(folder);
+                }
+            }
+        }
+
+        int[] returnFolderList = new int[folderList.size()];
+        for(int i = 0; i < returnFolderList.length; i++) {
+            returnFolderList[i] = folderList.get(i);
+        }
+        return returnFolderList;
+    }
+
+    public boolean isFolder() {
+        return isFolder;
+    }
+
+    public void setFolder(boolean folder) {
+        isFolder = folder;
     }
 }
