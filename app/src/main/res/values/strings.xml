@@ -59,6 +59,8 @@
     <string name="backup_successful">Bookmarks backed up to %1s</string>
     <string name="backup_failed">Failed to create backup of bookmarks</string>
     <string name="new_tag">New tag</string>
+    <string name="share_target_quick">Quickadd</string>
+    <string name="share_target_normal">Add to Bookmarks</string>
     <string name="nav_drawer_tags_header">Tags</string>
     <string name="settings">Settings</string>
     <string name="nav_open">Open Drawer</string>
