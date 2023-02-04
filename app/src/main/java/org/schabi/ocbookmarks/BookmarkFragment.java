@@ -196,4 +196,13 @@ public class BookmarkFragment extends Fragment implements FolderListener {
     public void setRefreshing(boolean refresh) {
         refreshLayout.setRefreshing(refresh);
     }
+
+    public Folder getCurrentFolder() {
+        if(mCurrentFolder == null) {
+            Log.e("TAG", "gcf" + mRootFolder.getTitle());
+            return mRootFolder;
+        }
+        Log.e("TAG", "gcf" + mCurrentFolder.getTitle());
+        return mCurrentFolder;
+    }
 }
