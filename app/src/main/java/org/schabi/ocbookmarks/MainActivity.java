@@ -50,6 +50,7 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+import java.util.Arrays;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -112,13 +113,12 @@ public class MainActivity extends AppCompatActivity {
             AlertDialog dialog = bookmarkDialog.getDialog(MainActivity.this, null, new BookmarkListener() {
                 @Override
                 public void bookmarkChanged(Bookmark bookmark) {
+                    bookmark.setFolders(Arrays.asList(mBookmarkFragment.getCurrentFolder().getId()));
                     addEditBookmark(bookmark);
                 }
 
                 @Override
-                public void deleteBookmark(Bookmark bookmark) {
-
-                }
+                public void deleteBookmark(Bookmark bookmark) {}
             });
             dialog.show();
         });

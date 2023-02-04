@@ -5,6 +5,7 @@
     <color name="colorPrimary">#0082c9</color>
     <color name="colorPrimaryDark">#006aa3</color>
     <color name="colorAccent">#007cc2</color>
+    <color name="colorSecondary">#007cc2</color>
 
     <!-- login style -->
     <color name="loginBackground">#0082c9</color>

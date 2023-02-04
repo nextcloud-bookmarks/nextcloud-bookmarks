@@ -285,6 +285,11 @@ public class OCBookmarksRestConnector {
             parameter.add(new QueryParam("tags[]", tag));
         }
 
+        for (Integer folder : bookmark.getFolders()) {
+            parameter.add(new QueryParam("folders[]", folder.toString()));
+        }
+
+
         return parameter;
     }
 
