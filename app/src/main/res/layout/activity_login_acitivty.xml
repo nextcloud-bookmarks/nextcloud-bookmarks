@@ -1,54 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.schabi.ocbookmarks.LoginAcitivty"
-    android:padding="20dp">
+    tools:context="org.schabi.ocbookmarks.LoginAcitivty">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <RelativeLayout
+
+    <ImageView
+        android:id="@+id/starImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="64dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/star_new" />
+
+
+    <!-- todo: Fix this blue on blue color -->
+    <Button
+        android:id="@+id/ssoButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="48dp"
+        android:background="@drawable/shape"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:elevation="8dp"
+        android:enabled="true"
+        android:padding="16dp"
+        android:text="@string/connect_sso"
+        android:textColor="@color/login_error_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/starImageView" />
+
+
+    <LinearLayout
+        android:id="@+id/errorContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ssoButton">
+
+        <ImageView
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:srcCompat="@android:drawable/stat_notify_error" />
 
-            <ImageView
-                android:id="@+id/starImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="100dp"
-                app:srcCompat="@drawable/star_new"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true"/>
+        <TextView
+            android:id="@+id/loginErrorView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="96dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="96dp"
+            android:text="Login Failed"
+            android:textAlignment="center"
+            android:visibility="visible" />
+    </LinearLayout>
 
-            <Button
-                android:id="@+id/ssoButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/starImageView"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="27dp"
-                android:background="@drawable/shape"
-                android:enabled="true"
-                android:padding="16dp"
-                android:text="@string/connect_sso" />
 
-            <TextView
-                android:id="@+id/loginErrorView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/ssoButton"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="14dp"
-                android:text="Login Failed"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textColor="@color/login_error_color"
-                android:textSize="18sp" />
-
-        </RelativeLayout>
-    </ScrollView>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

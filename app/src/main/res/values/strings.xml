@@ -65,4 +65,5 @@
     <string name="settings">Settings</string>
     <string name="nav_open">Open Drawer</string>
     <string name="nav_close">Close Drawer</string>
+    <string name="login_error_no_bookmarks_api">Bookmark-App not installed in the selected server.</string>
 </resources>
