@@ -24,12 +24,17 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
+import com.nextcloud.android.sso.AccountImporter;
 import com.nextcloud.android.sso.BuildConfig;
 import com.nextcloud.android.sso.api.NextcloudAPI;
+import com.nextcloud.android.sso.exceptions.AndroidGetAccountsPermissionNotGranted;
 import com.nextcloud.android.sso.exceptions.NextcloudFilesAppAccountNotFoundException;
+import com.nextcloud.android.sso.exceptions.NextcloudFilesAppNotInstalledException;
 import com.nextcloud.android.sso.exceptions.NoCurrentAccountSelectedException;
+import com.nextcloud.android.sso.exceptions.SSOException;
 import com.nextcloud.android.sso.helper.SingleAccountHelper;
 import com.nextcloud.android.sso.model.SingleSignOnAccount;
+import com.nextcloud.android.sso.ui.UiExceptionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -303,6 +308,13 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.action_change_login:
+                try {
+                    SSOUtil.invalidateAPICache();
+                    SingleAccountHelper.setCurrentAccount(this, null);
+                    SingleAccountHelper.reauthenticateCurrentAccount(this);
+                } catch (SSOException e) {
+                    UiExceptionManager.showDialogForException(this, e);
+                }
                 Intent intent = new Intent(this, LoginAcitivty.class);
                 startActivity(intent);
                 return true;

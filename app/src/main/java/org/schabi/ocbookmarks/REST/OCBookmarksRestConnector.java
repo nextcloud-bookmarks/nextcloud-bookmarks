@@ -1,22 +1,14 @@
 package org.schabi.ocbookmarks.REST;
 
-import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.util.Pair;
 
 import com.nextcloud.android.sso.QueryParam;
 import com.nextcloud.android.sso.aidl.NextcloudRequest;
 import com.nextcloud.android.sso.api.NextcloudAPI;
 import com.nextcloud.android.sso.api.Response;
-import com.nextcloud.android.sso.exceptions.NextcloudFilesAppAccountNotFoundException;
-import com.nextcloud.android.sso.exceptions.NoCurrentAccountSelectedException;
-import com.nextcloud.android.sso.helper.SingleAccountHelper;
-import com.nextcloud.android.sso.model.SingleSignOnAccount;
 
-import org.apache.commons.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,16 +16,11 @@ import org.schabi.ocbookmarks.REST.model.Bookmark;
 import org.schabi.ocbookmarks.REST.model.Folder;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -66,7 +53,7 @@ public class OCBookmarksRestConnector {
     public JSONObject sendWithSSO(@NonNull String methode, @NonNull String relativeUrl, @NonNull Collection<QueryParam> parameter) throws RequestException {
         if (this.nextcloudAPI == null) {
             Log.e(TAG,"API not set up.");
-            throw new RequestException("Trying to send request via SSO, but API is null.");
+            throw new RequestException("Trying to send request via SSO, but API is null.", RequestException.ERROR.API_NOT_SET_UP);
         }
 
         Log.i(TAG,"API is already set up");
@@ -79,6 +66,8 @@ public class OCBookmarksRestConnector {
         try {
             Response response = nextcloudAPI.performNetworkRequestV2(request);
 
+            Log.e(TAG, response.getPlainHeaders().toString());
+
             final StringBuilder result = new StringBuilder();
             final BufferedReader rd = new BufferedReader(new InputStreamReader(response.getBody()));
             String line;
@@ -89,6 +78,9 @@ public class OCBookmarksRestConnector {
 
             return parseJson(methode, apiRootUrl + relativeUrl, result.toString());
         } catch (Exception e) {
+            if(e.getMessage().contains("status-code: 302")) {
+                throw new RequestException(RequestException.ERROR.BOOKMARK_NOT_INSTALLED);
+            }
             e.printStackTrace();
             throw new RequestException(e);
         }
@@ -149,6 +141,34 @@ public class OCBookmarksRestConnector {
     // +++++++++++++++++
     // +   bookmarks   +
     // +++++++++++++++++
+
+
+    /**
+     * This is a function to get the first bookmarks.
+     * This assures us that the bookmark app is avaliable on the server
+     * while not gathering every bookmark. Only one query is made.
+     * @return
+     * @throws RequestException
+     */
+    public JSONArray testAPI() throws RequestException {
+        try {
+            JSONArray bookmarks = new JSONArray();
+
+            Collection<QueryParam> parameter = new ArrayList<>();
+            parameter.add(new QueryParam("page", "1"));
+            parameter.add(new QueryParam("limit", "10"));
+            JSONObject now = sendWithSSO("GET", "/bookmark", parameter);
+            JSONArray data = now.getJSONArray("data");
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject bm = (JSONObject) data.get(i);
+                bookmarks.put(bm);
+            }
+            return bookmarks;
+        } catch (JSONException e) {
+            throw new RequestException("Could not parse data", e);
+        }
+    }
+
 
     public JSONArray getRawBookmarks() throws RequestException {
         try {
