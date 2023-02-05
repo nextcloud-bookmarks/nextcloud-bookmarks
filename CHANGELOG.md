@@ -1,3 +1,31 @@
+# [v1.18](https://gitlab.com/bisada/OCBookmarks/tags/v1.18)
+This release is major release. Thanks to [newhinton](https://gitlab.com/newhinton). The following feature are released:
+- One click Quick Sharing.
+- Folder structure.
+- CI FIX.
+- Multiple functionality improvements and remove unnecessary methods.
+- Switching between multiple accounts.
+- The following Issues has been addressed in the following release:
+  - [Save in folders](https://gitlab.com/bisada/OCBookmarks/-/issues/25) 
+  - [Switching between multiple SSO accounts](https://gitlab.com/bisada/OCBookmarks/-/issues/79)
+  - [widget and tags improvement](https://gitlab.com/bisada/OCBookmarks/-/issues/7)
+  - [[feature request] save in folders](https://gitlab.com/bisada/OCBookmarks/-/issues/25)
+  - [return](https://gitlab.com/bisada/OCBookmarks/-/issues/71)
+  - [Configurable default view](https://gitlab.com/bisada/OCBookmarks/-/issues/1)
+  - [Folder support?](https://gitlab.com/bisada/OCBookmarks/-/issues/61)
+  - [Where are the bookmarks folders?](https://gitlab.com/bisada/OCBookmarks/-/issues/68)
+  - [CI pipeline is broken](https://gitlab.com/bisada/OCBookmarks/-/issues/78)
+  - [Drawer home icon missing](https://gitlab.com/bisada/OCBookmarks/-/issues/52)
+
+# [v1.17](https://gitlab.com/bisada/OCBookmarks/tags/v1.17)
+- Introducing SSO again.
+- minor improvements in the app.
+- The following issues are closed:
+  - [[Feature request] Single sign-on](https://gitlab.com/bisada/OCBookmarks/-/issues/27)
+  - [unable to login](https://gitlab.com/bisada/OCBookmarks/-/issues/60)
+  - [Nextcloud Bookmarks issue with TLSv1.3](https://gitlab.com/bisada/OCBookmarks/-/issues/42)
+  - [support http and https connection](https://gitlab.com/bisada/OCBookmarks/-/issues/30)
+
 # [v1.16](https://gitlab.com/bisada/OCBookmarks/tags/v1.16)
 
 - SSO Removed as requested #67
