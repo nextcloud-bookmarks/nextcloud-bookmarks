@@ -40,6 +40,15 @@ android {
             applicationIdSuffix ".owncloud"
         }
     }
+    productFlavors {
+        fdroid {
+            applicationId "org.schabi.nxbookmarks"
+        }
+        amazon{
+            applicationId "org.bisw.nxbookmarks"
+        }
+    }
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
