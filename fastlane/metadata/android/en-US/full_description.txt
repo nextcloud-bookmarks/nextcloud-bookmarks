@@ -11,4 +11,6 @@ If you need more information about the Nextcloud Bookmark app, you can follow <a
 <li>Manage tags 🏷</li>
 <li>Translated in many languages 🌎</    li>
 <li>Multiple accounts</li>
-<li>SSO : Nextcloud Single Sign On (Work In Progress)</li></ul>
+<li>☑ now showing bookmarks under Folder.📁 </li>
+<li>SSO : Nextcloud Single Sign On</li>
+<li>Nextcloud Single Sign On 🔊 🔥. Need [nextcloud files](https://github.com/nextcloud/android) app as dependency.</li></ul>

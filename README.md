@@ -13,6 +13,11 @@ An Android front end for the Nextcloud [Bookmark App](https://github.com/nextclo
 based on the new [REST API](https://github.com/nextcloud/bookmarks/#rest-api) that was introduced
 by NextCloudBookmarks version [3.2.1](https://github.com/nextcloud/bookmarks/releases/tag/v3.2.1)
 
+From v1.18 below features are introduced:
+
+#### ☑ Now login with nextcloud single sign-on 🔊
+#### ☑ now showing bookmarks under Folder.📁
+#### ☑ App support Multiple accounts 👩‍👩‍👧‍👧
 
 ## :arrow_forward: Access
 
@@ -32,13 +37,13 @@ by NextCloudBookmarks version [3.2.1](https://github.com/nextcloud/bookmarks/rel
 
 ## :rocket: Features
 
-
-* Works offline 🔌
+* SSO : Nextcloud Single Sign On 🔊 🔥. Need [nextcloud files](https://github.com/nextcloud/android) app as dependency.
+* Folder Structure 📁🔥
+* Works offline 🔌 (WIP)
 * Mark bookmarks as favorite Organize your bookmarks with labels 🔖
 * Manage tags 🏷
 * Translated in many languages 🌎
-* Multiple accounts
-* SSO : Nextcloud Single Sign On
+* Multiple accounts 👩‍👩‍👧‍👧
 
 
 ## :eyes: Screenshots
