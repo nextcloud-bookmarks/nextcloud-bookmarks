@@ -9,4 +9,4 @@ Details zur Nextcloud Bookmark App finden sich unter <a href="https://apps.nextc
 <li>Tags verwalten 🏷</li>
 <li>In viele Sprachen übersetzt 🌎</li>
 <li>Mehrere Accounts verwenden</li>
-<li>SSO : Nextcloud Single Sign On (WIP)</li></ul>
+<li>SSO: Nextcloud Single Sign On 🔊 🔥. Benötigt <a href='https://github.com/nextcloud/android'>Nextcloud Files</a>.</li></ul>
