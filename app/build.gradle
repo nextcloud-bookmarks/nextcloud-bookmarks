@@ -20,7 +20,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 18
+        versionCode 19
         versionName "1.19"
         applicationId "org.bisw.nxbookmarks"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
