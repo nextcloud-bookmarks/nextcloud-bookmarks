@@ -21,7 +21,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 32
         versionCode 18
-        versionName "1.18"
+        versionName "1.19"
         applicationId "org.bisw.nxbookmarks"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -30,12 +30,14 @@ android {
     flavorDimensions "default"
     buildTypes {
         release {
-            minifyEnabled true
+            // Do not minify: https://github.com/nextcloud/Android-SingleSignOn/issues/488
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         owncloud {
-            minifyEnabled true
+            // Do not minify: https://github.com/nextcloud/Android-SingleSignOn/issues/488
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".owncloud"
         }
