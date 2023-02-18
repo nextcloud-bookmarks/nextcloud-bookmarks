@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
     private SearchView searchBar;
     private ImageButton menuButton;
 
-
     private static final String TAG = MainActivity.class.toString();
 
     @Override
@@ -115,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         searchButton.setOnClickListener(v -> {
             searchToolbar.setVisibility(View.VISIBLE);
             normalToolbar.setVisibility(View.GONE);
-            searchBar.requestFocus();
+            searchBar.setIconified(false);
         });
 
         backButton.setOnClickListener(v->{
@@ -127,6 +126,21 @@ public class MainActivity extends AppCompatActivity {
             drawerLayout.openDrawer(GravityCompat.START);
         });
 
+        searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchBookmarks(query);
+                searchToolbar.setVisibility(View.GONE);
+                normalToolbar.setVisibility(View.VISIBLE);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchBookmarks(newText);
+                return false;
+            }
+        });
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
@@ -215,6 +229,19 @@ public class MainActivity extends AppCompatActivity {
                 }.execute();
             }
         });
+    }
+
+    private void searchBookmarks(String query) {
+        if(mBookmarkFragment != null) {
+            mBookmarkFragment.search(query);
+        }
+
+        if(!query.isBlank()) {
+            String searchInAction = getString(R.string.search_active);
+            searchButton.setText(searchInAction + " " + query);
+        } else {
+            searchButton.setText(getString(R.string.search_in_all));
+        }
     }
 
     private void addEditBookmark(final Bookmark bookmark) {

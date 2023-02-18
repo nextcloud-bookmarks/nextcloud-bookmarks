@@ -67,4 +67,5 @@
     <string name="nav_close">Close Drawer</string>
     <string name="login_error_no_bookmarks_api">Bookmark-App not installed in the selected server.</string>
     <string name="search_in_all">Search...</string>
+    <string name="search_active">Searching:</string>
 </resources>
