@@ -1,7 +1,6 @@
 package org.schabi.ocbookmarks;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,27 +8,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
-import com.nextcloud.android.sso.AccountImporter;
 import com.nextcloud.android.sso.BuildConfig;
 import com.nextcloud.android.sso.api.NextcloudAPI;
-import com.nextcloud.android.sso.exceptions.AndroidGetAccountsPermissionNotGranted;
 import com.nextcloud.android.sso.exceptions.NextcloudFilesAppAccountNotFoundException;
-import com.nextcloud.android.sso.exceptions.NextcloudFilesAppNotInstalledException;
 import com.nextcloud.android.sso.exceptions.NoCurrentAccountSelectedException;
 import com.nextcloud.android.sso.exceptions.SSOException;
 import com.nextcloud.android.sso.helper.SingleAccountHelper;
@@ -41,7 +38,6 @@ import org.json.JSONException;
 import org.schabi.ocbookmarks.REST.model.Bookmark;
 import org.schabi.ocbookmarks.REST.OCBookmarksRestConnector;
 import org.schabi.ocbookmarks.REST.model.Folder;
-import org.schabi.ocbookmarks.api.LoginData;
 import org.schabi.ocbookmarks.api.SSOUtil;
 import org.schabi.ocbookmarks.listener.BookmarkListener;
 import org.schabi.ocbookmarks.listener.OnRequestReloadListener;
@@ -64,9 +60,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String DATA_BACKUP_FILE_NAME = "data-backup.json";
     private static final int TAGLIST_MIN_ID = 10;
 
-
-    private Toolbar mToolbar;
-
     private NextcloudAPI mNextcloudAPI = null;
 
     private static final String BOOKMARK_FRAGMENT = "bookmark_fragment";
@@ -75,6 +68,14 @@ public class MainActivity extends AppCompatActivity {
 
     private NavigationView navigationview;
     private DrawerLayout drawerLayout;
+
+    private LinearLayout normalToolbar;
+    private LinearLayout searchToolbar;
+    private TextView searchButton;
+    private ImageButton backButton;
+    private SearchView searchBar;
+    private ImageButton menuButton;
+
 
     private static final String TAG = MainActivity.class.toString();
 
@@ -100,16 +101,31 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
+        normalToolbar =  findViewById(R.id.normalToolbar);
+        searchToolbar =  findViewById(R.id.searchToolbar);
+        searchButton = findViewById(R.id.search_text);
+        backButton = findViewById(R.id.backButton);
+        searchBar = findViewById(R.id.searchbar);
+        menuButton = findViewById(R.id.menu_button);
 
+        searchButton.setOnClickListener(v -> {
+            searchToolbar.setVisibility(View.VISIBLE);
+            normalToolbar.setVisibility(View.GONE);
+            searchBar.requestFocus();
+        });
+
+        backButton.setOnClickListener(v->{
+            searchToolbar.setVisibility(View.GONE);
+            normalToolbar.setVisibility(View.VISIBLE);
+        });
+
+        menuButton.setOnClickListener(v->{
+            drawerLayout.openDrawer(GravityCompat.START);
+        });
 
 
         FloatingActionButton fab = findViewById(R.id.fab);

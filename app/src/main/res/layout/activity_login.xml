@@ -29,12 +29,11 @@
         android:layout_marginTop="48dp"
         android:layout_marginEnd="48dp"
         android:background="@drawable/shape"
-        android:backgroundTint="@color/colorPrimaryDark"
+        android:backgroundTint="@color/colorPrimary"
         android:elevation="8dp"
         android:enabled="true"
         android:padding="16dp"
         android:text="@string/connect_sso"
-        android:textColor="@color/login_error_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/starImageView" />

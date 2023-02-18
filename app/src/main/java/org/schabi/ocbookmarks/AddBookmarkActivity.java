@@ -1,8 +1,6 @@
 package org.schabi.ocbookmarks;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -30,7 +28,7 @@ public class AddBookmarkActivity extends AppCompatActivity implements BookmarkLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_bookmark_activity);
+        setContentView(R.layout.activity_add_bookmark);
         setTitle("");
 
         Intent intent = getIntent();

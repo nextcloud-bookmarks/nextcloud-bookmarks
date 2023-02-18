@@ -3,20 +3,17 @@
 
     <!--             - NextCloud colors -     -->
     <color name="colorPrimary">#0082c9</color>
-    <color name="colorPrimaryDark">#006aa3</color>
-    <color name="colorAccent">#007cc2</color>
-    <color name="colorSecondary">#007cc2</color>
+    <color name="colorAccent">#006FAC</color>
+    <color name="colorSecondary">#005788</color>
 
-    <!-- login style -->
-    <color name="loginBackground">#0082c9</color>
-    <color name="loginTextColor">#ffffff</color>
-    <color name="loginTextHintColor">#84d2ff</color>
-    <color name="login_error_color">#ffffff</color>
 
     <!-- edit text dialog -->
     <color name="editTitlebarTextColor">#ffffff</color>
 
-    <color name="app_drawer_feed_list_background_color">#ededed</color>
-    <color name="material_red_600" tools:override="true">#e53935</color>
+
+    <color name="appbar">@android:color/white</color>
+    <color name="textColor">#2E2E2E</color>
+    <color name="subtextColor">#757575</color>
+    <color name="iconColor">#757575</color>
 
 </resources>

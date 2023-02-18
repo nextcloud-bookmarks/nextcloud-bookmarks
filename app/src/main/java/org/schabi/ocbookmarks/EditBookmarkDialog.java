@@ -68,7 +68,7 @@ public class EditBookmarkDialog {
         }
 
         toolbar.setTitle(dialogTitle);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        toolbar.setNavigationIcon(R.drawable.ic_round_arrow_back);
         toolbar.inflateMenu(R.menu.edit_bookmark_menu);
 
         final AlertDialog dialog = new AlertDialog.Builder(context)

@@ -39,7 +39,7 @@ public class IconHandler {
 
         if(siteHasNoIcon(bookmark)) {
             Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                    ic_globe);
+                    ic_round_bookmarks);
             imageView.setImageBitmap(icon);
             return;
         }

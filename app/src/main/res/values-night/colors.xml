@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!--             - NextCloud colors -     -->
+    <color name="colorPrimary">#A400C9</color>
+    <color name="colorAccent">#B5C200</color>
+    <color name="colorSecondary">#B5C200</color>
+
+</resources>
