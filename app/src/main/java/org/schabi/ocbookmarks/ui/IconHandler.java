@@ -5,9 +5,12 @@ import static org.schabi.ocbookmarks.R.drawable.*;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
+
+import androidx.appcompat.content.res.AppCompatResources;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -38,9 +41,8 @@ public class IconHandler {
     public void loadIcon(final ImageView imageView, final Bookmark bookmark) {
 
         if(siteHasNoIcon(bookmark)) {
-            Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                    ic_round_bookmarks);
-            imageView.setImageBitmap(icon);
+            Drawable drawable = AppCompatResources.getDrawable(context, ic_round_bookmarks);
+            imageView.setImageDrawable(drawable);
             return;
         }
 
