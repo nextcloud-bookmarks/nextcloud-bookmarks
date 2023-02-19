@@ -15,12 +15,10 @@ height="80">](https://play.google.com/store/apps/details?id=com.nextcloud.client
 alt="Get it on F-Droid"
 height="80">](https://f-droid.org/packages/com.nextcloud.client/)
 
-
-
 ### Login and register to Nextcloud android App
 
 * **Step 1:** Install the Nextcloud Synchronization client
-* **Step 2:** Register the Nextcoud account for sso: 
+* **Step 2:** Register the Nextcoud app for sso: 
     * Enter the "server address" in the field. Eg: https://cloud.disroot.org/
     * Enter the Username in the **user name** field. eg. email id(xxxxxxxx@nextcloud.com)
     * Enter the credentials **Password** field.
