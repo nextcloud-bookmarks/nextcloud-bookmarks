@@ -4,6 +4,13 @@
 
 * You should have nextcloud instances access
 * NextCloud Bookmarks version [3.2.1](https://github.com/nextcloud/bookmarks/releases/tag/v3.2.1) should be installed.
+* you need to install the **Android client** for Nextcloud from Playstore or f-droid.
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" 
+alt="Download from Google Play" 
+height="80">](https://play.google.com/store/apps/details?id=com.nextcloud.client)
+[<img src="https://f-droid.org/badge/get-it-on.png"
+alt="Get it on F-Droid"
+height="80">](https://f-droid.org/packages/com.nextcloud.client/)
 
 ### Login to Bookmark App
 
