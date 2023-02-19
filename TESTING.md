@@ -4,7 +4,9 @@
 
 * You should have nextcloud instances access
 * NextCloud Bookmarks version [3.2.1](https://github.com/nextcloud/bookmarks/releases/tag/v3.2.1) should be installed.
-* you need to install the **Android client** from bookmark v1.19 onwards. This is to supprt nextcloud ecosystem. It can be downloaded from Playstore or f-droid.
+* you need to install the **Android client** from bookmark v1.19 onwards. This is to supprt nextcloud ecosystem. It can be downloaded from Github, Playstore or f-droid.
+
+**Github release**: https://github.com/nextcloud/android/releases then select stable release like: https://github.com/nextcloud/android/releases/download/stable-3.24.0/nextcloud-30240090.apk
 
 [<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" 
 alt="Download from Google Play" 
@@ -13,10 +15,12 @@ height="80">](https://play.google.com/store/apps/details?id=com.nextcloud.client
 alt="Get it on F-Droid"
 height="80">](https://f-droid.org/packages/com.nextcloud.client/)
 
+
+
 ### Login and register to Nextcloud android App
 
 * **Step 1:** Install the Nextcloud Synchronization client
-* **Step 2:** Register the Nextcoud app for sso: 
+* **Step 2:** Register the Nextcoud account for sso: 
     * Enter the "server address" in the field. Eg: https://cloud.disroot.org/
     * Enter the Username in the **user name** field. eg. email id(xxxxxxxx@nextcloud.com)
     * Enter the credentials **Password** field.
